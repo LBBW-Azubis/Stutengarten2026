@@ -1,0 +1,76 @@
+-- SQL Skript für Datenbank
+CREATE DATABASE stutengarten;
+USE stutengarten;
+
+
+-- Kinderkonten
+CREATE TABLE kunden (
+	id INT AUTO_INCREMENT PRIMARY KEY,
+	stutengarten_id VARCHAR(50) UNIQUE NOT NULL,
+	vorname VARCHAR(50) NOT NULL,
+	nachname VARCHAR(50) NOT NULL
+	);
+
+CREATE TABLE kundensparbuecher (
+	id INT AUTO_INCREMENT PRIMARY KEY,
+	kunden_fk INT NOT NULL,
+	saldo INT DEFAULT 0,
+	FOREIGN KEY (kunden_fk) REFERENCES kundensparbuecher(id) ON DELETE CASCADE
+	);
+	
+CREATE TABLE kundenumsaetze (
+	id INT AUTO_INCREMENT PRIMARY KEY,
+	sparbuch_fk INT NOT NULL,
+	betrag INT NOT NULL,
+	verwendungszweck VARCHAR(255),
+	FOREIGN	KEY (sparbuch_fk) REFERENCES kundensparbuecher(id) ON DELETE CASCADE
+	);
+
+CREATE TABLE kundenaktien (
+	id INT AUTO_INCREMENT PRIMARY KEY,
+	besitzer_fk INT NOT NULL,
+	wert INT NOT NULL DEFAULT 3,
+	wochentage ENUM('MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY') NOT NULL,
+	FOREIGN KEY (besitzer_fk) REFERENCES kunden(id) ON DELETE CASCADE
+	);
+
+
+-- Unternehmenskonten
+CREATE TABLE unternehmen (
+	id INT AUTO_INCREMENT PRIMARY KEY,
+	bezeichnung VARCHAR(255) NOT NULL UNIQUE,
+	mappe_abgegeben BOOL DEFAULT FALSE
+	);
+
+CREATE TABLE unternehmenssparbuecher (
+	id INT AUTO_INCREMENT PRIMARY KEY,
+	unternehmen_fk INT NOT NULL,
+	saldo INT DEFAULT 0,
+	FOREIGN KEY (unternehmen_fk) REFERENCES unternehmen(id) ON DELETE CASCADE
+	);
+
+CREATE TABLE unternehmensumsaetze (
+	id INT AUTO_INCREMENT PRIMARY KEY,
+	unternehmenssparbuecher_fk INT NOT NULL,
+	betrag INT NOT NULL,
+	verwendungszweck VARCHAR(255),
+	FOREIGN KEY (unternehmenssparbuecher_fk) REFERENCES unternehmenssparbuecher(id) ON DELETE CASCADE
+	);
+	
+
+-- Statistik
+CREATE TABLE statistik (
+	id INT AUTO_INCREMENT PRIMARY KEY,
+	wochentage ENUM('MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY') NOT NULL,
+	gesamtumsatz INT
+	);
+	
+
+-- Wirtschaftsbeihilfe
+CREATE TABLE wirtschaftsbeihilfe (
+	id INT AUTO_INCREMENT PRIMARY KEY,
+	beruf VARCHAR(255) NOT NULL,
+	betrag INT NOT NULL,
+	unternehmen_fk INT NOT NULL,
+	FOREIGN KEY (unternehmen_fk) REFERENCES unternehmen(id) ON DELETE CASCADE
+	);
