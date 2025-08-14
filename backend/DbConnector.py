@@ -18,10 +18,11 @@ class DbConnector:
                 password = password,
                 database = database
             )
-        except mysql.connector.Errror as e:
+        except mysql.connector.Error as e:
             print("Error connecting to database", e)
 
     def get_connection(self):
         """Function to get the connection to the database"""
         return self.connection
     # End of file
+
