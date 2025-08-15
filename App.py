@@ -3,7 +3,7 @@
     flask endpoint to read an uploaded XLSX file using the helper library `xlsx_file_reader`.
 """
 import configparser
-import xlsx_file_reader
+from xlsx_file_reader import XlsxFileReader
 from flask import Flask, request, jsonify
 from DbConnector import DbConnector
 
@@ -23,6 +23,7 @@ connector.connect(ip, user, password, db, port)
 
 
 app = Flask(__name__)
+xlsx_reader = XlsxFileReader()
 
 @app.route("/read_xlsx_file", methods=["POST"])
 def read_xlsx_file():
@@ -40,7 +41,7 @@ def read_xlsx_file():
         if not file:
             return jsonify({"error": "No file uploaded"}), 400
 
-        data = xlsx_file_reader.read_xlsx(file)
+        data = xlsx_reader.read(file)
         return jsonify({"status": "success", "data": data})
     except Exception as exc:  # pylint: disable=broad-except
         return jsonify({"status": "error", "message": str(exc)}), 500
