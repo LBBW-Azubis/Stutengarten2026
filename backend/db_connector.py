@@ -31,4 +31,4 @@ class DbConnector:
     def get_connection(self):
         """Function to get the connection to the database"""
         return self.connection
-    # End of file
+# End of file
