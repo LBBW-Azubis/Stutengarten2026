@@ -54,6 +54,15 @@ def import_customers():
         # Check file type
         if not customer_file.filename.lower().endswith('.xlsx'):
             return jsonify({"error": "Invalid file type. Only .xlsx files are supported."}), 400
+        
+        # Actually import the customers
+        result = customer_importer.import_customers(customer_file)
+        
+        if result["status"] == "success":
+            return jsonify(result), 200
+        else:
+            return jsonify(result), 500
+            
     except Exception as exc:  # pylint: disable=broad-except
         return jsonify({"status": "error", "message": str(exc)}), 500
 
@@ -78,6 +87,15 @@ def import_companies():
         # Check file type
         if not company_file.filename.lower().endswith('.xlsx'):
             return jsonify({"error": "Invalid file type. Only .xlsx files are supported."}), 400
+        
+        # Actually import the companies
+        result = company_importer.import_company(company_file)
+        
+        if result["status"] == "success":
+            return jsonify(result), 200
+        else:
+            return jsonify(result), 500
+            
     except Exception as exc:  # pylint: disable=broad-except
         return jsonify({"status": "error", "message": str(exc)}), 500
 
