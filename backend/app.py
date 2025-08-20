@@ -109,9 +109,9 @@ def health_check():
         if connection and connection.is_connected():
             return jsonify({"status": "healthy", "database": "connected"}), 200
         else:
-            return jsonify({"status": "unhealthy", "database": "disconnected"}), 503
+            return jsonify({"status": "unhealthy", "database": "disconnected"}), 500
     except Exception as exc: # pylint: disable=broad-except
-        return jsonify({"status": "error", "message": str(exc)}), 503
+        return jsonify({"status": "error", "message": str(exc)}), 500
 
 if __name__ == "__main__":
     try:
@@ -123,3 +123,4 @@ if __name__ == "__main__":
             print("Database connection closed")
 
 #End-of-file
+
