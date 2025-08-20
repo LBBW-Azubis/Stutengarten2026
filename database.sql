@@ -15,7 +15,7 @@ CREATE TABLE kundensparbuecher (
 	id INT AUTO_INCREMENT PRIMARY KEY,
 	kunden_fk INT NOT NULL,
 	saldo INT DEFAULT 0,
-	FOREIGN KEY (kunden_fk) REFERENCES kundensparbuecher(id) ON DELETE CASCADE
+	FOREIGN KEY (kunden_fk) REFERENCES kunden(id) ON DELETE CASCADE
 	);
 	
 CREATE TABLE kundenumsaetze (
