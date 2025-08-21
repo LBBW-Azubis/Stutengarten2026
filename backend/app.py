@@ -8,6 +8,7 @@ from xlsx_file_reader import XlsxFileReader
 from db_connector import DbConnector
 from customer_import import CustomerImport
 from company_import import CompanyImport
+from kunde import Kunde, CustomException, KundeException
 
 # Initialize Flask app
 app = Flask(__name__)
@@ -112,6 +113,100 @@ def health_check():
             return jsonify({"status": "unhealthy", "database": "disconnected"}), 500
     except Exception as exc: # pylint: disable=broad-except
         return jsonify({"status": "error", "message": str(exc)}), 500
+    
+
+@app.route("/kunden/<int:kunden_id>", methods=["GET"])
+def get_kunde(kunden_id):
+    """
+    Retrieve a customer by database ID
+
+    GET /kunden/<kunden_id>
+
+    Returns:
+    - 200 JSON with customer data, e.g. {"id": 1, "stutengarten_id": "SG-2026", "vorname": "Max", "nachname": "Mustermann"}
+    - 404 JSON {"error": "..."} if no customer with this ID exists or a customer-specific error occurs
+    - 500 JSON {"error": "Internal server error", "details": "..."} on unexpected errors
+    """
+    try:
+        kunde = Kunde.get_by_db_id(connector, kunden_id)
+        return jsonify(kunde.to_dict()), 200
+    except (CustomException, KundeException) as e:
+        return jsonify({"error": str(e)}), 404
+    except Exception as e:
+        return jsonify({"error": "Interner Serverfehler", "details": str(e)}), 500
+
+
+@app.route("/kunden", methods=["POST"])
+def create_kunde():
+    """
+    Create a new customer
+
+    POST /kunden
+
+    Returns:
+    - 200 JSON with customer data on success
+    - 400 JSON {"error": "..."} if required fields are missing or invalid
+    - 500 JSON {"error": "..."} on other errors
+    """
+    data = request.json
+    if not data:
+        return jsonify({"error": "No data provided"}), 400
+
+    try:
+        kunde = Kunde(
+            connector,
+            stutengarten_id=data.get("stutengarten_id"),
+            vorname=data.get("vorname"),
+            nachname=data.get("nachname")
+        )
+        return jsonify(kunde.to_dict()), 200
+    except KundeException as e:
+        return jsonify({"error": str(e)}), 400
+    except (CustomException) as e:
+        return jsonify({"error": str(e)}), 500
+    except Exception as e:
+        return jsonify({"error": "Interner Serverfehler", "details": str(e)}), 500
+
+@app.route("/kunden/<int:kunden_id>", methods=["PATCH"])
+def update_kunde(kunden_id):
+    """
+    Partially update customer data (stutengarten_id, vorname, nachname)
+
+    PATCH /kunden/<kunden_id>
+    
+    Returns:
+    - 200 JSON with updated customer data and list of updated fields
+    - 400 JSON {"error": "..."} if no valid field is supplied or body is missing
+    - 404 JSON {"error": "..."} if the customer does not exist
+    - 500 JSON {"error": "..."} on other errors
+    """
+    data = request.json
+    if not data:
+        return jsonify({"error": "No data provided"}), 400
+
+    try:
+        kunde = Kunde.get_by_db_id(connector, kunden_id)
+    except (CustomException, KundeException) as e:
+        return jsonify({"error": str(e)}), 404
+
+    updates = []
+    try:
+        if "stutengarten_id" in data:
+            kunde.update_stutengarten_id(data["stutengarten_id"])
+            updates.append("stutengarten_id")
+        if "vorname" in data:
+            kunde.update_vorname(data["vorname"])
+            updates.append("vorname")
+        if "nachname" in data:
+            kunde.update_nachname(data["nachname"])
+            updates.append("nachname")
+        if not updates:
+            return jsonify({"error": "No valid fields to update"}), 400
+
+        return jsonify({"status": "success", "updated": updates, "kunde": kunde.to_dict()}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 
 if __name__ == "__main__":
     try:
