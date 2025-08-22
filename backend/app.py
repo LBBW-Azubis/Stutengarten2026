@@ -116,12 +116,12 @@ def health_check():
         return jsonify({"status": "error", "message": str(exc)}), 500
 
 
-@app.route("/customers/<int:customers_id>", methods=["GET"])
+@app.route("/customer/<int:customer_id>", methods=["GET"])
 def get_customer(customer_id):
     """
     Retrieve a customer by database ID
 
-    GET /customers/<customers_id>
+    GET /customer/<customer_id>
 
     Returns:
     - 200 JSON with customer data, e.g. {"id": 1, "stutengarten_id": "SG-2026", "vorname": "Max", "nachname": "Mustermann"}
@@ -137,12 +137,12 @@ def get_customer(customer_id):
         return jsonify({"error": "Internal server error", "details": str(e)}), 500
 
 
-@app.route("/customers", methods=["POST"])
+@app.route("/customer", methods=["POST"])
 def create_customer():
     """
     Create a new customer
 
-    POST /customers
+    POST /customer
 
     Returns:
     - 200 JSON with customer data on success
@@ -168,12 +168,12 @@ def create_customer():
     except Exception as e:  # pylint: disable=broad-except
         return jsonify({"error": "Internal server error", "details": str(e)}), 500
 
-@app.route("/customers/<int:customers_id>", methods=["PATCH"])
+@app.route("/customer/<int:customer_id>", methods=["PATCH"])
 def update_customer(customers_id):
     """
     Partially update customer data (stutengarten_id, vorname, nachname)
 
-    PATCH /customers/<customers_id>
+    PATCH /customer/<customer_id>
     
     Returns:
     - 200 JSON with updated customer data and list of updated fields
@@ -210,12 +210,12 @@ def update_customer(customers_id):
     except Exception as e:  # pylint: disable=broad-except
         return jsonify({"error": str(e)}), 500
 
-@app.route("/customers/<int:customers_id>", methods=["DELETE"])
+@app.route("/customer/<int:customer_id>", methods=["DELETE"])
 def delete_customers(customers_id):
     """
     Delete a customer by database ID
 
-    DELETE /customers/<customers_id>
+    DELETE /customer/<customer_id>
 
     Returns:
     - 200 JSON {"status": "success"} if deleted
@@ -249,12 +249,12 @@ def get_all_savings_books():
     except Exception as e:  # pylint: disable=broad-except
         return jsonify({"error": str(e)}), 500
 
-@app.route("/customers/<int:customers_id>/savingsbook", methods=["GET"])
+@app.route("/customer/<int:customer_id>/savingsbook", methods=["GET"])
 def get_savings_book_for_customer(customers_id):
     """
     Retrieve the savings book overview for a specific customer.
 
-    GET /customers/<customers_id>/savingsbook
+    GET /customer/<customer_id>/savingsbook
 
     Returns:
     - 200 JSON list with savings book info for the customer,
@@ -267,12 +267,12 @@ def get_savings_book_for_customer(customers_id):
     except Exception as e:  # pylint: disable=broad-except
         return jsonify({"error": str(e)}), 404
 
-@app.route("/customers/<int:customers_id>/savingsbook", methods=["POST"])
+@app.route("/customer/<int:customer_id>/savingsbook", methods=["POST"])
 def create_savings_book_for_customer(customers_id):
     """
     Create a new savings book for a customer.
 
-    POST /customers/<customers_id>/savingsbook
+    POST /customer/<customer_id>/savingsbook
 
     Returns:
     - 201 JSON {"kunden_id": ..., "saldo": 0} on success
@@ -284,12 +284,12 @@ def create_savings_book_for_customer(customers_id):
     except Exception as e:  # pylint: disable=broad-except
         return jsonify({"error": str(e)}), 500
 
-@app.route("/customers/<int:customers_id>/savingsbook/balance", methods=["PATCH"])
+@app.route("/customer/<int:customer_id>/savingsbook/balance", methods=["PATCH"])
 def update_balance_for_customer(customers_id):
     """
     Update the balance of a customer's savings book.
 
-    PATCH /customers/<customers_id>/savingsbook/balance
+    PATCH /customer/<customer_id>/savingsbook/balance
 
     Expects JSON: {"balance": new_balance}
 
