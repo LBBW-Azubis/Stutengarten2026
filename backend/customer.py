@@ -1,22 +1,25 @@
+"""import db_connector for connection to database"""
 from db_connector import DbConnector
 
-
 class CustomException(Exception):
-    pass
-
+    """special exception"""
 
 class CustomerException(Exception):
-    pass
-
+    """special exception"""
 
 class SavingsBookRef:
+    """Class for referencing on savingsbook"""
     def __init__(self, customer_id, balance):
         self.customer_id = customer_id
         self.balance = balance
 
-
 class Customer:
-    def __init__(self, db: DbConnector, stutengarten_id=None, first_name=None, last_name=None, id=None):
+    """Class for creating customer object"""
+    def __init__(self, db: DbConnector,
+                 stutengarten_id=None,
+                 first_name=None,
+                 last_name=None,
+                 id=None):
         self.db = db
 
         if id is None:
@@ -38,7 +41,7 @@ class Customer:
                 self.last_name = last_name
                 conn.commit()
             except Exception as err:
-                raise CustomException(f"Error creating customer: {err}")
+                raise CustomException(f"Error creating customer: {err}") from err
             finally:
                 cursor.close()
         else:
@@ -63,6 +66,7 @@ class Customer:
     # Static methods
     @staticmethod
     def get_by_stutengarten_id(db: DbConnector, stutengarten_id):
+        """getting customer by their id"""
         conn = db.get_connection()
         cursor = conn.cursor(dictionary=True)
         try:
@@ -71,12 +75,17 @@ class Customer:
         finally:
             cursor.close()
         if row:
-            return Customer(db, row["stutengarten_id"], row["vorname"], row["nachname"], id=row["id"])
+            return Customer(db,
+                            row["stutengarten_id"],
+                            row["vorname"],
+                            row["nachname"],
+                            id=row["id"])
         else:
             raise CustomerException("No customer found!")
 
     @staticmethod
     def get_by_db_id(db: DbConnector, customer_id):
+        """getting customer by their id in the database"""
         conn = db.get_connection()
         cursor = conn.cursor(dictionary=True)
         try:
@@ -85,12 +94,17 @@ class Customer:
         finally:
             cursor.close()
         if row:
-            return Customer(db, row["stutengarten_id"], row["vorname"], row["nachname"], id=row["id"])
+            return Customer(db,
+                            row["stutengarten_id"],
+                            row["vorname"],
+                            row["nachname"],
+                            id=row["id"])
         else:
             raise CustomerException("No customer found!")
 
     # Methods
     def get_savings_book(self):
+        """getting customers savingsbook"""
         conn = self.db.get_connection()
         cursor = conn.cursor(dictionary=True)
         try:
@@ -98,7 +112,7 @@ class Customer:
             try:
                 cursor.execute("SELECT * FROM sparbuecher WHERE kunden = %s", (self.id,))
                 row = cursor.fetchone()
-            except Exception:
+            except Exception:  # pylint: disable=broad-except
                 # Fallback: if column 'kunden' doesn't exist, try 'kunden_id'
                 cursor.close()
                 cursor = conn.cursor(dictionary=True)
@@ -113,6 +127,7 @@ class Customer:
 
     # Update methods
     def update_stutengarten_id(self, new_id):
+        """updating the stutengarten_id of a customer"""
         conn = self.db.get_connection()
         cursor = conn.cursor()
         try:
@@ -123,6 +138,7 @@ class Customer:
             cursor.close()
 
     def update_first_name(self, new_first_name):
+        """updating customers first name"""
         conn = self.db.get_connection()
         cursor = conn.cursor()
         try:
@@ -133,6 +149,7 @@ class Customer:
             cursor.close()
 
     def update_last_name(self, new_last_name):
+        """updating customers last name"""
         conn = self.db.get_connection()
         cursor = conn.cursor()
         try:
@@ -143,9 +160,11 @@ class Customer:
             cursor.close()
 
     def to_dict(self):
+        """converting object into dictionary"""
         return {
             "id": self.id,
             "stutengarten_id": self.stutengarten_id,
             "first_name": self.first_name,
             "last_name": self.last_name,
         }
+#End-of-file

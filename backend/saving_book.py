@@ -1,5 +1,6 @@
+"""import db_connector for connection to database"""
 from db_connector import DbConnector
-from kunde import CustomException
+from customer import CustomException
 
 class SavingsBook:
     """
@@ -79,7 +80,7 @@ class SavingsBook:
             conn.commit()
             return {"customer_id": customer_id, "balance": 0}
         except Exception as e:
-            raise CustomException(f"Error creating savings book: {e}")
+            raise CustomException(f"Error creating savings book: {e}") from e
         finally:
             cursor.close()
 
@@ -92,12 +93,14 @@ class SavingsBook:
         conn = db.get_connection()
         cursor = conn.cursor()
         try:
-            cursor.execute("UPDATE kundensparbuecher SET saldo=%s WHERE kunden_fk=%s", (balance, customer_id))
+            cursor.execute("UPDATE kundensparbuecher SET saldo=%s WHERE kunden_fk=%s",
+                           (balance, customer_id))
             if cursor.rowcount == 0:
                 raise CustomException("Could not update balance")
             conn.commit()
             return {"customer_id": customer_id, "balance": balance}
         except Exception as e:
-            raise CustomException(f"Error updating balance: {e}")
+            raise CustomException(f"Error updating balance: {e}") from e
         finally:
             cursor.close()
+#End-of-file

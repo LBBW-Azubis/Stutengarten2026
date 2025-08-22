@@ -9,7 +9,7 @@ from db_connector import DbConnector
 from customer_import import CustomerImport
 from company_import import CompanyImport
 from customer import Customer, CustomException, CustomerException
-from savingsbook import Savingsbook
+from saving_book import SavingsBook
 
 # Initialize Flask app
 app = Flask(__name__)
@@ -56,15 +56,15 @@ def import_customers():
         # Check file type
         if not customer_file.filename.lower().endswith('.xlsx'):
             return jsonify({"error": "Invalid file type. Only .xlsx files are supported."}), 400
-        
+
         # Actually import the customers
         result = customer_importer.import_customers(customer_file)
-        
+
         if result["status"] == "success":
             return jsonify(result), 200
         else:
             return jsonify(result), 500
-            
+
     except Exception as exc:  # pylint: disable=broad-except
         return jsonify({"status": "error", "message": str(exc)}), 500
 
@@ -89,15 +89,15 @@ def import_companies():
         # Check file type
         if not company_file.filename.lower().endswith('.xlsx'):
             return jsonify({"error": "Invalid file type. Only .xlsx files are supported."}), 400
-        
+
         # Actually import the companies
         result = company_importer.import_company(company_file)
-        
+
         if result["status"] == "success":
             return jsonify(result), 200
         else:
             return jsonify(result), 500
-            
+
     except Exception as exc:  # pylint: disable=broad-except
         return jsonify({"status": "error", "message": str(exc)}), 500
 
@@ -114,7 +114,7 @@ def health_check():
             return jsonify({"status": "unhealthy", "database": "disconnected"}), 500
     except Exception as exc: # pylint: disable=broad-except
         return jsonify({"status": "error", "message": str(exc)}), 500
-    
+
 
 @app.route("/customers/<int:customers_id>", methods=["GET"])
 def get_customer(customer_id):
@@ -133,7 +133,7 @@ def get_customer(customer_id):
         return jsonify(customer.to_dict()), 200
     except (CustomException, CustomerException) as e:
         return jsonify({"error": str(e)}), 404
-    except Exception as e:
+    except Exception as e:  # pylint: disable=broad-except
         return jsonify({"error": "Internal server error", "details": str(e)}), 500
 
 
@@ -157,15 +157,15 @@ def create_customer():
         customer = Customer(
             connector,
             stutengarten_id=data.get("stutengarten_id"),
-            vorname=data.get("vorname"),
-            nachname=data.get("nachname")
+            first_name=data.get("first_name"),
+            last_name=data.get("last_name")
         )
         return jsonify(customer.to_dict()), 200
     except CustomerException as e:
         return jsonify({"error": str(e)}), 400
     except (CustomException) as e:
         return jsonify({"error": str(e)}), 500
-    except Exception as e:
+    except Exception as e:  # pylint: disable=broad-except
         return jsonify({"error": "Internal server error", "details": str(e)}), 500
 
 @app.route("/customers/<int:customers_id>", methods=["PATCH"])
@@ -195,19 +195,21 @@ def update_customer(customers_id):
         if "stutengarten_id" in data:
             customer.update_stutengarten_id(data["stutengarten_id"])
             updates.append("stutengarten_id")
-        if "vorname" in data:
-            customer.update_first_name(data["vorname"])
-            updates.append("vorname")
-        if "nachname" in data:
-            customer.update_nachname(data["nachname"])
-            updates.append("nachname")
+        if "first_name" in data:
+            customer.update_first_name(data["first_name"])
+            updates.append("first_name")
+        if "last_name" in data:
+            customer.update_last_name(data["last_name"])
+            updates.append("last_name")
         if not updates:
             return jsonify({"error": "No valid fields to update"}), 400
 
-        return jsonify({"status": "success", "updated": updates, "customer": customer.to_dict()}), 200
-    except Exception as e:
+        return jsonify({"status": "success",
+                        "updated": updates,
+                        "customer": customer.to_dict()}), 200
+    except Exception as e:  # pylint: disable=broad-except
         return jsonify({"error": str(e)}), 500
-    
+
 @app.route("/customers/<int:customers_id>", methods=["DELETE"])
 def delete_customers(customers_id):
     """
@@ -224,9 +226,9 @@ def delete_customers(customers_id):
         customer = Customer.get_by_db_id(connector, customers_id)
         customer.delete()
         return jsonify({"status": "success", "deleted id": customers_id}), 200
-    except (CustomException, CustomersException) as e:
+    except (CustomException, CustomerException) as e:
         return jsonify({"error": str(e)}), 404
-    except Exception as e:
+    except Exception as e:  # pylint: disable=broad-except
         return jsonify({"error": "Internal server error", "details": str(e)}), 500
 
 @app.route("/savingsbook", methods=["GET"])
@@ -242,9 +244,9 @@ def get_all_savings_books():
     - 500 JSON {"error": "..."} on failure
     """
     try:
-        result = Savingsbook.get_all_savings_books(connector)
+        result = SavingsBook.get_all_savings_books(connector)
         return jsonify(result), 200
-    except Exception as e:
+    except Exception as e:  # pylint: disable=broad-except
         return jsonify({"error": str(e)}), 500
 
 @app.route("/customers/<int:customers_id>/savingsbook", methods=["GET"])
@@ -260,9 +262,9 @@ def get_savings_book_for_customer(customers_id):
     - 404 JSON {"error": "..."} if no savings book for customer found
     """
     try:
-        result = Savingsbook.get_savings_book_overview(connector, customers_id)
+        result = SavingsBook.get_savings_book_overview(connector, customers_id)
         return jsonify(result), 200
-    except Exception as e:
+    except Exception as e:  # pylint: disable=broad-except
         return jsonify({"error": str(e)}), 404
 
 @app.route("/customers/<int:customers_id>/savingsbook", methods=["POST"])
@@ -277,9 +279,9 @@ def create_savings_book_for_customer(customers_id):
     - 500 JSON {"error": "..."} on failure
     """
     try:
-        new_book = Savingsbook.create_new(connector, customers_id)
+        new_book = SavingsBook.create_new(connector, customers_id)
         return jsonify(new_book), 201
-    except Exception as e:
+    except Exception as e:  # pylint: disable=broad-except
         return jsonify({"error": str(e)}), 500
 
 @app.route("/customers/<int:customers_id>/savingsbook/balance", methods=["PATCH"])
@@ -300,9 +302,9 @@ def update_balance_for_customer(customers_id):
     if not data or "balance" not in data:
         return jsonify({"error": "No new balance provided"}), 400
     try:
-        updated = Savingsbook.set_balance(connector, customers_id, data["balance"])
+        updated = SavingsBook.set_balance(connector, customers_id, data["balance"])
         return jsonify(updated), 200
-    except Exception as e:
+    except Exception as e:  # pylint: disable=broad-except
         return jsonify({"error": str(e)}), 500
 
 
