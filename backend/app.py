@@ -169,7 +169,7 @@ def create_customer():
         return jsonify({"error": "Internal server error", "details": str(e)}), 500
 
 @app.route("/customer/<int:customer_id>", methods=["PATCH"])
-def update_customer(customers_id):
+def update_customer(customer_id):
     """
     Partially update customer data (stutengarten_id, vorname, nachname)
 
@@ -186,7 +186,7 @@ def update_customer(customers_id):
         return jsonify({"error": "No data provided"}), 400
 
     try:
-        customer = Customer.get_by_db_id(connector, customers_id)
+        customer = Customer.get_by_db_id(connector, customer_id)
     except (CustomException, CustomerException) as e:
         return jsonify({"error": str(e)}), 404
 
@@ -211,7 +211,7 @@ def update_customer(customers_id):
         return jsonify({"error": str(e)}), 500
 
 @app.route("/customer/<int:customer_id>", methods=["DELETE"])
-def delete_customers(customers_id):
+def delete_customers(customer_id):
     """
     Delete a customer by database ID
 
@@ -223,9 +223,9 @@ def delete_customers(customers_id):
     - 500 JSON {"error": "..."} on other errors
     """
     try:
-        customer = Customer.get_by_db_id(connector, customers_id)
+        customer = Customer.get_by_db_id(connector, customer_id)
         customer.delete()
-        return jsonify({"status": "success", "deleted id": customers_id}), 200
+        return jsonify({"status": "success", "deleted id": customer_id}), 200
     except (CustomException, CustomerException) as e:
         return jsonify({"error": str(e)}), 404
     except Exception as e:  # pylint: disable=broad-except
@@ -250,7 +250,7 @@ def get_all_savings_books():
         return jsonify({"error": str(e)}), 500
 
 @app.route("/customer/<int:customer_id>/savingsbook", methods=["GET"])
-def get_savings_book_for_customer(customers_id):
+def get_savings_book_for_customer(customer_id):
     """
     Retrieve the savings book overview for a specific customer.
 
@@ -262,13 +262,13 @@ def get_savings_book_for_customer(customers_id):
     - 404 JSON {"error": "..."} if no savings book for customer found
     """
     try:
-        result = SavingsBook.get_savings_book_overview(connector, customers_id)
+        result = SavingsBook.get_savings_book_overview(connector, customer_id)
         return jsonify(result), 200
     except Exception as e:  # pylint: disable=broad-except
         return jsonify({"error": str(e)}), 404
 
 @app.route("/customer/<int:customer_id>/savingsbook", methods=["POST"])
-def create_savings_book_for_customer(customers_id):
+def create_savings_book_for_customer(customer_id):
     """
     Create a new savings book for a customer.
 
@@ -279,13 +279,13 @@ def create_savings_book_for_customer(customers_id):
     - 500 JSON {"error": "..."} on failure
     """
     try:
-        new_book = SavingsBook.create_new(connector, customers_id)
+        new_book = SavingsBook.create_new(connector, customer_id)
         return jsonify(new_book), 201
     except Exception as e:  # pylint: disable=broad-except
         return jsonify({"error": str(e)}), 500
 
 @app.route("/customer/<int:customer_id>/savingsbook/balance", methods=["PATCH"])
-def update_balance_for_customer(customers_id):
+def update_balance_for_customer(customer_id):
     """
     Update the balance of a customer's savings book.
 
@@ -302,7 +302,7 @@ def update_balance_for_customer(customers_id):
     if not data or "balance" not in data:
         return jsonify({"error": "No new balance provided"}), 400
     try:
-        updated = SavingsBook.set_balance(connector, customers_id, data["balance"])
+        updated = SavingsBook.set_balance(connector, customer_id, data["balance"])
         return jsonify(updated), 200
     except Exception as e:  # pylint: disable=broad-except
         return jsonify({"error": str(e)}), 500
