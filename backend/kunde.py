@@ -50,6 +50,19 @@ class Kunde:
             self.vorname = vorname
             self.nachname = nachname
 
+    def delete(self):
+        """
+        Delete this customer from the database.
+        """
+        conn = self.db.get_connection()
+        cursor = conn.cursor()
+        try:
+            cursor.execute("DELETE FROM kunden WHERE id = %s", (self.id,))
+            conn.commit()
+        finally:
+            cursor.close()
+
+
     # Static Methoden
     @staticmethod
     def get_by_stutengarten_id(db: DbConnector, stutengarten_id):
@@ -109,7 +122,7 @@ class Kunde:
         try:
             cursor.execute("UPDATE kunden SET stutengarten_id = %s WHERE id = %s", (neue_id, self.id))
             conn.commit()
-            # Kein Fehler mehr wenn rowcount == 0 (z. B. gleicher Wert) -> fuck this
+            # Kein Fehler mehr wenn rowcount == 0 (z. B. gleicher Wert)
             self.stutengarten_id = neue_id
         finally:
             cursor.close()
@@ -134,7 +147,7 @@ class Kunde:
         finally:
             cursor.close()
 
-    # help (brauch hilfe)
+    # help (ich brauch hilfe)
     def to_dict(self):
         return {
             "id": self.id,

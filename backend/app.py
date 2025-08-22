@@ -9,6 +9,7 @@ from db_connector import DbConnector
 from customer_import import CustomerImport
 from company_import import CompanyImport
 from kunde import Kunde, CustomException, KundeException
+from sparbuch import Sparbuch
 
 # Initialize Flask app
 app = Flask(__name__)
@@ -204,6 +205,103 @@ def update_kunde(kunden_id):
             return jsonify({"error": "No valid fields to update"}), 400
 
         return jsonify({"status": "success", "updated": updates, "kunde": kunde.to_dict()}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    
+@app.route("/kunden/<int:kunden_id>", methods=["DELETE"])
+def delete_kunde(kunden_id):
+    """
+    Delete a customer by database ID
+
+    DELETE /kunden/<kunden_id>
+
+    Returns:
+    - 200 JSON {"status": "success"} if deleted
+    - 404 JSON {"error": "..."} if not found
+    - 500 JSON {"error": "..."} on other errors
+    """
+    try:
+        kunde = Kunde.get_by_db_id(connector, kunden_id)
+        kunde.delete()
+        return jsonify({"status": "success", "deleted id": kunden_id}), 200
+    except (CustomException, KundeException) as e:
+        return jsonify({"error": str(e)}), 404
+    except Exception as e:
+        return jsonify({"error": "Internal server error", "details": str(e)}), 500
+
+@app.route("/sparbuecher", methods=["GET"])
+def get_all_savings_books():
+    """
+    Retrieve an overview of all savings books.
+
+    GET /sparbuecher
+
+    Returns:
+    - 200 JSON list of all savings books with customer data,
+      e.g. [{"stutengarten_id": "...", "vorname": "...", "nachname": "...", "saldo": ...}]
+    - 500 JSON {"error": "..."} on failure
+    """
+    try:
+        result = Sparbuch.get_all_savings_books(connector)
+        return jsonify(result), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route("/kunden/<int:kunden_id>/sparbuch", methods=["GET"])
+def get_savings_book_for_customer(kunden_id):
+    """
+    Retrieve the savings book overview for a specific customer.
+
+    GET /kunden/<kunden_id>/sparbuch
+
+    Returns:
+    - 200 JSON list with savings book info for the customer,
+      e.g. [{"stutengarten_id": "...", "saldo": ...}]
+    - 404 JSON {"error": "..."} if no savings book for customer found
+    """
+    try:
+        result = Sparbuch.get_savings_book_overview(connector, kunden_id)
+        return jsonify(result), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 404
+
+@app.route("/kunden/<int:kunden_id>/sparbuch", methods=["POST"])
+def create_savings_book_for_customer(kunden_id):
+    """
+    Create a new savings book for a customer.
+
+    POST /kunden/<kunden_id>/sparbuch
+
+    Returns:
+    - 201 JSON {"kunden_id": ..., "saldo": 0} on success
+    - 500 JSON {"error": "..."} on failure
+    """
+    try:
+        new_book = Sparbuch.create_new(connector, kunden_id)
+        return jsonify(new_book), 201
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route("/kunden/<int:kunden_id>/sparbuch/saldo", methods=["PATCH"])
+def update_balance_for_customer(kunden_id):
+    """
+    Update the balance of a customer's savings book.
+
+    PATCH /kunden/<kunden_id>/sparbuch/saldo
+
+    Expects JSON: {"saldo": new_balance}
+
+    Returns:
+    - 200 JSON {"kunden_id": ..., "saldo": ...} on success
+    - 400 JSON {"error": "No new balance provided"} if saldo is missing
+    - 500 JSON {"error": "..."} on failure
+    """
+    data = request.json
+    if not data or "saldo" not in data:
+        return jsonify({"error": "No new balance provided"}), 400
+    try:
+        updated = Sparbuch.set_balance(connector, kunden_id, data["saldo"])
+        return jsonify(updated), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
