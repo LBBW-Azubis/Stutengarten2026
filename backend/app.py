@@ -236,7 +236,7 @@ def get_all_savings_books():
     """
     Retrieve an overview of all savings books.
 
-    GET /savingsbooks
+    GET /savingsbook
 
     Returns:
     - 200 JSON list of all savings books with customer data,
