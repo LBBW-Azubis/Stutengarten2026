@@ -8,8 +8,8 @@ from xlsx_file_reader import XlsxFileReader
 from db_connector import DbConnector
 from customer_import import CustomerImport
 from company_import import CompanyImport
-from kunde import Kunde, CustomException, KundeException
-from sparbuch import Sparbuch
+from customer import Customer, CustomException, CustomerException
+from savingsbook import Savingsbook
 
 # Initialize Flask app
 app = Flask(__name__)
@@ -49,8 +49,8 @@ def import_customers():
     - 500 JSON {"status": "error", "message": "..."} on unexpected errors
     """
     try:
-        # key in frontend has to be called "kunden"
-        customer_file = request.files.get("kunden")
+        # key in frontend has to be called "customers"
+        customer_file = request.files.get("customers")
         if not customer_file:
             return jsonify({"error": "No file uploaded"}), 400
         # Check file type
@@ -82,8 +82,8 @@ def import_companies():
     - 500 JSON {"status": "error", "message": "..."} on unexpected errors
     """
     try:
-        # key in frontend has to be called "unternehmen"
-        company_file = request.files.get("unternehmen")
+        # key in frontend has to be called "companies"
+        company_file = request.files.get("companies")
         if not company_file:
             return jsonify({"error": "No file uploaded"}), 400
         # Check file type
@@ -116,12 +116,12 @@ def health_check():
         return jsonify({"status": "error", "message": str(exc)}), 500
     
 
-@app.route("/kunden/<int:kunden_id>", methods=["GET"])
-def get_kunde(kunden_id):
+@app.route("/customers/<int:customers_id>", methods=["GET"])
+def get_customer(customer_id):
     """
     Retrieve a customer by database ID
 
-    GET /kunden/<kunden_id>
+    GET /customers/<customers_id>
 
     Returns:
     - 200 JSON with customer data, e.g. {"id": 1, "stutengarten_id": "SG-2026", "vorname": "Max", "nachname": "Mustermann"}
@@ -129,20 +129,20 @@ def get_kunde(kunden_id):
     - 500 JSON {"error": "Internal server error", "details": "..."} on unexpected errors
     """
     try:
-        kunde = Kunde.get_by_db_id(connector, kunden_id)
-        return jsonify(kunde.to_dict()), 200
-    except (CustomException, KundeException) as e:
+        customer = Customer.get_by_db_id(connector, customer_id)
+        return jsonify(customer.to_dict()), 200
+    except (CustomException, CustomerException) as e:
         return jsonify({"error": str(e)}), 404
     except Exception as e:
-        return jsonify({"error": "Interner Serverfehler", "details": str(e)}), 500
+        return jsonify({"error": "Internal server error", "details": str(e)}), 500
 
 
-@app.route("/kunden", methods=["POST"])
-def create_kunde():
+@app.route("/customers", methods=["POST"])
+def create_customer():
     """
     Create a new customer
 
-    POST /kunden
+    POST /customers
 
     Returns:
     - 200 JSON with customer data on success
@@ -154,26 +154,26 @@ def create_kunde():
         return jsonify({"error": "No data provided"}), 400
 
     try:
-        kunde = Kunde(
+        customer = Customer(
             connector,
             stutengarten_id=data.get("stutengarten_id"),
             vorname=data.get("vorname"),
             nachname=data.get("nachname")
         )
-        return jsonify(kunde.to_dict()), 200
-    except KundeException as e:
+        return jsonify(customer.to_dict()), 200
+    except CustomerException as e:
         return jsonify({"error": str(e)}), 400
     except (CustomException) as e:
         return jsonify({"error": str(e)}), 500
     except Exception as e:
-        return jsonify({"error": "Interner Serverfehler", "details": str(e)}), 500
+        return jsonify({"error": "Internal server error", "details": str(e)}), 500
 
-@app.route("/kunden/<int:kunden_id>", methods=["PATCH"])
-def update_kunde(kunden_id):
+@app.route("/customers/<int:customers_id>", methods=["PATCH"])
+def update_customer(customers_id):
     """
     Partially update customer data (stutengarten_id, vorname, nachname)
 
-    PATCH /kunden/<kunden_id>
+    PATCH /customers/<customers_id>
     
     Returns:
     - 200 JSON with updated customer data and list of updated fields
@@ -186,34 +186,34 @@ def update_kunde(kunden_id):
         return jsonify({"error": "No data provided"}), 400
 
     try:
-        kunde = Kunde.get_by_db_id(connector, kunden_id)
-    except (CustomException, KundeException) as e:
+        customer = Customer.get_by_db_id(connector, customers_id)
+    except (CustomException, CustomerException) as e:
         return jsonify({"error": str(e)}), 404
 
     updates = []
     try:
         if "stutengarten_id" in data:
-            kunde.update_stutengarten_id(data["stutengarten_id"])
+            customer.update_stutengarten_id(data["stutengarten_id"])
             updates.append("stutengarten_id")
         if "vorname" in data:
-            kunde.update_vorname(data["vorname"])
+            customer.update_first_name(data["vorname"])
             updates.append("vorname")
         if "nachname" in data:
-            kunde.update_nachname(data["nachname"])
+            customer.update_nachname(data["nachname"])
             updates.append("nachname")
         if not updates:
             return jsonify({"error": "No valid fields to update"}), 400
 
-        return jsonify({"status": "success", "updated": updates, "kunde": kunde.to_dict()}), 200
+        return jsonify({"status": "success", "updated": updates, "customer": customer.to_dict()}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     
-@app.route("/kunden/<int:kunden_id>", methods=["DELETE"])
-def delete_kunde(kunden_id):
+@app.route("/customers/<int:customers_id>", methods=["DELETE"])
+def delete_customers(customers_id):
     """
     Delete a customer by database ID
 
-    DELETE /kunden/<kunden_id>
+    DELETE /customers/<customers_id>
 
     Returns:
     - 200 JSON {"status": "success"} if deleted
@@ -221,20 +221,20 @@ def delete_kunde(kunden_id):
     - 500 JSON {"error": "..."} on other errors
     """
     try:
-        kunde = Kunde.get_by_db_id(connector, kunden_id)
-        kunde.delete()
-        return jsonify({"status": "success", "deleted id": kunden_id}), 200
-    except (CustomException, KundeException) as e:
+        customer = Customer.get_by_db_id(connector, customers_id)
+        customer.delete()
+        return jsonify({"status": "success", "deleted id": customers_id}), 200
+    except (CustomException, CustomersException) as e:
         return jsonify({"error": str(e)}), 404
     except Exception as e:
         return jsonify({"error": "Internal server error", "details": str(e)}), 500
 
-@app.route("/sparbuecher", methods=["GET"])
+@app.route("/savingsbook", methods=["GET"])
 def get_all_savings_books():
     """
     Retrieve an overview of all savings books.
 
-    GET /sparbuecher
+    GET /savingsbooks
 
     Returns:
     - 200 JSON list of all savings books with customer data,
@@ -242,17 +242,17 @@ def get_all_savings_books():
     - 500 JSON {"error": "..."} on failure
     """
     try:
-        result = Sparbuch.get_all_savings_books(connector)
+        result = Savingsbook.get_all_savings_books(connector)
         return jsonify(result), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-@app.route("/kunden/<int:kunden_id>/sparbuch", methods=["GET"])
-def get_savings_book_for_customer(kunden_id):
+@app.route("/customers/<int:customers_id>/savingsbook", methods=["GET"])
+def get_savings_book_for_customer(customers_id):
     """
     Retrieve the savings book overview for a specific customer.
 
-    GET /kunden/<kunden_id>/sparbuch
+    GET /customers/<customers_id>/savingsbook
 
     Returns:
     - 200 JSON list with savings book info for the customer,
@@ -260,47 +260,47 @@ def get_savings_book_for_customer(kunden_id):
     - 404 JSON {"error": "..."} if no savings book for customer found
     """
     try:
-        result = Sparbuch.get_savings_book_overview(connector, kunden_id)
+        result = Savingsbook.get_savings_book_overview(connector, customers_id)
         return jsonify(result), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 404
 
-@app.route("/kunden/<int:kunden_id>/sparbuch", methods=["POST"])
-def create_savings_book_for_customer(kunden_id):
+@app.route("/customers/<int:customers_id>/savingsbook", methods=["POST"])
+def create_savings_book_for_customer(customers_id):
     """
     Create a new savings book for a customer.
 
-    POST /kunden/<kunden_id>/sparbuch
+    POST /customers/<customers_id>/savingsbook
 
     Returns:
     - 201 JSON {"kunden_id": ..., "saldo": 0} on success
     - 500 JSON {"error": "..."} on failure
     """
     try:
-        new_book = Sparbuch.create_new(connector, kunden_id)
+        new_book = Savingsbook.create_new(connector, customers_id)
         return jsonify(new_book), 201
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-@app.route("/kunden/<int:kunden_id>/sparbuch/saldo", methods=["PATCH"])
-def update_balance_for_customer(kunden_id):
+@app.route("/customers/<int:customers_id>/savingsbook/balance", methods=["PATCH"])
+def update_balance_for_customer(customers_id):
     """
     Update the balance of a customer's savings book.
 
-    PATCH /kunden/<kunden_id>/sparbuch/saldo
+    PATCH /customers/<customers_id>/savingsbook/balance
 
-    Expects JSON: {"saldo": new_balance}
+    Expects JSON: {"balance": new_balance}
 
     Returns:
-    - 200 JSON {"kunden_id": ..., "saldo": ...} on success
-    - 400 JSON {"error": "No new balance provided"} if saldo is missing
+    - 200 JSON {"kunden_id": ..., "balance": ...} on success
+    - 400 JSON {"error": "No new balance provided"} if balance is missing
     - 500 JSON {"error": "..."} on failure
     """
     data = request.json
-    if not data or "saldo" not in data:
+    if not data or "balance" not in data:
         return jsonify({"error": "No new balance provided"}), 400
     try:
-        updated = Sparbuch.set_balance(connector, kunden_id, data["saldo"])
+        updated = Savingsbook.set_balance(connector, customers_id, data["balance"])
         return jsonify(updated), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
@@ -316,4 +316,3 @@ if __name__ == "__main__":
             print("Database connection closed")
 
 #End-of-file
-
