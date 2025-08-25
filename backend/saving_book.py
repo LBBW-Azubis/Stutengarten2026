@@ -4,7 +4,7 @@ from customer import CustomException
 
 class SavingsBook:
     """
-    Class to handle bankbook (Sparbuch) operations for customers.
+    Class to handle savings book (Sparbuch) operations for customers.
     All methods use dicts for better JSON compatibility.
     """
 

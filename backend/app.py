@@ -10,6 +10,8 @@ from customer_import import CustomerImport
 from company_import import CompanyImport
 from customer import Customer, CustomException, CustomerException
 from saving_book import SavingsBook
+from company import Company, CustomCompanyException, CompanyException
+from company_saving_book import CompanySavingsBook
 
 # Initialize Flask app
 app = Flask(__name__)
@@ -29,6 +31,9 @@ password = config["server"]["password"]
 connector = DbConnector()
 connector.connect(ip, user, password, db, port)
 
+
+#--------------------------------------------------------------------------------------------------------------------------------------------------------
+#XLSX-Files
 # Initialize XLSX reader, Customer Import and Company Import
 xlsx_reader = XlsxFileReader()
 customer_importer = CustomerImport(connector)
@@ -116,6 +121,8 @@ def health_check():
         return jsonify({"status": "error", "message": str(exc)}), 500
 
 
+#------------------------------------------------------------------------------------------------------------------------------------------------
+#Customer
 @app.route("/customer/<int:customer_id>", methods=["GET"])
 def get_customer(customer_id):
     """
@@ -124,7 +131,8 @@ def get_customer(customer_id):
     GET /customer/<customer_id>
 
     Returns:
-    - 200 JSON with customer data, e.g. {"id": 1, "stutengarten_id": "SG-2026", "vorname": "Max", "nachname": "Mustermann"}
+    - 200 JSON with customer data,
+        e.g. {"id": 1, "stutengarten_id": "SG-2026", "vorname": "Max", "nachname": "Mustermann"}
     - 404 JSON {"error": "..."} if no customer with this ID exists or a customer-specific error occurs
     - 500 JSON {"error": "Internal server error", "details": "..."} on unexpected errors
     """
@@ -240,7 +248,7 @@ def get_all_savings_books():
 
     Returns:
     - 200 JSON list of all savings books with customer data,
-      e.g. [{"stutengarten_id": "...", "vorname": "...", "nachname": "...", "saldo": ...}]
+        e.g. [{"stutengarten_id": "...", "vorname": "...", "nachname": "...", "saldo": ...}]
     - 500 JSON {"error": "..."} on failure
     """
     try:
@@ -308,6 +316,193 @@ def update_balance_for_customer(customer_id):
         return jsonify({"error": str(e)}), 500
 
 
+#-----------------------------------------------------------------------------------------------------------------------------------
+#Company
+#Company Endpoints
+@app.route("/company/<int:company:id>", method=["GET"])
+def get_company(company_id):
+    """
+    Retrieve a company by database ID
+
+    GET /company/<company_id>
+
+    Returns:
+    - 200 JSON with company data, e.g. {"id": 1, "bezeichnung": "Beispiel GmbH", "mappe_abgegeben": false}
+    - 404 JSON {"error": "..."} if no company with this ID exists or a company-specific error occurs
+    - 500 JSON {"error": "Internal server error", "details": "..."} on unexpected errors
+    """
+    try:
+        company = Company.get_by_db_id(connector, company_id)
+        return jsonify(company.to_dict()), 200
+    except (CustomCompanyException, CompanyException) as e:
+        return jsonify({"error": str(e)}), 404
+    except Exception as e: # pylint: disable=broad-except
+        return jsonify({"error": "Internal server error", "details": str(e)}), 500
+
+@app.route("/company", methods=["POST"])
+def create_company():
+    """
+    Create a new company
+
+    POST /company
+
+    Returns:
+    - 200 JSON with company data on success
+    - 400 JSON {"error": "..."} if required fields are missing or invalid
+    - 500 JSON {"error": "..."} on other errors
+    """
+    data = request.json
+    if not data:
+        return jsonify({"error": "No data provided"}), 400
+    try:
+        company = Company(
+            connector,
+            name=data.get("name"),
+            folder_handed_over=data.get("folder_handed_over", False)
+        )
+        return jsonify(company.to_dict()), 200
+    except CompanyException as e:
+        return jsonify({"error": str(e)}), 400
+    except CustomCompanyException as e:
+        return jsonify({"error": str(e)}), 500
+    except Exception as e: # pylint: disable=broad-except
+        return jsonify({"error": "Internal server error", "details": str(e)}), 500
+
+@app.route("/company/<int:company_id>", methods=["PATCH"])
+def update_company(company_id):
+    """
+    Partially update company data (bezeichnung, mappe_abgegeben)
+
+    PATCH /company/<company_id>
+    
+    Returns:
+    - 200 JSON with updated company data and list of updated fields
+    - 400 JSON {"error": "..."} if no valid field is supplied or body is missing
+    - 404 JSON {"error": "..."} if the company does not exist
+    - 500 JSON {"error": "..."} on other errors
+    """
+    data = request.json
+    if not data:
+        return jsonify({"error": "No data provided"}), 400
+
+    try:
+        company = Company.get_by_db_id(connector, company_id)
+    except (CustomCompanyException, CompanyException)as e:
+        return jsonify({"error": str(e)}), 400
+
+    updates = []
+    try:
+        if "name" in data:
+            company.update_name(data["name"])
+            updates.append("name")
+        if "folder_handed_over" in data:
+            company.update_folder_handed_over(data["folder_handed_over"])
+            updates.append("folder_handed_over")
+        if not updates:
+            return jsonify({"error": "No valid fields to update"}), 400
+    except Exception as e: # pylint: disable=broad-except
+        return jsonify({"error": str(e)}), 500
+
+@app.route("/company/<int:company_id>", methods=["DELETE"])
+def delete_company(company_id):
+    """
+    Delete a company by database ID
+
+    DELETE /company/<company_id>
+
+    Returns:
+    - 200 JSON {"status": "success"} if deleted
+    - 404 JSON {"error": "..."} if not found
+    - 500 JSON {"error": "..."} on other errors
+    """
+    try:
+        company = Company.get_by_db_id(connector, company_id)
+        company.delete()
+        return jsonify({"status": "success", "deleted id": company_id}), 200
+    except (CustomCompanyException, CompanyException) as e:
+        return jsonify({"error": str(e)}), 404
+    except Exception as e: # pylint: disable=broad-except
+        return jsonify({"error": "Internal server error", "details": str(e)}), 500
+
+@app.route("/companysavingsbook", methods=["GET"])
+def get_all_company_savings_books():
+    """
+    Retrieve an overview of all company savings books.
+
+    GET /savingsbook
+
+    Returns:
+    - 200 JSON list of all savings books with company data,
+        e.g. [{"bezeichnung": "...", "saldo": "..."}]
+    - 500 JSON {"error": "..."} on failure
+    """
+    try:
+        result = CompanySavingsBook.get_all_company_savings_books(connector)
+        return jsonify(result), 200
+    except Exception as e: # pylint: disable=broad-except
+        return jsonify({"error": str(e)}), 500
+
+@app.route("/company/<int:company_id>/savingsbook", methods=["GET"])
+def get_savings_book_for_company(company_id):
+    """
+    Retrieve the savings book overview for a specific company.
+
+    GET /company/<int:company_id>/savingsbook
+
+    Returns:
+    - 200 JSON list with savings book info for the company,
+      e.g. [{"bezeichnung": "...", "saldo": ...}]
+    - 404 JSON {"error": "..."} if no savings book for customer found
+    """
+    try:
+        result = CompanySavingsBook.get_company_savings_book_overview(connector, company_id)
+        return jsonify(result), 200
+    except Exception as e: # pylint: disable=broad-except
+        return jsonify({"error": str(e)}), 404
+
+@app.route("/company/<int:company_id>/savingsbook", methods=["POST"])
+def create_savings_book_for_company(company_id):
+    """
+    Create a new savings book for a company.
+
+    POST /company/<int:company_id>/savingsbook
+
+    Returns:
+    - 201 JSON {"unternehmen_id": ..., "saldo": 0} on success
+    - 500 JSON {"error": "..."} on failure
+    """
+    try:
+        new_book = CompanySavingsBook.create_new(connector, company_id)
+        return jsonify(new_book), 201
+    except Exception as e: # pylint: disable=broad-except
+        return jsonify({"error": str(e)}), 500
+
+@app.route("/company/<int:company_id>/savingsbook/balance", methods=["PATCH"])
+def update_balance_for_company(company_id):
+    """
+    Update the balance of a company's savings book.
+
+    PATCH /company/<int:company_id>/savingsbook/balance
+
+    Expects JSON: {"balance": new_balance}
+
+    Returns:
+    - 200 JSON {"unternehmen_id": ..., "balance": ...} on success
+    - 400 JSON {"error": "No new balance provided"} if balance is missing
+    - 500 JSON {"error": "..."} on failure
+    """
+    data = request.json
+    if not data:
+        return jsonify({"error": "No new balance provided"}), 400
+    try:
+        updated = CompanySavingsBook.set_balance(connector, company_id, data["balance"])
+        return jsonify(updated), 200
+    except Exception as e: # pylint: disable=broad-except
+        return jsonify({"error": str(e)}), 500
+
+
+#-----------------------------------------------------------------------------------------------------------------------------------
+#End
 if __name__ == "__main__":
     try:
         app.run(host='0.0.0.0', port=5000)
@@ -318,4 +513,3 @@ if __name__ == "__main__":
             print("Database connection closed")
 
 #End-of-file
-
