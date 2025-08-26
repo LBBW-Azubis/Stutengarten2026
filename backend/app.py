@@ -319,7 +319,7 @@ def update_balance_for_customer(customer_id):
 #-----------------------------------------------------------------------------------------------------------------------------------
 #Company
 #Company Endpoints
-@app.route("/company/<int:company:id>", method=["GET"])
+@app.route("/company/<int:company_id>", methods=["GET"])
 def get_company(company_id):
     """
     Retrieve a company by database ID

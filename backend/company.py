@@ -31,7 +31,7 @@ class Company:
             cursor = conn.cursor()
             try:
                 cursor.execute(
-                    "INSERT INTO unternehmen (name, folder_handed_over) VALUES (%s, %s)",
+                    "INSERT INTO unternehmen (bezeichnung, mappe_abgegeben) VALUES (%s, %s)",
                     (name, folder_handed_over)
                 )
                 self.id = cursor.lastrowid
@@ -86,7 +86,7 @@ class Company:
         cursor = conn.cursor(dictionary=True)
         try:
             cursor.execute("SELECT * FROM unternehmen WHERE id = %s", (company_id,))
-            row = cursor.fetchone
+            row = cursor.fetchone()
         finally:
             cursor.close()
         if row:
@@ -114,7 +114,7 @@ class Company:
 
     def update_name(self, new_name):
         """updating company name"""
-        conn = self.db.get_connection
+        conn = self.db.get_connection()
         cursor = conn.cursor(dictionary=True)
         try:
             cursor.execute("UPDATE unternehmen SET bezeichnung = %s WHERE id = %s", (new_name, self.id))
@@ -128,7 +128,7 @@ class Company:
         conn = self.db.get_connection()
         cursor = conn.cursor(dictionary=True)
         try:
-            cursor.execute("UPDATE unternehmen SET mappe_abgegeben = %s WHERE id = %s", (folder_handed_over, self,id))
+            cursor.execute("UPDATE unternehmen SET mappe_abgegeben = %s WHERE id = %s", (folder_handed_over, self.id))
             conn.commit()
             self.folder_handed_over = folder_handed_over
         finally:
