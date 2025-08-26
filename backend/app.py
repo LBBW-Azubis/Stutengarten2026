@@ -388,7 +388,7 @@ def update_company(company_id):
     try:
         company = Company.get_by_db_id(connector, company_id)
     except (CustomCompanyException, CompanyException)as e:
-        return jsonify({"error": str(e)}), 400
+        return jsonify({"error": str(e)}), 404
 
     updates = []
     try:
@@ -400,6 +400,12 @@ def update_company(company_id):
             updates.append("folder_handed_over")
         if not updates:
             return jsonify({"error": "No valid fields to update"}), 400
+
+        return jsonify({
+            "status": "success",
+            "updated": updates,
+            "company": company.to_dict()
+        }), 200
     except Exception as e: # pylint: disable=broad-except
         return jsonify({"error": str(e)}), 500
 
