@@ -54,7 +54,7 @@ class CompanySavingsBook:
             cursor.execute("SELECT * FROM unternehmenssparbuecher WHERE unternehmen_fk = %s", (company_id,))
             for row in cursor.fetchall():
                 balance = row["saldo"]
-                cursor2.execute("SELECT * FROM unternehmen WHERE id = %s", (company_id))
+                cursor2.execute("SELECT * FROM unternehmen WHERE id = %s", (company_id,))
                 customer_row = cursor2.fetchone()
                 if customer_row:
                     result.append({
@@ -83,7 +83,7 @@ class CompanySavingsBook:
         except Exception as e:
             raise CustomCompanyException(f"Error creating savings book: {e}") from e
         finally:
-            conn.close()
+            cursor.close()
 
     @staticmethod
     def set_balance(db:DbConnector, company_id, balance):
