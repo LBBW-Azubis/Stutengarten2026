@@ -32,7 +32,7 @@ connector = DbConnector()
 connector.connect(ip, user, password, db, port)
 
 
-#--------------------------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------------------------------------- pylint:disable=line-too-long
 #XLSX-Files
 # Initialize XLSX reader, Customer Import and Company Import
 xlsx_reader = XlsxFileReader()
@@ -121,7 +121,7 @@ def health_check():
         return jsonify({"status": "error", "message": str(exc)}), 500
 
 
-#------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------ pylint:disable=line-too-long
 #Customer
 @app.route("/customer/<int:customer_id>", methods=["GET"])
 def get_customer(customer_id):
@@ -133,7 +133,8 @@ def get_customer(customer_id):
     Returns:
     - 200 JSON with customer data,
         e.g. {"id": 1, "stutengarten_id": "SG-2026", "vorname": "Max", "nachname": "Mustermann"}
-    - 404 JSON {"error": "..."} if no customer with this ID exists or a customer-specific error occurs
+    - 404 JSON {"error": "..."} if no customer with this ID exists 
+        or a customer-specific error occurs 
     - 500 JSON {"error": "Internal server error", "details": "..."} on unexpected errors
     """
     try:

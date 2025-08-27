@@ -19,13 +19,13 @@ class Customer:
                  stutengarten_id=None,
                  first_name=None,
                  last_name=None,
-                 id=None):
+                 id=None): # pylint: disable=redefined-builtin
         self.db = db
 
         if id is None:
             # Validate required fields before insert
             if stutengarten_id is None or first_name is None or last_name is None:
-                raise CustomerException("stutengarten_id, first_name and last_name must be set to create a new customer.")
+                raise CustomerException("stutengarten_id, first_name and last_name must be set to create a new customer.") # pylint:disable=line-too-long
 
             # Create new customer in DB
             conn = db.get_connection()
@@ -131,7 +131,7 @@ class Customer:
         conn = self.db.get_connection()
         cursor = conn.cursor()
         try:
-            cursor.execute("UPDATE kunden SET stutengarten_id = %s WHERE id = %s", (new_id, self.id))
+            cursor.execute("UPDATE kunden SET stutengarten_id = %s WHERE id = %s", (new_id, self.id)) # pylint:disable=line-too-long
             conn.commit()
             self.stutengarten_id = new_id
         finally:
@@ -142,7 +142,7 @@ class Customer:
         conn = self.db.get_connection()
         cursor = conn.cursor()
         try:
-            cursor.execute("UPDATE kunden SET vorname = %s WHERE id = %s", (new_first_name, self.id))
+            cursor.execute("UPDATE kunden SET vorname = %s WHERE id = %s", (new_first_name, self.id)) # pylint:disable=line-too-long
             conn.commit()
             self.first_name = new_first_name
         finally:
@@ -153,7 +153,7 @@ class Customer:
         conn = self.db.get_connection()
         cursor = conn.cursor()
         try:
-            cursor.execute("UPDATE kunden SET nachname = %s WHERE id = %s", (new_last_name, self.id))
+            cursor.execute("UPDATE kunden SET nachname = %s WHERE id = %s", (new_last_name, self.id)) # pylint:disable=line-too-long
             conn.commit()
             self.last_name = new_last_name
         finally:

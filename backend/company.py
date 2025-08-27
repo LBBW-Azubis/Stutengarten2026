@@ -18,7 +18,7 @@ class Company:
     def __init__(self, db:DbConnector,
                  name=None,
                  folder_handed_over=False,
-                 id=None):
+                 id=None): # pylint: disable=redefined-builtin
         self.db = db
 
         if id is None:
@@ -103,7 +103,7 @@ class Company:
         conn = self.db.get_connection()
         cursor = conn.cursor(dictionary=True)
         try:
-            cursor.execute("SELECT * FROM unternehmenssparbuecher WHERE unternehmen_fk = %s", (self.id,))
+            cursor.execute("SELECT * FROM unternehmenssparbuecher WHERE unternehmen_fk = %s", (self.id,)) # pylint:disable=line-too-long
             row = cursor.fetchone()
         finally:
             cursor.close()
@@ -117,7 +117,7 @@ class Company:
         conn = self.db.get_connection()
         cursor = conn.cursor(dictionary=True)
         try:
-            cursor.execute("UPDATE unternehmen SET bezeichnung = %s WHERE id = %s", (new_name, self.id))
+            cursor.execute("UPDATE unternehmen SET bezeichnung = %s WHERE id = %s", (new_name, self.id)) # pylint:disable=line-too-long
             conn.commit()
             self.name = new_name
         finally:
@@ -128,7 +128,7 @@ class Company:
         conn = self.db.get_connection()
         cursor = conn.cursor(dictionary=True)
         try:
-            cursor.execute("UPDATE unternehmen SET mappe_abgegeben = %s WHERE id = %s", (folder_handed_over, self.id))
+            cursor.execute("UPDATE unternehmen SET mappe_abgegeben = %s WHERE id = %s", (folder_handed_over, self.id)) # pylint:disable=line-too-long
             conn.commit()
             self.folder_handed_over = folder_handed_over
         finally:

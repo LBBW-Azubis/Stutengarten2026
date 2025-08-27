@@ -7,7 +7,7 @@ class CompanySavingsBook:
     Class to handle companies savings book (Sparbuch) operations for companies
     All methods use dicts for better JSON compatibility.
     """
-    
+
     @staticmethod
     def get_all_company_savings_books(db: DbConnector):
         """
@@ -51,7 +51,7 @@ class CompanySavingsBook:
         cursor2 = conn.cursor(dictionary=True)
 
         try:
-            cursor.execute("SELECT * FROM unternehmenssparbuecher WHERE unternehmen_fk = %s", (company_id,))
+            cursor.execute("SELECT * FROM unternehmenssparbuecher WHERE unternehmen_fk = %s", (company_id,)) # pylint:disable=line-too-long
             for row in cursor.fetchall():
                 balance = row["saldo"]
                 cursor2.execute("SELECT * FROM unternehmen WHERE id = %s", (company_id,))
@@ -77,7 +77,7 @@ class CompanySavingsBook:
         conn = db.get_connection()
         cursor = conn.cursor()
         try:
-            cursor.execute("INSERT INTO unternehmenssparbuecher (unternehmen_fk) VALUES (%s)", (company_id,))
+            cursor.execute("INSERT INTO unternehmenssparbuecher (unternehmen_fk) VALUES (%s)", (company_id,)) # pylint:disable=line-too-long
             conn.commit()
             return {"company_id": company_id, "balance": 0}
         except Exception as e:
