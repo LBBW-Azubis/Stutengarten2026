@@ -84,10 +84,10 @@ class CompanyTransaction:
         """
         transactions = []
         conn = db.get_connection()
-        cursor = conn.cursor()
+        cursor = conn.cursor(dictionary=True)
 
         try:
-            query = """"
+            query = """
             SELECT uu.*, u.bezeichnung as company_name
             FROM unternehmensumsaetze uu
             JOIN unternehmenssparbuecher us ON uu.unternehmenssparbuecher_fk = us.id
@@ -148,7 +148,7 @@ class CompanyTransaction:
 
         except Exception as err: #pylint: disable=broad-except
             conn.rollback()
-            print(f"Erro updating company statistics: {err}")
+            print(f"Error updating company statistics: {err}")
         finally:
             cursor.close()
 
@@ -171,7 +171,7 @@ class CompanyTransaction:
                     "weekday": row["wochentage"],
                     "total_amount": row["gesamtumsatz"] or 0
                 })
-                return result
+            return result
         finally:
             cursor.close()
 
