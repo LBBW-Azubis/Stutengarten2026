@@ -70,42 +70,6 @@ class CompanyTransaction:
             self.purpose = purpose
 
     @staticmethod
-    def get_all_company_transactions(db:DbConnector, company_savings_book_id):
-        """
-        Returns all transactions for a specific company savings book.
-
-        Args:
-            db: Database connector
-            company_savings_book_id: ID of the company savings book
-        
-        Returns:
-            List of CompanyTransaction objects
-        """
-        transactions = []
-        conn = db.get_connection
-        cursor = conn.cursor()
-
-        try:
-            cursor.execute(
-                "SELECT * FROM unternehmensumsaetze WHERE unternehmenssparbuecher_fk = %S ORDER BY id DESC", #pylint: disable=line-too-long
-                (company_savings_book_id,)
-            )
-
-            for row in cursor.fetchall():
-                transaction = CompanyTransaction(
-                    db,
-                    row["unternehmenssparbuecher_fk"],
-                    row["betrag"],
-                    row["verwendungszweck"],
-                    transaction_id=row["id"]
-                )
-                transactions.append(transaction)
-
-                return transactions
-        finally:
-            cursor.close()
-
-    @staticmethod
     def get_all_transactions_for_company(db:DbConnector, company_id):
         """
         Returns all transactions for a specific company.

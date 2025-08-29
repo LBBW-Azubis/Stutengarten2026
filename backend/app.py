@@ -12,6 +12,7 @@ from customer import Customer, CustomException, CustomerException
 from saving_book import SavingsBook
 from company import Company, CustomCompanyException, CompanyException
 from company_saving_book import CompanySavingsBook
+from company_transactions import CompanyTransaction, CompanyTransactionException
 
 # Initialize Flask app
 app = Flask(__name__)
@@ -506,6 +507,108 @@ def update_balance_for_company(company_id):
         return jsonify(updated), 200
     except Exception as e: # pylint: disable=broad-except
         return jsonify({"error": str(e)}), 500
+
+@app.route("/company/<int:company_id>/transactions", methods=["GET"])
+def get_company_transactions(company_id):
+    """
+    Retrieve all transactions for a specific company.
+    
+    GET /company/<company_id>/transactions
+
+    Returns:
+    - 200 JSON list of transactions with company info
+    - 404 JSON {"error": "..."} if company not found
+    - 500 JSON {"error": "..."} on other errors
+    """
+    try:
+        transactions = CompanyTransaction.get_all_transactions_for_company(connector, company_id)
+        return jsonify([transaction.to_dict() for transaction in transactions]), 200
+    except Exception as e: # pylint: disable=broad-except
+        return jsonify({"error": f"Error retrieving transactions: {str(e)}"}), 500
+
+@app.route("/company/<int:company_id>/transactions", methods=["POST"])
+def create_company_transaction(company_id):
+    """
+    Create a new transaction for a company
+
+    POST /company/<company_id>/transactions
+
+    Expects JSON: {
+        "amount": 100,  # Can be negative for withdrawals
+        "purpose": "Beschreibung der Transaktion"
+    }
+
+    Returns:
+    - 201 JSON with transaction data on success
+    - 400 JSON {"error": "..."} if required fields are missing
+    - 404 JSON {"error": "..."} if company or savings book not found
+    - 500 JSON {"error": "..."} on other errors
+    """
+    data = request.json
+    if not data:
+        return jsonify({"error": "No data provided"}), 400
+
+    amount = data.get("amount")
+    purpose = data.get("purpose", "") #Default is an empty string
+
+    if amount is None:
+        return jsonify({"error": "Amount is required"}), 400
+
+    try:
+        #Get company to ensure it exists
+        company = Company.get_by_db_id(connector, company_id)
+
+        #Get company savings book
+        company_savings_book = company.get_savings_book()
+
+        #Get savings book ID from database
+        conn = connector.get_connection()
+        cursor = conn.cursor(dictionary=True)
+        try:
+            cursor.execute("SELECT id from unternehmenssparbuecher WHERE unternehmen_fk = %s",
+                           (company_id,))
+            savings_book_row = cursor.fetchone()
+            if not savings_book_row:
+                return jsonify({"error": "No savings book found for this company"}), 404
+            savings_book_id = savings_book_row["id"]
+        finally:
+            cursor.close()
+
+        #Create transaction
+        transaction = CompanyTransaction(
+            connector,
+            savings_book_id,
+            amount,
+            purpose,
+            company_savings_book
+        )
+
+        return jsonify(transaction.to_dict()), 201
+
+    except (CustomCompanyException, CompanyException) as e:
+        return jsonify({"error": str(e)}), 404
+    except CompanyTransactionException as e:
+        return jsonify({"error": str(e)}), 400
+    except Exception as e: # pylint: disable=broad-except
+        return jsonify({"error": f"Internal server error: {str(e)}"}), 500
+
+@app.route("/company/statistics", methods=["GET"])
+def get_company_statistics():
+    """
+    Retrieve company transaction statistics by weekday
+
+    GET /company/statistics
+
+    Returns:
+    - 200 JSON list of statistics by weekday
+        e.g. [{"weekday": "MONDAY", "total_amount": 1000}, ...]
+    - 500 JSON {"error": "..."} on errors
+    """
+    try:
+        statistics = CompanyTransaction.get_company_statistics(connector)
+        return jsonify(statistics), 200
+    except Exception as e: # pylint: disable=broad-except
+        return jsonify({"error": f"Error retrieving statistics: {str(e)}"}), 500
 
 
 #-----------------------------------------------------------------------------------------------------------------------------------
