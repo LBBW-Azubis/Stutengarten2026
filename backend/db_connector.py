@@ -22,6 +22,7 @@ class DbConnector:
             print("Connection successfull")
         except mysql.connector.Error as e:
             print("Error connecting to database:", e)
+            raise # 
 
     def close(self):
         """Function to close connection to database"""

@@ -59,12 +59,20 @@ CREATE TABLE unternehmensumsaetze (
 	
 
 -- Statistik
-CREATE TABLE statistik (
+CREATE TABLE kundenstatistik (
 	id INT AUTO_INCREMENT PRIMARY KEY,
 	wochentage ENUM('MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY') NOT NULL,
 	gesamtumsatz INT
 	);
 	
+
+-- Unternehmensstatistik
+CREATE TABLE unternehmensstatistik (
+	id INT AUTO_INCREMENT PRIMARY KEY,
+	wochentage ENUM('MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY') NOT NULL,
+	gesamtumsatz INT
+	);
+
 
 -- Wirtschaftsbeihilfe
 CREATE TABLE wirtschaftsbeihilfe (
