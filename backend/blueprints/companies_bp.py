@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request, current_app
-from backend.company import Company, CustomCompanyException, CompanyException
-from backend.company_saving_book import CompanySavingsBook
-from backend.company_transactions import CompanyTransaction, CompanyTransactionException
+from company import Company, CustomCompanyException, CompanyException
+from company_saving_book import CompanySavingsBook
+from company_transactions import CompanyTransaction, CompanyTransactionException
 
 companies_bp = Blueprint("companies", __name__)
 

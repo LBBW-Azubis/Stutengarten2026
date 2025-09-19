@@ -7,40 +7,27 @@ from blueprints.customers_bp import customers_bp  # pylint: disable=import-error
 from blueprints.companies_bp import companies_bp  # pylint: disable=import-error
 from db_connector import DbConnector
 
-def create_app():
-    app = Flask(__name__)
+app = Flask(__name__)
 
-    config = configparser.ConfigParser()
-    config.read("server.config")
+config = configparser.ConfigParser()
+config.read("server.config")
 
-    ip = config["server"]["IPAddress"]
-    port = int(config["server"]["port"])
-    db = config["server"]["database"]
-    user = config["server"]["user"]
-    password = config["server"]["password"]
+ip = config["server"]["IPAddress"]
+port = int(config["server"]["port"])
+db = config["server"]["database"]
+user = config["server"]["user"]
+password = config["server"]["password"]
 
-    connector = DbConnector()
-    connector.connect(ip, user, password, db, port)
-    app.config["DB_CONNECTOR"] = connector
+connector = DbConnector()
+connector.connect(ip, user, password, db, port)
+app.config["DB_CONNECTOR"] = connector
 
-    app.register_blueprint(health_bp)
-    app.register_blueprint(imports_bp)
-    app.register_blueprint(customers_bp)
-    app.register_blueprint(companies_bp)
-
-    @app.teardown_appcontext
-    def close_db_connection(exception=None):  # pylint: disable=unused-argument
-        conn = app.config.get("DB_CONNECTOR")
-        if conn:
-            try:
-                conn.close()
-            except Exception:
-                pass
-
-    return app
+app.register_blueprint(health_bp)
+app.register_blueprint(imports_bp)
+app.register_blueprint(customers_bp)
+app.register_blueprint(companies_bp)
 
 if __name__ == "__main__":
-    app = create_app()
     try:
         app.run(host="0.0.0.0", port=5000)
     finally:

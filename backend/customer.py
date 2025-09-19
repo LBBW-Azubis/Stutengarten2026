@@ -110,13 +110,13 @@ class Customer:
         try:
             # First attempt: column name 'kunden'
             try:
-                cursor.execute("SELECT * FROM sparbuecher WHERE kunden = %s", (self.id,))
+                cursor.execute("SELECT * FROM kundensparbuecher WHERE kunden = %s", (self.id,))
                 row = cursor.fetchone()
             except Exception:  # pylint: disable=broad-except
                 # Fallback: if column 'kunden' doesn't exist, try 'kunden_id'
                 cursor.close()
                 cursor = conn.cursor(dictionary=True)
-                cursor.execute("SELECT * FROM sparbuecher WHERE kunden_id = %s", (self.id,))
+                cursor.execute("SELECT * FROM kundensparbuecher WHERE kunden_fk = %s", (self.id,))
                 row = cursor.fetchone()
         finally:
             cursor.close()

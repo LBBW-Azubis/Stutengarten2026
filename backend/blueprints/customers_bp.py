@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, request, current_app
-from backend.customer import Customer, CustomException, CustomerException
-from backend.saving_book import SavingsBook
+from customer import Customer, CustomException, CustomerException
+from customer_transactions import CustomerTransaction, CustomerTransactionException
+from saving_book import SavingsBook
 
 customers_bp = Blueprint("customers", __name__)
 
@@ -150,4 +151,61 @@ def update_balance_for_customer(customer_id):
         return jsonify(updated), 200
     except Exception as e:  # pylint: disable=broad-except
         return jsonify({"error": str(e)}), 500
+
+@customers_bp.route("/customer/<int:customer_id>/transactions", methods=["POST"])
+def create_customer_transaction(customer_id):
+    """
+    Create a new transaction for a customer
+    Expects JSON: {"amount": 100, "purpose": "..."}
+    """
+    data = request.json
+    if not data:
+        return jsonify({"error": "No data provided"}), 400
+
+    amount = data.get("amount")
+    purpose = data.get("purpose", "")
+
+    if amount is None:
+        return jsonify({"error": "Amount is required"}), 400
+
+    connector = current_app.config["DB_CONNECTOR"]
+    try:
+        # Ensure customer exists
+        customer = Customer.get_by_db_id(connector, customer_id)
+
+        # Get customer savings book object
+        customer_savings_book = customer.get_savings_book()
+
+        # Get savings book ID from database (Tabellenname angepasst!)
+        conn = connector.get_connection()
+        cursor = conn.cursor(dictionary=True)
+        try:
+            cursor.execute(
+                "SELECT id FROM kundensparbuecher WHERE kunden_fk = %s",
+                (customer_id,),
+            )
+            savings_book_row = cursor.fetchone()
+            if not savings_book_row:
+                return jsonify({"error": "No savings book found for this customer"}), 404
+            savings_book_id = savings_book_row["id"]
+        finally:
+            cursor.close()
+
+        # Create transaction (Tabellenname für Umsätze ebenfalls anpassen!)
+        transaction = CustomerTransaction(
+            connector,
+            savings_book_id,
+            amount,
+            purpose,
+            customer_savings_book,
+        )
+
+        return jsonify(transaction.to_dict()), 201
+
+    except (CustomException, CustomerException) as e:
+        return jsonify({"error": str(e)}), 404
+    except CustomerTransactionException as e:
+        return jsonify({"error": str(e)}), 400
+    except Exception as e:  # pylint: disable=broad-except
+        return jsonify({"error": f"Internal server error: {str(e)}"}), 500
 #End-of-file

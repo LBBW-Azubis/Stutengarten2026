@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request, current_app
-from backend.customer_import import CustomerImport
-from backend.company_import import CompanyImport
+from customer_import import CustomerImport
+from company_import import CompanyImport
 
 imports_bp = Blueprint("imports", __name__)
 
