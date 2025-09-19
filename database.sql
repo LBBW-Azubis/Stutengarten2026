@@ -20,17 +20,17 @@ CREATE TABLE kundensparbuecher (
 	
 CREATE TABLE kundenumsaetze (
 	id INT AUTO_INCREMENT PRIMARY KEY,
-	sparbuch_fk INT NOT NULL,
+	kundensparbuch_fk INT NOT NULL,
 	betrag INT NOT NULL,
 	verwendungszweck VARCHAR(255),
-	FOREIGN	KEY (sparbuch_fk) REFERENCES kundensparbuecher(id) ON DELETE CASCADE
+	FOREIGN	KEY (kundensparbuch_fk) REFERENCES kundensparbuecher(id) ON DELETE CASCADE
 	);
 
 CREATE TABLE kundenaktien (
 	id INT AUTO_INCREMENT PRIMARY KEY,
 	besitzer_fk INT NOT NULL,
 	wert INT NOT NULL DEFAULT 3,
-	wochentage ENUM('MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY') NOT NULL,
+	wochentage ENUM('MONDAY', 'DIENSTAG', 'MITTWOCH', 'DONNERSTAG', 'FREITAG', 'SAMSTAG', 'SONNTAG') NOT NULL,
 	FOREIGN KEY (besitzer_fk) REFERENCES kunden(id) ON DELETE CASCADE
 	);
 
@@ -61,7 +61,7 @@ CREATE TABLE unternehmensumsaetze (
 -- Statistik
 CREATE TABLE kundenstatistik (
 	id INT AUTO_INCREMENT PRIMARY KEY,
-	wochentage ENUM('MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY') NOT NULL,
+	wochentage ENUM('MONTAG', 'DIENSTAG', 'MITTWOCH', 'DONNERSTAG', 'FREITAG', 'SAMSTAG', 'SONNTAG') NOT NULL,
 	gesamtumsatz INT
 	);
 	
@@ -69,7 +69,7 @@ CREATE TABLE kundenstatistik (
 -- Unternehmensstatistik
 CREATE TABLE unternehmensstatistik (
 	id INT AUTO_INCREMENT PRIMARY KEY,
-	wochentage ENUM('MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY') NOT NULL,
+	wochentage ENUM('MONDAY', 'DIENSTAG', 'MITTWOCH', 'DONNERSTAG', 'FREITAG', 'SAMSTAG', 'SONNTAG') NOT NULL,
 	gesamtumsatz INT
 	);
 
