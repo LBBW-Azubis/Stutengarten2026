@@ -30,7 +30,7 @@ CREATE TABLE kundenaktien (
 	id INT AUTO_INCREMENT PRIMARY KEY,
 	besitzer_fk INT NOT NULL,
 	wert INT NOT NULL DEFAULT 3,
-	wochentage ENUM('Montag', 'DIENSTAG', 'MITTWOCH', 'DONNERSTAG', 'FREITAG', 'SAMSTAG', 'SONNTAG') NOT NULL,
+	wochentage ENUM('MONTAG', 'DIENSTAG', 'MITTWOCH', 'DONNERSTAG', 'FREITAG', 'SAMSTAG', 'SONNTAG') NOT NULL,
 	FOREIGN KEY (besitzer_fk) REFERENCES kunden(id) ON DELETE CASCADE
 	);
 
@@ -69,7 +69,7 @@ CREATE TABLE kundenstatistik (
 -- Unternehmensstatistik
 CREATE TABLE unternehmensstatistik (
 	id INT AUTO_INCREMENT PRIMARY KEY,
-	wochentage ENUM('Montag', 'DIENSTAG', 'MITTWOCH', 'DONNERSTAG', 'FREITAG', 'SAMSTAG', 'SONNTAG') NOT NULL,
+	wochentage ENUM('MONTAG', 'DIENSTAG', 'MITTWOCH', 'DONNERSTAG', 'FREITAG', 'SAMSTAG', 'SONNTAG') NOT NULL,
 	gesamtumsatz INT
 	);
 
@@ -83,3 +83,4 @@ CREATE TABLE wirtschaftsbeihilfe (
 	FOREIGN KEY (unternehmen_fk) REFERENCES unternehmen(id) ON DELETE CASCADE
 
 	);
+
