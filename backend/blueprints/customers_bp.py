@@ -208,4 +208,16 @@ def create_customer_transaction(customer_id):
         return jsonify({"error": str(e)}), 400
     except Exception as e:  # pylint: disable=broad-except
         return jsonify({"error": f"Internal server error: {str(e)}"}), 500
+    
+@customers_bp.route("/customer/<int:customer_id>/transactions", methods=["GET"])
+def get_customer_transactions(customer_id):
+    """
+    Retrieve all transactions for a specific customer.
+    """
+    connector = current_app.config["DB_CONNECTOR"]
+    try:
+        transactions = CustomerTransaction.get_all_transactions_for_customer(connector, customer_id)
+        return jsonify([transaction.to_dict() for transaction in transactions]), 200
+    except Exception as e:  # pylint: disable=broad-except
+        return jsonify({"error": f"Error retrieving transactions: {str(e)}"}), 500 
 #End-of-file

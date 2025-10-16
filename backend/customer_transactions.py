@@ -106,7 +106,7 @@ class CustomerTransaction:
                     transaction_id=row["id"]
                 )
                 #Add customer name for convenience
-                transaction.customer_name = f'{row["vorname"]} {row["nachname"]}'
+                transaction.customer_name = f'{row["vorname"]} {row["nachname"]}' # pylint:disable=attribute-defined-outside-init
                 transactions.append(transaction)
 
             return transactions
