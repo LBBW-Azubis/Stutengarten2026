@@ -8,7 +8,7 @@ CREATE TABLE customers (
 	id INT AUTO_INCREMENT PRIMARY KEY,
 	stutengarten_id VARCHAR(50) UNIQUE NOT NULL,
 	first_name VARCHAR(50) NOT NULL,
-	surname VARCHAR(50) NOT NULL
+	last_name VARCHAR(50) NOT NULL
 	);
 
 CREATE TABLE customer_savings_books (
