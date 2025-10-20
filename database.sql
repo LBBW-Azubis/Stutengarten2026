@@ -31,7 +31,7 @@ CREATE TABLE kundenaktien (
 	besitzer_fk INT NOT NULL,
 	wert INT NOT NULL DEFAULT 3,
 	wochentage ENUM('MONTAG', 'DIENSTAG', 'MITTWOCH', 'DONNERSTAG', 'FREITAG', 'SAMSTAG', 'SONNTAG') NOT NULL,
-	FOREIGN KEY (besitzer_fk) REFERENCES kunden(id) ON DELETE CASCADE
+	FOREIGN KEY (besitzer_fk) REFERENCES kunden(stutengarten_id) ON DELETE CASCADE
 	);
 
 
