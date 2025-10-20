@@ -96,7 +96,7 @@ def delete_customers(customer_id):
         return jsonify({"error": "Internal server error", "details": str(e)}), 500
 
 
-@customers_bp.route("/savingsbook", methods=["GET"])
+@customers_bp.route("/customersavingsbook", methods=["GET"])
 def get_all_savings_books():
     """
     Retrieve an overview of all savings books.
