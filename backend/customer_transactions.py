@@ -38,7 +38,7 @@ class CustomerTransaction:
                 cursor.execute(
                     "INSERT INTO kundenumsaetze (sparbuch_fk, betrag, verwendungszweck) VALUES (%s, %s, %s)",
                     (customer_savings_book_id, amount, purpose)
-                )
+                    )
                 self.id = cursor.lastrowid
                 self.customer_savings_book_id = customer_savings_book_id
                 self.amount = amount
@@ -70,7 +70,7 @@ class CustomerTransaction:
             self.purpose = purpose
 
     @staticmethod
-    def get_all_transactions_for_customer(db:DbConnector, customer_id):
+    def get_all_transactions_for_customer(db:DbConnector, stutengarten_id):
         """
         Returns all transactions for a specific customer.
         Since each customer has only one savings book, this returns all customer transactions.
@@ -92,10 +92,10 @@ class CustomerTransaction:
             FROM kundenumsaetze ku
             JOIN kundensparbuecher ks ON ku.sparbuch_fk = ks.id
             JOIN kunden k ON ks.kunden_fk = k.id
-            WHERE k.id = %s
+            WHERE k.stutengarten_id = %s
             ORDER BY ku.id DESC
             """
-            cursor.execute(query, (customer_id,))
+            cursor.execute(query, (stutengarten_id,))
 
             for row in cursor.fetchall():
                 transaction = CustomerTransaction(

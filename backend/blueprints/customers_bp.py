@@ -1,18 +1,18 @@
 from flask import Blueprint, jsonify, request, current_app
 from customer import Customer, CustomException, CustomerException
 from customer_transactions import CustomerTransaction, CustomerTransactionException
-from saving_book import SavingsBook
+from customer_saving_book import CustomerSavingsBook
 
 customers_bp = Blueprint("customers", __name__)
 
-@customers_bp.route("/customer/<int:customer_id>", methods=["GET"])
-def get_customer(customer_id):
+@customers_bp.route("/customer/<string:stutengarten_id>", methods=["GET"])
+def get_customer(stutengarten_id):
     """
     Retrieve a customer by database ID
     """
     connector = current_app.config["DB_CONNECTOR"]
     try:
-        customer = Customer.get_by_db_id(connector, customer_id)
+        customer = Customer.get_by_stutengarten_id(connector, stutengarten_id)
         return jsonify(customer.to_dict()), 200
     except (CustomException, CustomerException) as e:
         return jsonify({"error": str(e)}), 404
@@ -46,8 +46,8 @@ def create_customer():
         return jsonify({"error": "Internal server error", "details": str(e)}), 500
 
 
-@customers_bp.route("/customer/<int:customer_id>", methods=["PATCH"])
-def update_customer(customer_id):
+@customers_bp.route("/customer/<string:stutengarten_id>", methods=["PATCH"])
+def update_customer(stutengarten_id):
     """
     Partially update customer data (stutengarten_id, first_name, last_name)
     """
@@ -57,7 +57,7 @@ def update_customer(customer_id):
 
     connector = current_app.config["DB_CONNECTOR"]
     try:
-        customer = Customer.get_by_db_id(connector, customer_id)
+        customer = Customer.get_by_stutengarten_id(connector, stutengarten_id)
     except (CustomException, CustomerException) as e:
         return jsonify({"error": str(e)}), 404
 
@@ -80,16 +80,16 @@ def update_customer(customer_id):
         return jsonify({"error": str(e)}), 500
 
 
-@customers_bp.route("/customer/<int:customer_id>", methods=["DELETE"])
-def delete_customers(customer_id):
+@customers_bp.route("/customer/<string:stutengarten_id>", methods=["DELETE"])
+def delete_customers(stutengarten_id):
     """
     Delete a customer by database ID
     """
     connector = current_app.config["DB_CONNECTOR"]
     try:
-        customer = Customer.get_by_db_id(connector, customer_id)
+        customer = Customer.get_by_stutengarten_id(connector, stutengarten_id)
         customer.delete()
-        return jsonify({"status": "success", "deleted id": customer_id}), 200
+        return jsonify({"status": "success", "deleted id": stutengarten_id}), 200
     except (CustomException, CustomerException) as e:
         return jsonify({"error": str(e)}), 404
     except Exception as e:  # pylint: disable=broad-except
@@ -103,40 +103,40 @@ def get_all_savings_books():
     """
     connector = current_app.config["DB_CONNECTOR"]
     try:
-        result = SavingsBook.get_all_savings_books(connector)
+        result = CustomerSavingsBook.get_all_savings_books(connector)
         return jsonify(result), 200
     except Exception as e:  # pylint: disable=broad-except
         return jsonify({"error": str(e)}), 500
 
 
-@customers_bp.route("/customer/<int:customer_id>/savingsbook", methods=["GET"])
-def get_savings_book_for_customer(customer_id):
+@customers_bp.route("/customer/<string:stutengarten_id>/savingsbook", methods=["GET"])
+def get_savings_book_for_customer(stutengarten_id):
     """
     Retrieve the savings book overview for a specific customer.
     """
     connector = current_app.config["DB_CONNECTOR"]
     try:
-        result = SavingsBook.get_savings_book_overview(connector, customer_id)
+        result = CustomerSavingsBook.get_savings_book_overview(connector, stutengarten_id)
         return jsonify(result), 200
     except Exception as e:  # pylint: disable=broad-except
         return jsonify({"error": str(e)}), 404
 
 
-@customers_bp.route("/customer/<int:customer_id>/savingsbook", methods=["POST"])
-def create_savings_book_for_customer(customer_id):
+@customers_bp.route("/customer/<string:stutengarten_id>/savingsbook", methods=["POST"])
+def create_savings_book_for_customer(stutengarten_id):
     """
     Create a new savings book for a customer.
     """
     connector = current_app.config["DB_CONNECTOR"]
     try:
-        new_book = SavingsBook.create_new(connector, customer_id)
+        new_book = CustomerSavingsBook.create_new(connector, stutengarten_id)
         return jsonify(new_book), 201
     except Exception as e:  # pylint: disable=broad-except
         return jsonify({"error": str(e)}), 500
 
 
-@customers_bp.route("/customer/<int:customer_id>/savingsbook/balance", methods=["PATCH"])
-def update_balance_for_customer(customer_id):
+@customers_bp.route("/customer/<string:stutengarten_id>/savingsbook/balance", methods=["PATCH"])
+def update_balance_for_customer(stutengarten_id):
     """
     Update the balance of a customer's savings book.
     Expects JSON: {"balance": new_balance}
@@ -147,13 +147,13 @@ def update_balance_for_customer(customer_id):
 
     connector = current_app.config["DB_CONNECTOR"]
     try:
-        updated = SavingsBook.set_balance(connector, customer_id, data["balance"])
+        updated = CustomerSavingsBook.set_balance(connector, stutengarten_id, data["balance"])
         return jsonify(updated), 200
     except Exception as e:  # pylint: disable=broad-except
         return jsonify({"error": str(e)}), 500
 
-@customers_bp.route("/customer/<int:customer_id>/transactions", methods=["POST"])
-def create_customer_transaction(customer_id):
+@customers_bp.route("/customer/<string:stutengarten_id>/transactions", methods=["POST"])
+def create_customer_transaction(stutengarten_id):
     """
     Create a new transaction for a customer
     Expects JSON: {"amount": 100, "purpose": "..."}
@@ -171,7 +171,7 @@ def create_customer_transaction(customer_id):
     connector = current_app.config["DB_CONNECTOR"]
     try:
         # Ensure customer exists
-        customer = Customer.get_by_db_id(connector, customer_id)
+        customer = Customer.get_by_stutengarten_id(connector, stutengarten_id)
 
         # Get customer savings book object
         customer_savings_book = customer.get_savings_book()
@@ -182,7 +182,7 @@ def create_customer_transaction(customer_id):
         try:
             cursor.execute(
                 "SELECT id FROM kundensparbuecher WHERE kunden_fk = %s",
-                (customer_id,),
+                (customer.id,),
             )
             savings_book_row = cursor.fetchone()
             if not savings_book_row:
@@ -209,15 +209,27 @@ def create_customer_transaction(customer_id):
     except Exception as e:  # pylint: disable=broad-except
         return jsonify({"error": f"Internal server error: {str(e)}"}), 500
     
-@customers_bp.route("/customer/<int:customer_id>/transactions", methods=["GET"])
-def get_customer_transactions(customer_id):
+@customers_bp.route("/customer/<string:stutengarten_id>/transactions", methods=["GET"])
+def get_customer_transactions(stutengarten_id):
     """
     Retrieve all transactions for a specific customer.
     """
     connector = current_app.config["DB_CONNECTOR"]
     try:
-        transactions = CustomerTransaction.get_all_transactions_for_customer(connector, customer_id)
+        transactions = CustomerTransaction.get_all_transactions_for_customer(connector, stutengarten_id)
         return jsonify([transaction.to_dict() for transaction in transactions]), 200
     except Exception as e:  # pylint: disable=broad-except
         return jsonify({"error": f"Error retrieving transactions: {str(e)}"}), 500 
+
+@customers_bp.route("/customer/statistics", methods=["GET"])
+def get_customer_statistics():
+    """
+    Returns customer transaction statistics by weekday.
+    """
+    connector = current_app.config["DB_CONNECTOR"]
+    try:
+        result = CustomerTransaction.get_customer_statistics(connector)
+        return jsonify(result), 200
+    except Exception as e:  # pylint: disable=broad-except
+        return jsonify({"error": str(e)}), 500
 #End-of-file

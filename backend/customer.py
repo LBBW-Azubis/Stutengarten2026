@@ -58,7 +58,7 @@ class Customer:
         conn = self.db.get_connection()
         cursor = conn.cursor()
         try:
-            cursor.execute("DELETE FROM kunden WHERE id = %s", (self.id,))
+            cursor.execute("DELETE FROM kunden WHERE stutengarten_id = %s", (self.stutengarten_id,))
             conn.commit()
         finally:
             cursor.close()
@@ -108,12 +108,10 @@ class Customer:
         conn = self.db.get_connection()
         cursor = conn.cursor(dictionary=True)
         try:
-            # First attempt: column name 'kunden'
             try:
                 cursor.execute("SELECT * FROM kundensparbuecher WHERE kunden = %s", (self.id,))
                 row = cursor.fetchone()
             except Exception:  # pylint: disable=broad-except
-                # Fallback: if column 'kunden' doesn't exist, try 'kunden_id'
                 cursor.close()
                 cursor = conn.cursor(dictionary=True)
                 cursor.execute("SELECT * FROM kundensparbuecher WHERE kunden_fk = %s", (self.id,))
@@ -121,7 +119,7 @@ class Customer:
         finally:
             cursor.close()
         if row:
-            return SavingsBookRef(self.id, row["saldo"])
+            return SavingsBookRef(self.stutengarten_id, row["saldo"])
         else:
             raise CustomException("No savings book available")
 
@@ -131,7 +129,7 @@ class Customer:
         conn = self.db.get_connection()
         cursor = conn.cursor()
         try:
-            cursor.execute("UPDATE kunden SET stutengarten_id = %s WHERE id = %s", (new_id, self.id)) # pylint:disable=line-too-long
+            cursor.execute("UPDATE kunden SET stutengarten_id = %s WHERE stutengarten_id = %s", (new_id, self.stutengarten_id)) # pylint:disable=line-too-long
             conn.commit()
             self.stutengarten_id = new_id
         finally:
@@ -142,7 +140,7 @@ class Customer:
         conn = self.db.get_connection()
         cursor = conn.cursor()
         try:
-            cursor.execute("UPDATE kunden SET vorname = %s WHERE id = %s", (new_first_name, self.id)) # pylint:disable=line-too-long
+            cursor.execute("UPDATE kunden SET vorname = %s WHERE stutengarten_id = %s", (new_first_name, self.stutengarten_id)) # pylint:disable=line-too-long
             conn.commit()
             self.first_name = new_first_name
         finally:
@@ -153,7 +151,7 @@ class Customer:
         conn = self.db.get_connection()
         cursor = conn.cursor()
         try:
-            cursor.execute("UPDATE kunden SET nachname = %s WHERE id = %s", (new_last_name, self.id)) # pylint:disable=line-too-long
+            cursor.execute("UPDATE kunden SET nachname = %s WHERE stutengarten_id = %s", (new_last_name, self.stutengarten_id)) # pylint:disable=line-too-long
             conn.commit()
             self.last_name = new_last_name
         finally:
