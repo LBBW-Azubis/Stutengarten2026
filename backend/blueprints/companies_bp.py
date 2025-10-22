@@ -32,7 +32,7 @@ def get_company_by_name(bezeichnung):
     """
     Retrieve a company by name in database
     """
-    connector = current_app.config["DB_Connector"]
+    connector = current_app.config["DB_CONNECTOR"]
     try:
         company = Company.get_by_name(connector, bezeichnung)
         return jsonify(company.to_dict()), 200
