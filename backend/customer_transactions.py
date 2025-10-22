@@ -36,7 +36,7 @@ class CustomerTransaction:
             cursor = conn.cursor()
             try:
                 cursor.execute(
-                    "INSERT INTO kundenumsaetze (sparbuch_fk, betrag, verwendungszweck) VALUES (%s, %s, %s)",
+                    "INSERT INTO kundenumsaetze (sparbuch_fk, betrag, verwendungszweck) VALUES (%s, %s, %s)", #pylint: disable=line-too-long
                     (customer_savings_book_id, amount, purpose)
                     )
                 self.id = cursor.lastrowid
@@ -140,13 +140,13 @@ class CustomerTransaction:
             else:
                 #Update existing entry
                 cursor.execute(
-                    "UPDATE kundenstatistik SET gesamtumsatz = gesamtumsatz + %s WHERE wochentage = %s",
+                    "UPDATE kundenstatistik SET gesamtumsatz = gesamtumsatz + %s WHERE wochentage = %s", #pylint: disable=line-too-long
                     (self.amount, current_weekday)
                 )
 
             conn.commit()
 
-        except Exception as err:
+        except Exception as err: #pylint: disable=broad-except
             conn.rollback()
             print(f"Error updating customer statistics: {err}")
         finally:

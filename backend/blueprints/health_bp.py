@@ -1,3 +1,8 @@
+"""
+    import blueprints for health check
+    jsonify for answer on api response
+    current_app for current connection
+"""
 from flask import Blueprint, jsonify, current_app
 
 health_bp = Blueprint("health", __name__)

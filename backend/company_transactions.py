@@ -1,4 +1,9 @@
-"""Import db_connector for connection to database and datetime for statistics"""
+"""
+    Import db_connector for connection to database
+    datetime for statistics
+    company for unique exceptions
+"""
+
 from datetime import datetime
 from db_connector import DbConnector
 from company import CustomCompanyException

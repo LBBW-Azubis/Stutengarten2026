@@ -1,3 +1,7 @@
+"""
+    import of configparser neccessary for connection to server
+"""
+
 import configparser
 from flask import Flask
 

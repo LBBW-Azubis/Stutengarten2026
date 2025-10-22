@@ -1,3 +1,11 @@
+"""
+    import blueprints for health check
+    jsonify for answer on api response
+    request for requesting a json file
+    current_app for current connection
+    rest for needed connections
+"""
+
 from flask import Blueprint, jsonify, request, current_app
 from customer import Customer, CustomException, CustomerException
 from customer_transactions import CustomerTransaction, CustomerTransactionException
@@ -208,7 +216,7 @@ def create_customer_transaction(stutengarten_id):
         return jsonify({"error": str(e)}), 400
     except Exception as e:  # pylint: disable=broad-except
         return jsonify({"error": f"Internal server error: {str(e)}"}), 500
-    
+
 @customers_bp.route("/customer/<string:stutengarten_id>/transactions", methods=["GET"])
 def get_customer_transactions(stutengarten_id):
     """
@@ -219,7 +227,7 @@ def get_customer_transactions(stutengarten_id):
         transactions = CustomerTransaction.get_all_transactions_for_customer(connector, stutengarten_id)
         return jsonify([transaction.to_dict() for transaction in transactions]), 200
     except Exception as e:  # pylint: disable=broad-except
-        return jsonify({"error": f"Error retrieving transactions: {str(e)}"}), 500 
+        return jsonify({"error": f"Error retrieving transactions: {str(e)}"}), 500
 
 @customers_bp.route("/customer/statistics", methods=["GET"])
 def get_customer_statistics():

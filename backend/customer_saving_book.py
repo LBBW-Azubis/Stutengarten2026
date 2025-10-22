@@ -82,7 +82,7 @@ class CustomerSavingsBook:
         conn = db.get_connection()
         cursor = conn.cursor()
         try:
-            cursor.execute("INSERT INTO kundensparbuecher (kunden_fk, saldo) VALUES (%s, 0)", (customer_id,))
+            cursor.execute("INSERT INTO kundensparbuecher (kunden_fk, saldo) VALUES (%s, 0)", (customer_id,)) #pylint: disable=line-too-long
             conn.commit()
             return {"stutengarten_id": stutengarten_id, "balance": 0}
         except Exception as e:

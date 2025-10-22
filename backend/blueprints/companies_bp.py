@@ -1,3 +1,11 @@
+"""
+    import blueprints for health check
+    jsonify for answer on api response
+    request for requesting a json file
+    current_app for current connection
+    rest for needed connections
+"""
+
 from flask import Blueprint, jsonify, request, current_app
 from company import Company, CustomCompanyException, CompanyException
 from company_saving_book import CompanySavingsBook
@@ -17,6 +25,20 @@ def get_company(company_id):
     except (CustomCompanyException, CompanyException) as e:
         return jsonify({"error": str(e)}), 404
     except Exception as e:  # pylint: disable=broad-except
+        return jsonify({"error": "Internal server error", "details": str(e)}), 500
+
+@companies_bp.route("/company/<string:bezeichnung>", methods=["GET"])
+def get_company_by_name(bezeichnung):
+    """
+    Retrieve a company by name in database
+    """
+    connector = current_app.config["DB_Connector"]
+    try:
+        company = Company.get_by_name(connector, bezeichnung)
+        return jsonify(company.to_dict()), 200
+    except (CustomCompanyException, CompanyException) as e:
+        return jsonify({"error": str(e)}), 404
+    except Exception as e: #pylint: disable=broad-except
         return jsonify({"error": "Internal server error", "details": str(e)}), 500
 
 

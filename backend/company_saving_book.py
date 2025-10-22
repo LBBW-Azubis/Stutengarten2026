@@ -1,4 +1,5 @@
 """import db_connector for connection to database"""
+
 from db_connector import DbConnector
 from company import CustomCompanyException
 

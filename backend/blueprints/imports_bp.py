@@ -1,3 +1,10 @@
+"""
+    import blueprints for import of file
+    jsonify for answer on api response
+    request for requesting a file
+    current_app for current connection
+"""
+
 from flask import Blueprint, jsonify, request, current_app
 from customer_import import CustomerImport
 from company_import import CompanyImport
