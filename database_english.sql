@@ -1,9 +1,9 @@
--- SQL Skript 
+-- SQL Script 
 CREATE DATABASE stutengarten;
 USE stutengarten;
 
 
--- Kinderkonten
+-- Customer Accounts
 CREATE TABLE customers (
 	id INT AUTO_INCREMENT PRIMARY KEY,
 	stutengarten_id VARCHAR(50) UNIQUE NOT NULL,
@@ -13,7 +13,7 @@ CREATE TABLE customers (
 
 CREATE TABLE customer_savings_books (
 	id INT AUTO_INCREMENT PRIMARY KEY,
-	customers_fk INT NOT NULL,
+	customers_fk VARCHAR(50) NOT NULL,
 	balance INT DEFAULT 0,
 	FOREIGN KEY (customers_fk) REFERENCES customers(stutengarten_id) ON DELETE CASCADE
 	);
@@ -26,27 +26,27 @@ CREATE TABLE customer_transactions (
 	FOREIGN	KEY (customer_savings_book_fk) REFERENCES customer_savings_books(id) ON DELETE CASCADE
 	);
 
-CREATE TABLE customer_stocks (
+CREATE TABLE customer_shares (
 	id INT AUTO_INCREMENT PRIMARY KEY,
-	owner_fk INT NOT NULL,
-	worth INT NOT NULL DEFAULT 3,
+	owner_fk VARCHAR(50) NOT NULL,
+	value INT NOT NULL DEFAULT 3,
 	weekdays ENUM('MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY') NOT NULL,
-	FOREIGN KEY (owner_fk) REFERENCES customer(stutengarten_id) ON DELETE CASCADE
+	FOREIGN KEY (owner_fk) REFERENCES customers(stutengarten_id) ON DELETE CASCADE
 	);
 
 
--- Unternehmenskonten
-CREATE TABLE companys (
+-- Company Accounts
+CREATE TABLE company (
 	id INT AUTO_INCREMENT PRIMARY KEY,
 	name VARCHAR(255) NOT NULL UNIQUE,
-	submit_folder BOOL DEFAULT FALSE
+	folder_submitted BOOL DEFAULT FALSE
 	);
 
 CREATE TABLE company_savings_books (
 	id INT AUTO_INCREMENT PRIMARY KEY,
-	companys_fk INT NOT NULL,
+	company_fk INT NOT NULL,
 	balance INT DEFAULT 0,
-	FOREIGN KEY (companys_fk) REFERENCES companys(id) ON DELETE CASCADE
+	FOREIGN KEY (company_fk) REFERENCES company(id) ON DELETE CASCADE
 	);
 
 CREATE TABLE company_revenues (
@@ -58,7 +58,7 @@ CREATE TABLE company_revenues (
 	);
 	
 
--- Statistik
+-- Statistics
 CREATE TABLE customer_statistics (
 	id INT AUTO_INCREMENT PRIMARY KEY,
 	weekdays ENUM('MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY') NOT NULL,
@@ -66,7 +66,7 @@ CREATE TABLE customer_statistics (
 	);
 	
 
--- Unternehmensstatistik
+-- Company Statistics
 CREATE TABLE company_statistics (
 	id INT AUTO_INCREMENT PRIMARY KEY,
 	weekdays ENUM('MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY') NOT NULL,
@@ -74,13 +74,13 @@ CREATE TABLE company_statistics (
 	);
 
 
--- Wirtschaftsbeihilfe
+-- Economic Aid
 CREATE TABLE economic_aid (
 	id INT AUTO_INCREMENT PRIMARY KEY,
 	profession VARCHAR(255) NOT NULL,
 	amount INT NOT NULL,
-	companys_fk INT NOT NULL,
-	FOREIGN KEY (companys_fk) REFERENCES companys(id) ON DELETE CASCADE
+	company_fk INT NOT NULL,
+	FOREIGN KEY (company_fk) REFERENCES company(id) ON DELETE CASCADE
 
 	);
 
