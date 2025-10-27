@@ -112,6 +112,7 @@ class CustomerTransaction:
             return transactions
         finally:
             cursor.close()
+            conn.close()
 
     def add_to_statistics(self):
         """
@@ -151,6 +152,7 @@ class CustomerTransaction:
             print(f"Error updating customer statistics: {err}")
         finally:
             cursor.close()
+            conn.close()
 
     @staticmethod
     def get_customer_statistics(db:DbConnector):
@@ -174,6 +176,7 @@ class CustomerTransaction:
             return result
         finally:
             cursor.close()
+            conn.close()
 
     def to_dict(self):
         """
@@ -238,4 +241,5 @@ class CustomerTransaction:
             raise err
         finally:
             cursor.close()
+            conn.close()
 #End-of-file

@@ -39,6 +39,7 @@ class CustomerSavingsBook:
         finally:
             cursor.close()
             cursor2.close()
+            conn.close()
 
     @staticmethod
     def get_savings_book_overview(db: DbConnector, stutengarten_id):
@@ -70,6 +71,7 @@ class CustomerSavingsBook:
         finally:
             cursor.close()
             cursor2.close()
+            conn.close()
 
     @staticmethod
     def create_new(db: DbConnector, stutengarten_id):
@@ -89,6 +91,7 @@ class CustomerSavingsBook:
             raise CustomException(f"Error creating savings book: {e}") from e
         finally:
             cursor.close()
+            conn.close()
 
     @staticmethod
     def set_balance(db: DbConnector, stutengarten_id, balance):
@@ -112,4 +115,5 @@ class CustomerSavingsBook:
             raise CustomException(f"Error updating balance: {e}") from e
         finally:
             cursor.close()
+            conn.close()
 #End-of-file

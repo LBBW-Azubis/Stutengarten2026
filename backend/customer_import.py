@@ -75,6 +75,7 @@ class CustomerImport:
         # commit all changes
         self.db_connector.get_connection().commit()
         cursor.close()
+        self.db_connector.close()
 
         return inserted_count
 

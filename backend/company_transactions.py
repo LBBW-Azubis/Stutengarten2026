@@ -117,6 +117,7 @@ class CompanyTransaction:
             return transactions
         finally:
             cursor.close()
+            conn.close()
 
     def add_to_statistics(self):
         """
@@ -156,6 +157,7 @@ class CompanyTransaction:
             print(f"Error updating company statistics: {err}")
         finally:
             cursor.close()
+            conn.close()
 
     @staticmethod
     def get_company_statistics(db:DbConnector):
@@ -179,6 +181,7 @@ class CompanyTransaction:
             return result
         finally:
             cursor.close()
+            conn.close()
 
     def to_dict(self):
         """

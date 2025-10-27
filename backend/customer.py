@@ -44,6 +44,7 @@ class Customer:
                 raise CustomException(f"Error creating customer: {err}") from err
             finally:
                 cursor.close()
+                conn.close()
         else:
             # Customer object from existing data
             self.id = id
@@ -62,6 +63,7 @@ class Customer:
             conn.commit()
         finally:
             cursor.close()
+            conn.close()
 
     # Static methods
     @staticmethod
@@ -74,6 +76,7 @@ class Customer:
             row = cursor.fetchone()
         finally:
             cursor.close()
+            conn.close()
         if row:
             return Customer(db,
                             row["stutengarten_id"],
@@ -93,6 +96,7 @@ class Customer:
             row = cursor.fetchone()
         finally:
             cursor.close()
+            conn.close()
         if row:
             return Customer(db,
                             row["stutengarten_id"],
@@ -104,20 +108,14 @@ class Customer:
 
     # Methods
     def get_savings_book(self):
-        """getting customers savingsbook"""
         conn = self.db.get_connection()
         cursor = conn.cursor(dictionary=True)
         try:
-            try:
-                cursor.execute("SELECT * FROM kundensparbuecher WHERE kunden = %s", (self.id,))
-                row = cursor.fetchone()
-            except Exception:  # pylint: disable=broad-except
-                cursor.close()
-                cursor = conn.cursor(dictionary=True)
-                cursor.execute("SELECT * FROM kundensparbuecher WHERE kunden_fk = %s", (self.id,))
-                row = cursor.fetchone()
+            cursor.execute("SELECT * FROM kundensparbuecher WHERE kunden_fk = %s", (self.id,))
+            row = cursor.fetchone()
         finally:
             cursor.close()
+            conn.close()
         if row:
             return SavingsBookRef(self.stutengarten_id, row["saldo"])
         else:
@@ -134,6 +132,7 @@ class Customer:
             self.stutengarten_id = new_id
         finally:
             cursor.close()
+            conn.close()
 
     def update_first_name(self, new_first_name):
         """updating customers first name"""
@@ -145,6 +144,7 @@ class Customer:
             self.first_name = new_first_name
         finally:
             cursor.close()
+            conn.close()
 
     def update_last_name(self, new_last_name):
         """updating customers last name"""
@@ -156,6 +156,7 @@ class Customer:
             self.last_name = new_last_name
         finally:
             cursor.close()
+            conn.close()
 
     def to_dict(self):
         """converting object into dictionary"""

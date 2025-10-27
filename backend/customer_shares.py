@@ -60,6 +60,7 @@ class CustomerShares:
                 raise CustomerException(f"Error creating customer share purchase: {err}") from err
             finally:
                 cursor.close()
+                conn.close()
         else:
             # Load existing share from database
             self.id = share_id
@@ -102,6 +103,7 @@ class CustomerShares:
             return shares
         finally:
             cursor.close()
+            conn.close()
 
     @staticmethod
     def sell_share(db:DbConnector, share_id, stutengarten_id,
@@ -169,6 +171,7 @@ class CustomerShares:
             raise CustomerException(f"Error selling share: {err}") from err
         finally:
             cursor.close()
+            conn.close()
 
     @staticmethod
     def update_share_value(db: DbConnector, share_id, new_value,
@@ -238,6 +241,7 @@ class CustomerShares:
             raise CustomerException(f"Error updating share value: {err}") from err
         finally:
             cursor.close()
+            conn.close()
 
 
 
