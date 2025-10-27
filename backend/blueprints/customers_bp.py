@@ -161,7 +161,7 @@ def update_balance_for_customer(stutengarten_id):
     except Exception as e:  # pylint: disable=broad-except
         return jsonify({"error": str(e)}), 500
 
-@customers_bp.route("/customer/<string:stutengarten_id>/transactions", methods=["POST"])
+@customers_bp.route("/customer/<string:stutengarten_id>/transaction", methods=["POST"])
 def create_customer_transaction(stutengarten_id):
     """
     Create a new transaction for a customer
