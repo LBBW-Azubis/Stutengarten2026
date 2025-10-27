@@ -1,7 +1,7 @@
 """Import db_connector for connection to database and datetime for statistics"""
 from datetime import datetime
 from db_connector import DbConnector
-from customer import CustomerException
+from customer import Customer,CustomerException
 
 class CustomerTransactionException(Exception):
     """Special exception for customer transaction-related errors"""
@@ -212,4 +212,30 @@ class CustomerTransaction:
         """Returns transaction purpose ("Verwendungszweck")"""
         return self.purpose
 
+    @staticmethod
+    def transfer(db:DbConnector, from_stutengarten_id, to_stutengarten_id, amount, purpose=""):
+        conn = db.get_connection()
+        cursor = conn.cursor(dictionary=True)
+        try:
+            sender = Customer.get_by_stutengarten_id(db, from_stutengarten_id)
+            receiver = Customer.get_by_stutengarten_id(db, to_stutengarten_id)
+            cursor.execute("SELECT id, saldo FROM kundensparbuecher WHERE kunden_fk = %s FOR UPDATE", (sender.id,))
+            sb_sender = cursor.fetchone()
+            cursor.execute("SELECT id, saldo FROM kundensparbuecher WHERE kunden_fk = %s FOR UPDATE", (receiver.id,))
+            sb_receiver = cursor.fetchone()
+            if not sb_sender or not sb_receiver:
+                raise CustomerTransactionException("savings book not found for sender or receiver")
+            if sb_sender["saldo"] < amount:
+                raise CustomerTransactionException("insufficient funds")
+            cursor.execute("UPDATE kundensparbuecher SET saldo = saldo - %s WHERE id = %s", (amount, sb_sender["id"]))
+            cursor.execute("UPDATE kundensparbuecher SET saldo = saldo + %s WHERE id = %s", (amount, sb_receiver["id"]))
+            cursor.execute("INSERT INTO kundenumsaetze (sparbuch_fk, betrag, verwendungszweck) VALUES (%s, %s, %s)", (sb_sender["id"], -amount, purpose))
+            cursor.execute("INSERT INTO kundenumsaetze (sparbuch_fk, betrag, verwendungszweck) VALUES (%s, %s, %s)", (sb_receiver["id"], amount, purpose))
+            conn.commit()
+            return {"status": "success", "from": from_stutengarten_id, "to": to_stutengarten_id, "amount": amount}
+        except Exception as err:
+            conn.rollback()
+            raise err
+        finally:
+            cursor.close()
 #End-of-file

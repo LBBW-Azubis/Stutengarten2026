@@ -431,4 +431,38 @@ def update_share_value(stutengarten_id, share_id):
     except Exception as e:  # pylint: disable=broad-except
         return jsonify({"error": f"Internal server error: {str(e)}"}), 500
 
+@customers_bp.route("/customer/transfer", methods=["POST"])
+def transfer_between_customers():
+    """
+    customer transfer
+
+    Expects JSON: 
+    {
+    "from": "K1",
+    "to": "K2",
+    "amount": 50,
+    "purpose": "Überweisung"
+    }
+    """
+    data = request.json or {}
+    from_id = data.get("from")
+    to_id = data.get("to")
+    amount = data.get("amount")
+    purpose = data.get("purpose", "")
+    if not from_id or not to_id or amount is None:
+        return jsonify({"error": "from, to and amount are required"}), 400
+    try:
+        amount = int(amount)
+    except Exception: # pylint: disable=broad-except
+        return jsonify({"error": "amount must be an integer"}), 400
+    if amount <= 0:
+        return jsonify({"error": "amount must be positive"}), 400
+    connector = current_app.config["DB_CONNECTOR"]
+    try:
+        result = CustomerTransaction.transfer(connector, from_id, to_id, amount, purpose)
+        return jsonify(result), 201
+    except (CustomException, CustomerException, CustomerTransactionException) as e:
+        return jsonify({"error": str(e)}), 400
+    except Exception as e: # pylint: disable=broad-except
+        return jsonify({"error": "Internal server error", "details": str(e)}), 500
 #End-of-file
