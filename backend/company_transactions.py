@@ -67,6 +67,7 @@ class CompanyTransaction:
                 raise CustomCompanyException(f"Error creating company transaction: {err}") from err
             finally:
                 cursor.close()
+                conn.close()
         else:
             #Load existing transactions from database
             self.id = transaction_id

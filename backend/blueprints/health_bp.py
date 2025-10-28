@@ -19,6 +19,14 @@ def _run_select_1(conn):
     finally:
         cur.close()
 
+@health_bp.route("/ping", methods=["GET"])
+def ping():
+    """
+    Sehr schneller Ping-Endpunkt ohne DB-Zugriff
+    """
+    return jsonify({"ok": True}), 200
+
+
 @health_bp.route("/health", methods=["GET"])
 def health_check():
     """

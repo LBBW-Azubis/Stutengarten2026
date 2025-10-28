@@ -62,6 +62,7 @@ class CustomerTransaction:
                 raise CustomerException(f"Error creating customer transaction: {err}") from err
             finally:
                 cursor.close()
+                conn.close()
         else:
             #Load existing transactions from database
             self.id = transaction_id

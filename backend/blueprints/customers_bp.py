@@ -199,6 +199,7 @@ def create_customer_transaction(stutengarten_id):
             savings_book_id = savings_book_row["id"]
         finally:
             cursor.close()
+            conn.close()
 
         # Create transaction (Tabellenname für Umsätze ebenfalls anpassen!)
         transaction = CustomerTransaction(
@@ -285,6 +286,7 @@ def buy_customer_share(stutengarten_id):
             savings_book_id = savings_book_row["id"]
         finally:
             cursor.close()
+            conn.close()
 
         # Create/buy share
         share = CustomerShares(
@@ -415,6 +417,7 @@ def update_share_value(stutengarten_id, share_id):
                 return jsonify({"error": "No savings book found for this customer"}), 404
         finally:
             cursor.close()
+            conn.close()
 
         # Update share value
         result = CustomerShares.update_share_value(

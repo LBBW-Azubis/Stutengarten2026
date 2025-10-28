@@ -222,6 +222,7 @@ def create_company_transaction(company_id):
             savings_book_id = savings_book_row["id"]
         finally:
             cursor.close()
+            conn.close()
 
         # Create transaction
         transaction = CompanyTransaction(
