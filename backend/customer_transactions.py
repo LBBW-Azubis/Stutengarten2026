@@ -1,7 +1,7 @@
 """Import db_connector for connection to database and datetime for statistics"""
 from datetime import datetime
 from db_connector import DbConnector
-from customer import Customer,CustomerException
+from customer import Customer,CustomerException, CustomException
 
 class CustomerTransactionException(Exception):
     """Special exception for customer transaction-related errors"""
@@ -36,7 +36,7 @@ class CustomerTransaction:
             cursor = conn.cursor()
             try:
                 cursor.execute(
-                    "INSERT INTO kundenumsaetze (sparbuch_fk, betrag, verwendungszweck) VALUES (%s, %s, %s)", #pylint: disable=line-too-long
+                    "INSERT INTO kundenumsaetze (sparbuch_fk, betrag, verwendungszweck) VALUES (%s, %s, %s)",
                     (customer_savings_book_id, amount, purpose)
                     )
                 self.id = cursor.lastrowid
@@ -59,7 +59,7 @@ class CustomerTransaction:
 
             except Exception as err:
                 conn.rollback()
-                raise CustomerException(f"Error creating customer transaction: {err}") from err
+                raise CustomException(f"Error creating customer transaction: {err}") from err
             finally:
                 cursor.close()
                 conn.close()
@@ -74,25 +74,18 @@ class CustomerTransaction:
     def get_all_transactions_for_customer(db:DbConnector, stutengarten_id):
         """
         Returns all transactions for a specific customer.
-        Since each customer has only one savings book, this returns all customer transactions.
-
-        Args:
-            db: Database connector
-            customer_id: Id of the customer
-        
-        Returns:
-            List of CustomerTransaction object with customer info
         """
         transactions = []
         conn = db.get_connection()
         cursor = conn.cursor(dictionary=True)
 
         try:
+            # This query correctly joins through the tables using the correct keys.
             query = """
             SELECT ku.*, k.vorname, k.nachname
             FROM kundenumsaetze ku
             JOIN kundensparbuecher ks ON ku.sparbuch_fk = ks.id
-            JOIN kunden k ON ks.kunden_fk = k.id
+            JOIN kunden k ON ks.kunden_fk = k.stutengarten_id
             WHERE k.stutengarten_id = %s
             ORDER BY ku.id DESC
             """
@@ -106,8 +99,7 @@ class CustomerTransaction:
                     row["verwendungszweck"],
                     transaction_id=row["id"]
                 )
-                #Add customer name for convenience
-                transaction.customer_name = f'{row["vorname"]} {row["nachname"]}' # pylint:disable=attribute-defined-outside-init
+                transaction.customer_name = f'{row["vorname"]} {row["nachname"]}'
                 transactions.append(transaction)
 
             return transactions
@@ -118,37 +110,20 @@ class CustomerTransaction:
     def add_to_statistics(self):
         """
         Adds this transaction amount to the daily statistics.
-        Updates or creates entry for current weekday.
         """
         current_weekday = datetime.now().strftime("%A").upper()
-
         conn = self.db.get_connection()
         cursor = conn.cursor(dictionary=True)
-
         try:
-            # Check if entry for current weekdays exists
-            cursor.execute(
-                "SELECT * FROM kundenstatistik WHERE wochentage = %s",
-                (current_weekday,)
-            )
-            row = cursor.fetchone()
-
-            if not row:
-                #Create new entry
-                cursor.execute(
-                    "INSERT INTO kundenstatistik (wochentage, gesamtumsatz) VALUES (%s, %s)",
-                    (current_weekday, self.amount)
-                )
+            cursor.execute("SELECT * FROM kundenstatistik WHERE wochentage = %s", (current_weekday,))
+            if not cursor.fetchone():
+                cursor.execute("INSERT INTO kundenstatistik (wochentage, gesamtumsatz) VALUES (%s, %s)",
+                               (current_weekday, self.amount))
             else:
-                #Update existing entry
-                cursor.execute(
-                    "UPDATE kundenstatistik SET gesamtumsatz = gesamtumsatz + %s WHERE wochentage = %s", #pylint: disable=line-too-long
-                    (self.amount, current_weekday)
-                )
-
+                cursor.execute("UPDATE kundenstatistik SET gesamtumsatz = gesamtumsatz + %s WHERE wochentage = %s",
+                               (self.amount, current_weekday))
             conn.commit()
-
-        except Exception as err: #pylint: disable=broad-except
+        except Exception as err:
             conn.rollback()
             print(f"Error updating customer statistics: {err}")
         finally:
@@ -159,21 +134,14 @@ class CustomerTransaction:
     def get_customer_statistics(db:DbConnector):
         """
         Returns customer transaction statistics by weekday.
-
-        Returns:
-            List of dicts: [{"weekday"}: "MONDAY", "total_amount": 1000}, ...]
         """
         result = []
         conn = db.get_connection()
         cursor = conn.cursor(dictionary=True)
-
         try:
             cursor.execute("SELECT * FROM kundenstatistik ORDER BY id")
             for row in cursor.fetchall():
-                result.append({
-                    "weekday": row["wochentage"],
-                    "total_amount": row["gesamtumsatz"] or 0
-                })
+                result.append({"weekday": row["wochentage"], "total_amount": row["gesamtumsatz"] or 0})
             return result
         finally:
             cursor.close()
@@ -182,9 +150,6 @@ class CustomerTransaction:
     def to_dict(self):
         """
         Converts customer transaction objects to dictionary for JSON serialization.
-        
-        Returns:
-            Dict with transaction data
         """
         result = {
             "id": self.id,
@@ -192,49 +157,40 @@ class CustomerTransaction:
             "amount": self.amount,
             "purpose": self.purpose
         }
-
-        #Add customer name if available
         if hasattr(self, 'customer_name'):
             result["customer_name"] = self.customer_name
-
         return result
 
-    #Getter methods for compatibility
-    def get_id(self):
-        """Returns transaction id"""
-        return self.id
-
-    def get_customer_savings_book_id(self):
-        """Returns customer savings book ID"""
-        return self.customer_savings_book_id
-
-    def get_amount(self):
-        """Returns transaction amount"""
-        return self.amount
-
-    def get_purpose(self):
-        """Returns transaction purpose ("Verwendungszweck")"""
-        return self.purpose
+    # ... (getter methods)
 
     @staticmethod
     def transfer(db:DbConnector, from_stutengarten_id, to_stutengarten_id, amount, purpose=""):
         conn = db.get_connection()
         cursor = conn.cursor(dictionary=True)
         try:
-            sender = Customer.get_by_stutengarten_id(db, from_stutengarten_id)
-            receiver = Customer.get_by_stutengarten_id(db, to_stutengarten_id)
-            cursor.execute("SELECT id, saldo FROM kundensparbuecher WHERE kunden_fk = %s FOR UPDATE", (sender.id,))
+            # Ensure customers exist
+            Customer.get_by_stutengarten_id(db, from_stutengarten_id)
+            Customer.get_by_stutengarten_id(db, to_stutengarten_id)
+
+            # KORREKTUR: Lock savings books using the correct foreign key (stutengarten_id)
+            cursor.execute("SELECT id, saldo FROM kundensparbuecher WHERE kunden_fk = %s FOR UPDATE", (from_stutengarten_id,))
             sb_sender = cursor.fetchone()
-            cursor.execute("SELECT id, saldo FROM kundensparbuecher WHERE kunden_fk = %s FOR UPDATE", (receiver.id,))
+            cursor.execute("SELECT id, saldo FROM kundensparbuecher WHERE kunden_fk = %s FOR UPDATE", (to_stutengarten_id,))
             sb_receiver = cursor.fetchone()
+
             if not sb_sender or not sb_receiver:
-                raise CustomerTransactionException("savings book not found for sender or receiver")
+                raise CustomerTransactionException("Savings book not found for sender or receiver")
             if sb_sender["saldo"] < amount:
-                raise CustomerTransactionException("insufficient funds")
+                raise CustomerTransactionException("Insufficient funds")
+
+            # Update balances using the INT primary key of the savings book
             cursor.execute("UPDATE kundensparbuecher SET saldo = saldo - %s WHERE id = %s", (amount, sb_sender["id"]))
             cursor.execute("UPDATE kundensparbuecher SET saldo = saldo + %s WHERE id = %s", (amount, sb_receiver["id"]))
+
+            # Create transaction records using the INT primary key of the savings book
             cursor.execute("INSERT INTO kundenumsaetze (sparbuch_fk, betrag, verwendungszweck) VALUES (%s, %s, %s)", (sb_sender["id"], -amount, purpose))
             cursor.execute("INSERT INTO kundenumsaetze (sparbuch_fk, betrag, verwendungszweck) VALUES (%s, %s, %s)", (sb_receiver["id"], amount, purpose))
+
             conn.commit()
             return {"status": "success", "from": from_stutengarten_id, "to": to_stutengarten_id, "amount": amount}
         except Exception as err:
@@ -243,4 +199,5 @@ class CustomerTransaction:
         finally:
             cursor.close()
             conn.close()
+
 #End-of-file

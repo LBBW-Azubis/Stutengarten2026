@@ -4,7 +4,8 @@
 """
 from datetime import datetime
 from db_connector import DbConnector
-from customer import CustomerException
+from customer import Customer, CustomerException
+from share import Share
 
 
 class CustomerShares:
@@ -13,75 +14,92 @@ class CustomerShares:
     All methods use dicts for better JSON compatibility.
     """
 
-    def __init__(self, db:DbConnector, value, customer_savings_book_id,
-                  customer_savings_book=None, share_id=None):
+    def __init__(self, db: DbConnector, share_id, customer_stutengarten_id,
+                 invested_amount, customer_shares_id=None, customer_savings_book=None):
         """
-        Creates a new share and writes it to the database.
+        Buys a new share for a customer.
 
         Args:
-            db: Database connector
-            value: current value of share
-            customer_savings_book_id: ID of customer savings book
-            customer_savings_book: CustomerSavingsBook object to check balance
-            share_id: ID for existing shares (for loading from DB)
+            db: connection to database
+            share_id: ID of share (from aktien table)
+            customer_stutengarten_id: Stutengarten ID of the customer
+            invested_amount: amount customer wants to invest
+            customer_shares_id: ID (when loading from db)
+            customer_savings_book: Savings book object
         """
-        current_weekday = datetime.now().strftime("%A").upper()
         self.db = db
+        weekdays_german = ['MONTAG', 'DIENSTAG', 'MITTWOCH', 'DONNERSTAG', 'FREITAG', 'SAMSTAG', 'SONNTAG']
+        current_weekday_index = datetime.now().weekday()  # Monday is 0, Sunday is 6
+        current_weekday = weekdays_german[current_weekday_index]
 
-        if share_id is None:
-            #Create new share
-            if customer_savings_book and (customer_savings_book.balance - value < 0):
-                raise CustomerException("Balance would go below 0")
+        if customer_shares_id is None:
+            # NEW PURCHASE
+            Share.get_by_id(db, share_id)
+
+            # Check balance
+            if customer_savings_book and (customer_savings_book.balance - invested_amount < 0):
+                raise CustomerException("Not enough balance")
 
             conn = db.get_connection()
             cursor = conn.cursor()
+
             try:
+                # The foreign key `besitzer_fk` refers to `kunden(stutengarten_id)`
                 cursor.execute(
-                    "INSERT INTO kundenaktien (besitzer_fk, wert, wochentage) VALUES (%s, %s, %s)", #pylint: disable=line-too-long
-                    (customer_savings_book_id, value, current_weekday)
+                    """INSERT INTO kundenaktien 
+                       (besitzer_fk, aktie_fk, investierter_betrag, aktueller_wert, wochentage) 
+                       VALUES (%s, %s, %s, %s, %s)""",
+                    (customer_stutengarten_id, share_id, invested_amount,
+                     invested_amount, current_weekday)
                 )
                 self.id = cursor.lastrowid
-                self.customer_savings_book_id = customer_savings_book_id
-                self.value = value
+                self.customer_stutengarten_id = customer_stutengarten_id
+                self.share_id = share_id
+                self.invested_amount = invested_amount
+                self.current_value = invested_amount
                 self.current_weekday = current_weekday
 
-                #Update customer savings book balance if provided
+                # Deduct amount from savings book
                 if customer_savings_book:
                     cursor.execute(
-                        "UPDATE kundensparbuecher SET saldo = saldo - %s WHERE id = %s",
-                        (value, customer_savings_book_id)
+                        "UPDATE kundensparbuecher SET saldo = saldo - %s WHERE kunden_fk = %s",
+                        (invested_amount, customer_stutengarten_id)
                     )
-                    customer_savings_book.balance -= value
+                    customer_savings_book.balance -= invested_amount
 
                 conn.commit()
 
             except Exception as err:
                 conn.rollback()
-                raise CustomerException(f"Error creating customer share purchase: {err}") from err
+                raise CustomerException(f"Error buying share: {err}") from err
             finally:
                 cursor.close()
                 conn.close()
         else:
-            # Load existing share from database
-            self.id = share_id
-            self.customer_savings_book_id = customer_savings_book_id
-            self.value = value
+            # LOAD FROM DB
+            self.id = customer_shares_id
+            self.customer_stutengarten_id = customer_stutengarten_id
+            self.share_id = share_id
+            self.invested_amount = invested_amount
+            self.current_value = invested_amount
             self.current_weekday = current_weekday
 
     @staticmethod
     def get_all_customer_shares(db: DbConnector, stutengarten_id):
-        """
-        Returns a list with all shares for a specific customer.
-        """
+        """Returns all shares of a customer with profit/loss"""
         shares = []
         conn = db.get_connection()
         cursor = conn.cursor(dictionary=True)
 
         try:
             query = """
-            SELECT ka.*, k.vorname, k.nachname, k.stutengarten_id
+            SELECT ka.*, 
+                   a.name as aktien_name, 
+                   a.symbol,
+                   k.vorname, k.nachname, k.stutengarten_id
             FROM kundenaktien ka
-            JOIN kunden k ON ka.besitzer_fk = k.id
+            JOIN aktien a ON ka.aktie_fk = a.id
+            JOIN kunden k ON ka.besitzer_fk = k.stutengarten_id
             WHERE k.stutengarten_id = %s
             ORDER BY ka.id DESC
             """
@@ -90,14 +108,25 @@ class CustomerShares:
             for row in cursor.fetchall():
                 share = CustomerShares(
                     db,
-                    row["wert"],
-                    row["besitzer_fk"],
-                    customer_savings_book=None,
-                    share_id=row["id"]
+                    share_id=row['aktie_fk'],
+                    customer_stutengarten_id=row['stutengarten_id'],
+                    invested_amount=row['investierter_betrag'],
+                    customer_shares_id=row['id']
                 )
-                # Add customer name for convenience
-                share.customer_name = f'{row["vorname"]} {row["nachname"]}'  # pylint:disable=attribute-defined-outside-init
-                share.stutengarten_id = row["stutengarten_id"]  # pylint:disable=attribute-defined-outside-init
+
+                # Set current value from DB
+                share.current_value = row['aktueller_wert']
+
+                share.share_name = row['aktien_name']  # pylint: disable=attribute-defined-outside-init
+                share.symbol = row['symbol']  # pylint: disable=attribute-defined-outside-init
+                share.customer_name = f"{row['vorname']} {row['nachname']}"  # pylint: disable=attribute-defined-outside-init
+
+                # Calculate profit/loss
+                invested = float(share.invested_amount)
+                current = float(share.current_value)
+                share.profit_loss = current - invested  # pylint: disable=attribute-defined-outside-init
+                share.profit_loss_percent = ((current / invested) - 1) * 100 if invested > 0 else 0  # pylint: disable=attribute-defined-outside-init
+
                 shares.append(share)
 
             return shares
@@ -105,65 +134,31 @@ class CustomerShares:
             cursor.close()
             conn.close()
 
-    @staticmethod
-    def sell_share(db:DbConnector, share_id, stutengarten_id,
-                   customer_savings_book=None):
-        """
-        Sells a share and deletes it from database
-    
-        Args:
-            db: Database connector
-            share_id: ID of selling Aktie
-            stutengarten_id: stutengarten_id of customer (NOT savings book id!)
-            customer_savings_book: CustomerSavingsBook object to update balance
-        
-        Returns:
-            dict with information on sell
-        """
-        conn = db.get_connection()
+    def sell(self, customer_savings_book=None):
+        """Sells share at current value"""
+        conn = self.db.get_connection()
         cursor = conn.cursor(dictionary=True)
 
         try:
-            # First, get the numeric customer ID from stutengarten_id
-            cursor.execute("SELECT id FROM kunden WHERE stutengarten_id = %s", (stutengarten_id,))
-            customer_row = cursor.fetchone()
-            if not customer_row:
-                raise CustomerException("Customer not found")
-            numeric_customer_id = customer_row['id']
-
-            # Load share from database - besitzer_fk is numeric customer id
-            cursor.execute(
-                "SELECT * FROM kundenaktien WHERE id = %s AND besitzer_fk = %s",
-                (share_id, numeric_customer_id)
-            )
-            share = cursor.fetchone()
-
-            if not share:
-                raise CustomerException("Share not found or does not belong to this customer")
-
-            # Update balance of savings book
-            share_value = share['wert']
-
+            # Book current value to savings book
             if customer_savings_book:
                 cursor.execute(
                     "UPDATE kundensparbuecher SET saldo = saldo + %s WHERE kunden_fk = %s",
-                    (share_value, numeric_customer_id)
+                    (self.current_value, self.customer_stutengarten_id)
                 )
-                customer_savings_book.balance += share_value
+                customer_savings_book.balance += self.current_value
 
-            # Delete from database
-            cursor.execute(
-                "DELETE FROM kundenaktien WHERE id = %s",
-                (share_id,)
-            )
-
+            cursor.execute("DELETE FROM kundenaktien WHERE id = %s", (self.id,))
             conn.commit()
+
+            profit = float(self.current_value) - float(self.invested_amount)
 
             return {
                 "status": "success",
-                "share_id": share_id,
-                "sold_value": share_value,
-                "new_balance": customer_savings_book.balance if customer_savings_book else None
+                "share_id": self.id,
+                "invested_amount": float(self.invested_amount),
+                "sell_value": float(self.current_value),
+                "profit": profit
             }
 
         except Exception as err:
@@ -174,88 +169,101 @@ class CustomerShares:
             conn.close()
 
     @staticmethod
-    def update_share_value(db: DbConnector, share_id, new_value,
-                       stutengarten_id=None):
+    def update_share_value(db: DbConnector, share_id, new_value, stutengarten_id):
         """
-            Updates value of specific share.
+        MANUAL: Updates share value after physical wheel of fortune
         
-            Args:
-                db: Database connector
-                share_id: ID of updating share
-                new_value: new value of specific share
-                stutengarten_id: Optional - stutengarten_id for validation of customer
-            
-            Returns:
-                dict with updated information of share
+        Args:
+            db: Database connector
+            share_id: ID of share to update
+            new_value: New value based on wheel result
+            stutengarten_id: Stutengarten ID for validation
+        
+        Returns:
+            dict with update information
         """
         conn = db.get_connection()
         cursor = conn.cursor(dictionary=True)
 
         try:
-            if stutengarten_id:
-                # Get numeric customer ID
-                cursor.execute("SELECT id FROM kunden WHERE stutengarten_id = %s", (stutengarten_id,)) #pylint: disable=line-too-long
-                customer_row = cursor.fetchone()
-                if not customer_row:
-                    raise CustomerException("Customer not found")
-                numeric_customer_id = customer_row['id']
-
-                cursor.execute(
-                    "SELECT * FROM kundenaktien WHERE id = %s AND besitzer_fk = %s",
-                    (share_id, numeric_customer_id)
-                )
-            else:
-                cursor.execute(
-                    "SELECT * FROM kundenaktien WHERE id = %s",
-                    (share_id,)
-                )
-
+            # Get share
+            cursor.execute(
+                """SELECT * FROM kundenaktien
+                   WHERE id = %s AND besitzer_fk = %s""",
+                (share_id, stutengarten_id)
+            )
             share = cursor.fetchone()
 
             if not share:
-                raise CustomerException("Share not found or does not belong to this customer")
+                raise CustomerException("Share not found for this customer")
 
-            old_value = share['wert']
+            old_value = float(share['aktueller_wert'])
 
-            # Update the value
+            # Minimum value: 0 Euro (total loss possible)
+            if new_value < 0:
+                new_value = 0
+
+            # Update
             cursor.execute(
-                "UPDATE kundenaktien SET wert = %s WHERE id = %s",
+                "UPDATE kundenaktien SET aktueller_wert = %s WHERE id = %s",
                 (new_value, share_id)
             )
 
             if cursor.rowcount == 0:
-                raise CustomerException("Could not update share value")
+                raise CustomerException("Could not update share")
 
             conn.commit()
+
+            change = new_value - old_value
+            change_percent = (change / old_value * 100) if old_value > 0 else 0
 
             return {
                 "status": "success",
                 "share_id": share_id,
                 "old_value": old_value,
                 "new_value": new_value,
-                "value_change": new_value - old_value
+                "change": round(change, 2),
+                "change_percent": round(change_percent, 2)
             }
 
         except Exception as err:
             conn.rollback()
-            raise CustomerException(f"Error updating share value: {err}") from err
+            raise CustomerException(f"Error updating share: {err}") from err
         finally:
             cursor.close()
             conn.close()
 
+    def to_dict(self):
+        """Converts to dictionary"""
+        result = {
+            'id': self.id,
+            'share_id': self.share_id,
+            'invested_amount': float(self.invested_amount),
+            'current_value': float(self.current_value),
+            'customer_stutengarten_id': self.customer_stutengarten_id
+        }
 
+        if hasattr(self, 'share_name'):
+            result['share_name'] = self.share_name
+        if hasattr(self, 'symbol'):
+            result['symbol'] = self.symbol
+        if hasattr(self, 'profit_loss'):
+            result['profit_loss'] = float(self.profit_loss)
+            result['profit_loss_percent'] = round(float(self.profit_loss_percent), 2)
 
-    #Getter methods for compatibility
+        return result
+
+    # Old getter methods for compatibility
     def get_id(self):
         """Returns share ID"""
         return self.id
 
-    def get_customer_savings_book_id(self):
-        """Returns customer savings book ID"""
-        return self.customer_savings_book_id
+    def get_customer_stutengarten_id(self):
+        """Returns customer stutengarten ID"""
+        return self.customer_stutengarten_id
 
     def get_value(self):
-        """Returns share value"""
-        return self.value
+        """Returns current share value"""
+        return float(self.current_value)
 
 #End-of-file

@@ -11,6 +11,7 @@ from customer import Customer, CustomException, CustomerException
 from customer_transactions import CustomerTransaction, CustomerTransactionException
 from customer_saving_book import CustomerSavingsBook
 from customer_shares import CustomerShares
+from share import Share, ShareException
 
 customers_bp = Blueprint("customers", __name__)
 
@@ -184,14 +185,17 @@ def create_customer_transaction(stutengarten_id):
 
         # Get customer savings book object
         customer_savings_book = customer.get_savings_book()
+        if not customer_savings_book:
+            return jsonify({"error": "No savings book found for this customer"}), 404
 
-        # Get savings book ID from database (Tabellenname angepasst!)
+        # Get savings book ID from database
         conn = connector.get_connection()
         cursor = conn.cursor(dictionary=True)
         try:
+            # KORREKTUR: Verwende stutengarten_id (den Parameter der Route) für die Abfrage
             cursor.execute(
                 "SELECT id FROM kundensparbuecher WHERE kunden_fk = %s",
-                (customer.id,),
+                (stutengarten_id,),
             )
             savings_book_row = cursor.fetchone()
             if not savings_book_row:
@@ -201,7 +205,7 @@ def create_customer_transaction(stutengarten_id):
             cursor.close()
             conn.close()
 
-        # Create transaction (Tabellenname für Umsätze ebenfalls anpassen!)
+        # Create transaction
         transaction = CustomerTransaction(
             connector,
             savings_book_id,
@@ -243,197 +247,6 @@ def get_customer_statistics():
     except Exception as e:  # pylint: disable=broad-except
         return jsonify({"error": str(e)}), 500
 
-@customers_bp.route("/customer/<string:stutengarten_id>/shares", methods=["POST"])
-def buy_customer_share(stutengarten_id):
-    """
-    Creates/Buys a new share for customer
-
-    POST /customer/<stutengarten_id>/shares
-    Expects JSON: {"value": 3}
-    
-    Returns:
-    - 201 JSON with share information
-    - 400 JSON {"error": "..."} if invalid data
-    - 404 JSON {"error": "..."} if customer not found
-    - 500 JSON {"error": "..."} other errors
-    """
-    connector = current_app.config["DB_CONNECTOR"]
-    data = request.json
-
-    if not data or "value" not in data:
-        return jsonify({"error": "Value is required"}), 400
-
-    value = data.get("value")
-
-    try:
-        # Ensure customer exists
-        customer = Customer.get_by_stutengarten_id(connector, stutengarten_id)
-
-        # Get customer savings book
-        customer_savings_book = customer.get_savings_book()
-
-        # Get savings book ID from database
-        conn = connector.get_connection()
-        cursor = conn.cursor(dictionary=True)
-        try:
-            cursor.execute(
-                "SELECT id FROM kundensparbuecher WHERE kunden_fk = %s",
-                (customer.id,)
-            )
-            savings_book_row = cursor.fetchone()
-            if not savings_book_row:
-                return jsonify({"error": "No savings book found for this customer"}), 404
-            savings_book_id = savings_book_row["id"]
-        finally:
-            cursor.close()
-            conn.close()
-
-        # Create/buy share
-        share = CustomerShares(
-            connector,
-            value,
-            savings_book_id,
-            customer_savings_book
-        )
-
-        return jsonify({
-            "status": "success",
-            "share_id": share.get_id(),
-            "value": share.get_value(),
-            "customer_savings_book_id": share.get_customer_savings_book_id()
-        }), 201
-
-    except (CustomException, CustomerException) as e:
-        return jsonify({"error": str(e)}), 404
-    except Exception as e:  # pylint: disable=broad-except
-        return jsonify({"error": f"Internal server error: {str(e)}"}), 500
-
-@customers_bp.route("/customer/<string:stutengarten_id>/shares", methods=["GET"])
-def get_customer_shares(stutengarten_id):
-    """
-    Get all shares for a specific customer
-    
-    GET /customer/<stutengarten_id>/shares
-    
-    Returns:
-    - 200 JSON with list of shares
-    - 404 JSON {"error": "..."} if customer not found
-    - 500 JSON {"error": "..."} other errors
-    """
-    connector = current_app.config["DB_CONNECTOR"]
-
-    try:
-        # Ensure customer exists
-        Customer.get_by_stutengarten_id(connector, stutengarten_id)
-
-        # Get all shares
-        shares = CustomerShares.get_all_customer_shares(connector, stutengarten_id)
-
-        return jsonify([{
-            "share_id": share.get_id(),
-            "value": share.get_value(),
-            "customer_savings_book_id": share.get_customer_savings_book_id()
-        } for share in shares]), 200
-
-    except (CustomException, CustomerException) as e:
-        return jsonify({"error": str(e)}), 404
-    except Exception as e:  # pylint: disable=broad-except
-        return jsonify({"error": f"Internal server error: {str(e)}"}), 500
-
-
-@customers_bp.route("/customer/<string:stutengarten_id>/shares/<int:share_id>", methods=["DELETE"])
-def sell_customer_share(stutengarten_id, share_id):
-    """
-    Sell a share for a customer
-    
-    DELETE /customer/<stutengarten_id>/shares/<share_id>
-    
-    Returns:
-    - 200 JSON with sell information
-    - 404 JSON {"error": "..."} if customer or share not found
-    - 500 JSON {"error": "..."} other errors
-    """
-    connector = current_app.config["DB_CONNECTOR"]
-
-    try:
-        # Ensure customer exists
-        customer = Customer.get_by_stutengarten_id(connector, stutengarten_id)
-
-        # Get customer savings book
-        customer_savings_book = customer.get_savings_book()
-
-        # Sell share - pass stutengarten_id, NOT savings_book_id!
-        result = CustomerShares.sell_share(
-            connector,
-            share_id,
-            stutengarten_id,  # Pass stutengarten_id here
-            customer_savings_book
-        )
-
-        return jsonify(result), 200
-
-    except (CustomException, CustomerException) as e:
-        return jsonify({"error": str(e)}), 404
-    except Exception as e:  # pylint: disable=broad-except
-        return jsonify({"error": f"Internal server error: {str(e)}"}), 500
-
-
-@customers_bp.route("/customer/<string:stutengarten_id>/shares/<int:share_id>", methods=["PATCH"])
-def update_share_value(stutengarten_id, share_id):
-    """
-    Update the value of a specific share
-    
-    PATCH /customer/<stutengarten_id>/shares/<share_id>
-    Expects JSON: {"value": new_value}
-    
-    Returns:
-    - 200 JSON with update information
-    - 400 JSON {"error": "..."} if invalid data
-    - 404 JSON {"error": "..."} if customer or share not found
-    - 500 JSON {"error": "..."} other errors
-    """
-    connector = current_app.config["DB_CONNECTOR"]
-    data = request.json
-
-    if not data or "value" not in data:
-        return jsonify({"error": "New value is required"}), 400
-
-    new_value = data.get("value")
-
-    try:
-        # Ensure customer exists
-        customer = Customer.get_by_stutengarten_id(connector, stutengarten_id)
-
-        # Get savings book ID from database
-        conn = connector.get_connection()
-        cursor = conn.cursor(dictionary=True)
-        try:
-            cursor.execute(
-                "SELECT id FROM kundensparbuecher WHERE kunden_fk = %s",
-                (customer.id,)
-            )
-            savings_book_row = cursor.fetchone()
-            if not savings_book_row:
-                return jsonify({"error": "No savings book found for this customer"}), 404
-        finally:
-            cursor.close()
-            conn.close()
-
-        # Update share value
-        result = CustomerShares.update_share_value(
-            connector,
-            share_id,
-            new_value,
-            stutengarten_id
-        )
-
-        return jsonify(result), 200
-
-    except (CustomException, CustomerException) as e:
-        return jsonify({"error": str(e)}), 404
-    except Exception as e:  # pylint: disable=broad-except
-        return jsonify({"error": f"Internal server error: {str(e)}"}), 500
-
 @customers_bp.route("/customer/transfer", methods=["POST"])
 def transfer_between_customers():
     """
@@ -468,4 +281,140 @@ def transfer_between_customers():
         return jsonify({"error": str(e)}), 400
     except Exception as e: # pylint: disable=broad-except
         return jsonify({"error": "Internal server error", "details": str(e)}), 500
+
+@customers_bp.route("/shares/available", methods=["GET"])
+def get_available_shares():
+    """
+    Shows all available shares (without fixed price)
+    """
+    connector = current_app.config["DB_CONNECTOR"]
+    try:
+        shares = Share.get_all_available_shares(connector)
+        return jsonify([share.to_dict() for share in shares]), 200
+    except Exception as e: #pylint: disable=broad-except
+        return jsonify({"error": str(e)}), 500
+
+
+@customers_bp.route("/shares/name/<string:share_name>", methods=["GET"])
+def get_share_by_name(share_name):
+    """
+    Search for a share by name
+    """
+    connector = current_app.config["DB_CONNECTOR"]
+    try:
+        share = Share.get_by_name(connector, share_name)
+        return jsonify(share.to_dict()), 200
+    except ShareException as e:
+        return jsonify({"error": str(e)}), 404
+    except Exception as e: #pylint: disable=broad-except
+        return jsonify({"error": str(e)}), 500
+
+@customers_bp.route("/customer/<string:stutengarten_id>/shares/buy", methods=["POST"])
+def buy_customer_share_new(stutengarten_id):
+    """
+    Buy shares for a customer with FREE investment amount
+    """
+    connector = current_app.config["DB_CONNECTOR"]
+    data = request.json
+    if not data or "share_id" not in data or "amount" not in data:
+        return jsonify({"error": "share_id and amount are required"}), 400
+
+    share_id, amount = data.get("share_id"), data.get("amount")
+    try:
+        amount = float(amount)
+        if amount <= 0:
+            return jsonify({"error": "Amount must be positive"}), 400
+    except (ValueError, TypeError):
+        return jsonify({"error": "Invalid amount"}), 400
+
+    try:
+        customer = Customer.get_by_stutengarten_id(connector, stutengarten_id)
+        customer_savings_book = customer.get_savings_book()
+
+        purchase = CustomerShares(
+            db=connector,
+            share_id=share_id,
+            customer_stutengarten_id=stutengarten_id,
+            invested_amount=amount,
+            customer_savings_book=customer_savings_book
+        )
+        share = Share.get_by_id(connector, share_id)
+        return jsonify({
+            "status": "success", "message": f"{amount} Stuggis invested in {share.name}!",
+            "purchase_id": purchase.id, "share_name": share.name, "symbol": share.symbol,
+            "invested_amount": amount, "current_value": amount,
+            "new_balance": customer_savings_book.balance
+        }), 201
+    except (CustomerException, ShareException, CustomException) as e:
+        return jsonify({"error": str(e)}), 400
+    except Exception as e: #pylint: disable=broad-except
+        return jsonify({"error": f"Error: {str(e)}"}), 500
+
+
+@customers_bp.route("/customer/<string:stutengarten_id>/shares", methods=["GET"])
+def get_customer_shares_new(stutengarten_id):
+    """
+    Shows all shares of a customer with profit/loss
+    """
+    connector = current_app.config["DB_CONNECTOR"]
+    try:
+        Customer.get_by_stutengarten_id(connector, stutengarten_id)
+        shares = CustomerShares.get_all_customer_shares(connector, stutengarten_id)
+        return jsonify([share.to_dict() for share in shares]), 200
+    except (CustomException, CustomerException) as e:
+        return jsonify({"error": str(e)}), 404
+    except Exception as e: #pylint: disable=broad-except
+        return jsonify({"error": f"Error: {str(e)}"}), 500
+
+
+@customers_bp.route("/customer/<string:stutengarten_id>/shares/<int:share_id>", methods=["PATCH"])
+def update_share_value_new(stutengarten_id, share_id):
+    """
+    MANUAL: Updates share value after physical wheel of fortune
+    """
+    connector = current_app.config["DB_CONNECTOR"]
+    data = request.json
+    if not data or "new_value" not in data:
+        return jsonify({"error": "new_value is required"}), 400
+
+    try:
+        new_value = float(data["new_value"])
+        result = CustomerShares.update_share_value(connector, share_id, new_value, stutengarten_id)
+        return jsonify({"status": "success", "message": "Share value updated", **result}), 200
+    except (CustomException, CustomerException) as e:
+        return jsonify({"error": str(e)}), 404
+    except ValueError:
+        return jsonify({"error": "Invalid value"}), 400
+    except Exception as e: #pylint: disable=broad-except
+        return jsonify({"error": f"Error: {str(e)}"}), 500
+
+
+@customers_bp.route("/customer/<string:stutengarten_id>/shares/<int:share_id>", methods=["DELETE"])
+def sell_customer_share_new(stutengarten_id, share_id):
+    """
+    Sells share at current value
+    """
+    connector = current_app.config["DB_CONNECTOR"]
+    try:
+        customer = Customer.get_by_stutengarten_id(connector, stutengarten_id)
+        customer_savings_book = customer.get_savings_book()
+
+        all_shares = CustomerShares.get_all_customer_shares(connector, stutengarten_id)
+        share_to_sell = None
+
+        for share in all_shares:
+            if share.id == share_id:
+                share_to_sell = share
+                break
+
+        if not share_to_sell:
+            return jsonify({"error": "Share not found"}), 404
+
+        result = share_to_sell.sell(customer_savings_book)
+        return jsonify(result), 200
+    except (CustomException, CustomerException) as e:
+        return jsonify({"error": str(e)}), 404
+    except Exception as e: #pylint: disable=broad-except
+        return jsonify({"error": f"Error: {str(e)}"}), 500
+
 #End-of-file

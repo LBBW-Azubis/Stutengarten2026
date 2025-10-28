@@ -26,12 +26,24 @@ CREATE TABLE customer_transactions (
 	FOREIGN	KEY (customer_savings_book_fk) REFERENCES customer_savings_books(id) ON DELETE CASCADE
 	);
 
+-- predefined Shares
+CREATE TABLE shares (
+	id INT AUTO_INCREMENT PRIMARY KEY,
+	name VARCHAR(100) NOT NULL UNIQUE,
+	symbol VARCHAR (5) NOT NULL UNIQUE,
+	description TEXT,
+	created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 CREATE TABLE customer_shares (
 	id INT AUTO_INCREMENT PRIMARY KEY,
 	owner_fk VARCHAR(50) NOT NULL,
-	value INT NOT NULL DEFAULT 3,
-	weekdays ENUM('MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY') NOT NULL,
-	FOREIGN KEY (owner_fk) REFERENCES customers(stutengarten_id) ON DELETE CASCADE
+	share_fk INT NOT NULL,
+	invested_amount INT NOT NULL,
+	current_value INT NOT NULL,
+	weekdays ENUM('MONTAG', 'DIENSTAG', 'MITTWOCH', 'DONNERSTAG', 'FREITAG', 'SAMSTAG', 'SONNTAG') NOT NULL,
+	FOREIGN KEY (owner_fk) REFERENCES customers(stutengarten_id) ON DELETE CASCADE,
+	FOREIGN KEY (share_fk) REFERENCES shares(id) ON DELETE CASCADE
 	);
 
 
@@ -61,7 +73,7 @@ CREATE TABLE company_revenues (
 -- Statistics
 CREATE TABLE customer_statistics (
 	id INT AUTO_INCREMENT PRIMARY KEY,
-	weekdays ENUM('MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY') NOT NULL,
+	weekdays ENUM('MONTAG', 'DIENSTAG', 'MITTWOCH', 'DONNERSTAG', 'FREITAG', 'SAMSTAG', 'SONNTAG') NOT NULL,
 	total_revenue INT
 	);
 	
@@ -69,7 +81,7 @@ CREATE TABLE customer_statistics (
 -- Company Statistics
 CREATE TABLE company_statistics (
 	id INT AUTO_INCREMENT PRIMARY KEY,
-	weekdays ENUM('MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY') NOT NULL,
+	weekdays ENUM('MONTAG', 'DIENSTAG', 'MITTWOCH', 'DONNERSTAG', 'FREITAG', 'SAMSTAG', 'SONNTAG') NOT NULL,
 	total_revenue INT
 	);
 
@@ -84,3 +96,13 @@ CREATE TABLE economic_aid (
 
 	);
 
+
+INSERT INTO shares (name, symbol, description) VALUES
+('Apfel AG', 'APF', 'Technologie-Unternehmen'),
+('Mercedos AG', 'MRC', 'Auto-Hersteller'),
+('Bananen Bank', 'BNB', 'Bank'),
+('Prinzen Sport', 'PSP', 'Schokoladen-Produzent'),
+('Lufthannah', 'LHH', 'Flugzeuge'),
+('Porche', 'POR', 'Auto-Hersteller'),
+('H&N', 'HuN', 'Kleidungs-Produzent'),
+('Fohrtnait', 'FRNT', 'Computerspiele');

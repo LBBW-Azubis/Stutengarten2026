@@ -18,27 +18,23 @@ class CustomerSavingsBook:
         result = []
         conn = db.get_connection()
         cursor = conn.cursor(dictionary=True)
-        cursor2 = conn.cursor(dictionary=True)
         try:
-            cursor.execute("SELECT * FROM kundensparbuecher")
+            query = """
+            SELECT ks.saldo, k.stutengarten_id, k.vorname, k.nachname
+            FROM kundensparbuecher ks
+            JOIN kunden k ON ks.kunden_fk = k.stutengarten_id
+            """
+            cursor.execute(query)
             for row in cursor.fetchall():
-                customer_id = row.get("kunden_fk")
-                balance = row["saldo"]
-                cursor2.execute("SELECT * FROM kunden WHERE id = %s", (customer_id,))
-                customer_row = cursor2.fetchone()
-                if customer_row:
-                    result.append({
-                        "stutengarten_id": customer_row["stutengarten_id"],
-                        "first_name": customer_row["vorname"],
-                        "last_name": customer_row["nachname"],
-                        "balance": balance,
-                    })
-                else:
-                    raise CustomException("No customer found for this savings book!")
+                result.append({
+                    "stutengarten_id": row["stutengarten_id"],
+                    "first_name": row["vorname"],
+                    "last_name": row["nachname"],
+                    "balance": row["saldo"],
+                })
             return result
         finally:
             cursor.close()
-            cursor2.close()
             conn.close()
 
     @staticmethod
@@ -50,27 +46,22 @@ class CustomerSavingsBook:
         result = []
         conn = db.get_connection()
         cursor = conn.cursor(dictionary=True)
-        cursor2 = conn.cursor(dictionary=True)
         try:
-            # stutengarten_id -> numerische kunden.id auflösen
-            customer = Customer.get_by_stutengarten_id(db, stutengarten_id)
-            customer_id = customer.id
-            cursor.execute("SELECT * FROM kundensparbuecher WHERE kunden_fk=%s", (customer_id,))
+            query = """
+            SELECT ks.saldo, k.stutengarten_id
+            FROM kundensparbuecher ks
+            JOIN kunden k ON ks.kunden_fk = k.stutengarten_id
+            WHERE k.stutengarten_id = %s
+            """
+            cursor.execute(query, (stutengarten_id,))
             for row in cursor.fetchall():
-                balance = row["saldo"]
-                cursor2.execute("SELECT * FROM kunden WHERE id = %s", (customer_id,))
-                customer_row = cursor2.fetchone()
-                if customer_row:
-                    result.append({
-                        "stutengarten_id": customer_row["stutengarten_id"],
-                        "balance": balance,
-                    })
-                else:
-                    raise CustomException("No customer found for this savings book!")
+                result.append({
+                    "stutengarten_id": row["stutengarten_id"],
+                    "balance": row["saldo"],
+                })
             return result
         finally:
             cursor.close()
-            cursor2.close()
             conn.close()
 
     @staticmethod
@@ -79,15 +70,22 @@ class CustomerSavingsBook:
         Creates a new savings book for the given customer.
         Returns: dict {"customer_id": ..., "balance": 0}
         """
-        customer = Customer.get_by_stutengarten_id(db, stutengarten_id)
-        customer_id = customer.id
+        # Ensure customer exists before creating a savings book
+        Customer.get_by_stutengarten_id(db, stutengarten_id)
+
         conn = db.get_connection()
         cursor = conn.cursor()
         try:
-            cursor.execute("INSERT INTO kundensparbuecher (kunden_fk, saldo) VALUES (%s, 0)", (customer_id,)) #pylint: disable=line-too-long
+            cursor.execute(
+                "INSERT INTO kundensparbuecher (kunden_fk, saldo) VALUES (%s, 0)", 
+                (stutengarten_id,)
+            )
             conn.commit()
             return {"stutengarten_id": stutengarten_id, "balance": 0}
         except Exception as e:
+            # Check for duplicate entry
+            if "Duplicate entry" in str(e):
+                raise CustomException(f"Savings book for customer {stutengarten_id} already exists.") from e #pylint: disable=line-too-long
             raise CustomException(f"Error creating savings book: {e}") from e
         finally:
             cursor.close()
@@ -102,13 +100,15 @@ class CustomerSavingsBook:
         conn = db.get_connection()
         cursor = conn.cursor()
         try:
-            customer = Customer.get_by_stutengarten_id(db, stutengarten_id)
-            numeric_customer_id = customer.id
+            # Check if customer exists
+            Customer.get_by_stutengarten_id(db, stutengarten_id)
 
-            cursor.execute("UPDATE kundensparbuecher SET saldo=%s WHERE kunden_fk=%s",
-                           (balance, numeric_customer_id))
+            cursor.execute(
+                "UPDATE kundensparbuecher SET saldo=%s WHERE kunden_fk=%s",
+                (balance, stutengarten_id)
+            )
             if cursor.rowcount == 0:
-                raise CustomException("Could not update balance")
+                raise CustomException("Could not update balance. Savings book might not exist.")
             conn.commit()
             return {"stutengarten_id": stutengarten_id, "balance": balance}
         except Exception as e:
@@ -116,4 +116,5 @@ class CustomerSavingsBook:
         finally:
             cursor.close()
             conn.close()
+
 #End-of-file

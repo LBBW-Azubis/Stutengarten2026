@@ -111,7 +111,8 @@ class Customer:
         conn = self.db.get_connection()
         cursor = conn.cursor(dictionary=True)
         try:
-            cursor.execute("SELECT * FROM kundensparbuecher WHERE kunden_fk = %s", (self.id,))
+            # KORREKTUR: Suche in 'kundensparbuecher' mit 'stutengarten_id', nicht 'id'.
+            cursor.execute("SELECT * FROM kundensparbuecher WHERE kunden_fk = %s", (self.stutengarten_id,))
             row = cursor.fetchone()
         finally:
             cursor.close()
@@ -166,4 +167,5 @@ class Customer:
             "first_name": self.first_name,
             "last_name": self.last_name,
         }
+
 #End-of-file
