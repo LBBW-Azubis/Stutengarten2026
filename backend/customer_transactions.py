@@ -36,7 +36,7 @@ class CustomerTransaction:
             cursor = conn.cursor()
             try:
                 cursor.execute(
-                    "INSERT INTO kundenumsaetze (sparbuch_fk, betrag, verwendungszweck) VALUES (%s, %s, %s)",
+                    "INSERT INTO kundenumsaetze (kundensparbuch_fk, betrag, verwendungszweck) VALUES (%s, %s, %s)",
                     (customer_savings_book_id, amount, purpose)
                     )
                 self.id = cursor.lastrowid
@@ -84,7 +84,7 @@ class CustomerTransaction:
             query = """
             SELECT ku.*, k.vorname, k.nachname
             FROM kundenumsaetze ku
-            JOIN kundensparbuecher ks ON ku.sparbuch_fk = ks.id
+            JOIN kundensparbuecher ks ON ku.kundensparbuch_fk = ks.id
             JOIN kunden k ON ks.kunden_fk = k.stutengarten_id
             WHERE k.stutengarten_id = %s
             ORDER BY ku.id DESC
@@ -94,7 +94,7 @@ class CustomerTransaction:
             for row in cursor.fetchall():
                 transaction = CustomerTransaction(
                     db,
-                    row["sparbuch_fk"],
+                    row["kundensparbuch_fk"],
                     row["betrag"],
                     row["verwendungszweck"],
                     transaction_id=row["id"]
@@ -115,7 +115,8 @@ class CustomerTransaction:
         conn = self.db.get_connection()
         cursor = conn.cursor(dictionary=True)
         try:
-            cursor.execute("SELECT * FROM kundenstatistik WHERE wochentage = %s", (current_weekday,))
+            cursor.execute("SELECT * FROM kundenstatistik WHERE wochentage = %s",
+                           (current_weekday,))
             if not cursor.fetchone():
                 cursor.execute("INSERT INTO kundenstatistik (wochentage, gesamtumsatz) VALUES (%s, %s)",
                                (current_weekday, self.amount))
@@ -123,7 +124,7 @@ class CustomerTransaction:
                 cursor.execute("UPDATE kundenstatistik SET gesamtumsatz = gesamtumsatz + %s WHERE wochentage = %s",
                                (self.amount, current_weekday))
             conn.commit()
-        except Exception as err:
+        except Exception as err: # pylint:disable=broad-except
             conn.rollback()
             print(f"Error updating customer statistics: {err}")
         finally:
@@ -141,7 +142,8 @@ class CustomerTransaction:
         try:
             cursor.execute("SELECT * FROM kundenstatistik ORDER BY id")
             for row in cursor.fetchall():
-                result.append({"weekday": row["wochentage"], "total_amount": row["gesamtumsatz"] or 0})
+                result.append({"weekday": row["wochentage"],
+                               "total_amount": row["gesamtumsatz"] or 0})
             return result
         finally:
             cursor.close()
@@ -165,6 +167,26 @@ class CustomerTransaction:
 
     @staticmethod
     def transfer(db:DbConnector, from_stutengarten_id, to_stutengarten_id, amount, purpose=""):
+        """
+        Transfers an amount between the savings books of two customers.
+
+        The method ensures the entire transfer is an atomic database
+        transaction. If any step fails, the entire operation is rolled back.
+
+        Args:
+            db (DbConnector): The database connector instance.
+            from_stutengarten_id (str): ID of the sending customer.
+            to_stutengarten_id (str): ID of the receiving customer.
+            amount (int): The amount to be transferred.
+            purpose (str, optional): The purpose for the transaction.
+
+        Returns:
+            dict: A confirmation of the successful transfer.
+
+        Raises:
+            CustomerTransactionException: For a missing savings book or insufficient funds.
+            CustomerException: If a customer does not exist.
+        """
         conn = db.get_connection()
         cursor = conn.cursor(dictionary=True)
         try:
@@ -173,9 +195,11 @@ class CustomerTransaction:
             Customer.get_by_stutengarten_id(db, to_stutengarten_id)
 
             # KORREKTUR: Lock savings books using the correct foreign key (stutengarten_id)
-            cursor.execute("SELECT id, saldo FROM kundensparbuecher WHERE kunden_fk = %s FOR UPDATE", (from_stutengarten_id,))
+            cursor.execute("SELECT id, saldo FROM kundensparbuecher WHERE kunden_fk = %s FOR UPDATE",
+                           (from_stutengarten_id,))
             sb_sender = cursor.fetchone()
-            cursor.execute("SELECT id, saldo FROM kundensparbuecher WHERE kunden_fk = %s FOR UPDATE", (to_stutengarten_id,))
+            cursor.execute("SELECT id, saldo FROM kundensparbuecher WHERE kunden_fk = %s FOR UPDATE",
+                           (to_stutengarten_id,))
             sb_receiver = cursor.fetchone()
 
             if not sb_sender or not sb_receiver:
@@ -184,15 +208,20 @@ class CustomerTransaction:
                 raise CustomerTransactionException("Insufficient funds")
 
             # Update balances using the INT primary key of the savings book
-            cursor.execute("UPDATE kundensparbuecher SET saldo = saldo - %s WHERE id = %s", (amount, sb_sender["id"]))
-            cursor.execute("UPDATE kundensparbuecher SET saldo = saldo + %s WHERE id = %s", (amount, sb_receiver["id"]))
+            cursor.execute("UPDATE kundensparbuecher SET saldo = saldo - %s WHERE id = %s",
+                           (amount, sb_sender["id"]))
+            cursor.execute("UPDATE kundensparbuecher SET saldo = saldo + %s WHERE id = %s",
+                           (amount, sb_receiver["id"]))
 
             # Create transaction records using the INT primary key of the savings book
-            cursor.execute("INSERT INTO kundenumsaetze (sparbuch_fk, betrag, verwendungszweck) VALUES (%s, %s, %s)", (sb_sender["id"], -amount, purpose))
-            cursor.execute("INSERT INTO kundenumsaetze (sparbuch_fk, betrag, verwendungszweck) VALUES (%s, %s, %s)", (sb_receiver["id"], amount, purpose))
+            cursor.execute("INSERT INTO kundenumsaetze (kundensparbuch_fk, betrag, verwendungszweck) VALUES (%s, %s, %s)",
+                           (sb_sender["id"], -amount, purpose))
+            cursor.execute("INSERT INTO kundenumsaetze (kundensparbuch_fk, betrag, verwendungszweck) VALUES (%s, %s, %s)",
+                           (sb_receiver["id"], amount, purpose))
 
             conn.commit()
-            return {"status": "success", "from": from_stutengarten_id, "to": to_stutengarten_id, "amount": amount}
+            return {"status": "success", "from": from_stutengarten_id,
+                    "to": to_stutengarten_id, "amount": amount}
         except Exception as err:
             conn.rollback()
             raise err
