@@ -2,11 +2,22 @@
     Import db_connector for connection to database
     datetime for statistics
     company for unique exceptions
+    import locale for german wording of current_weekday
 """
 
+import locale
 from datetime import datetime
 from db_connector import DbConnector
 from company import CustomCompanyException
+
+try:
+    locale.setlocale(locale.LC_TIME, 'de_DE.UTF-8')
+except locale.Error:
+    try:
+        locale.setlocale(locale.LC_TIME, 'German_Germany.1252')
+    except locale.Error:
+        print("Warning: German Locale couldnt be set. Weekdays will be in English and wont work with statistics")
+
 
 class CompanyTransactionException(Exception):
     """Special exception for company transaction-related errors"""

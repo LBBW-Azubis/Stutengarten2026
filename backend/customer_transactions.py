@@ -1,7 +1,19 @@
-"""Import db_connector for connection to database and datetime for statistics"""
+"""
+Import db_connector for connection to database and datetime for statistics
+import locale for german wording of current_weekday
+"""
+import locale
 from datetime import datetime
 from db_connector import DbConnector
 from customer import Customer,CustomerException, CustomException
+
+try:
+    locale.setlocale(locale.LC_TIME, 'de_DE.UTF-8')
+except locale.Error:
+    try:
+        locale.setlocale(locale.LC_TIME, 'German_Germany.1252')
+    except locale.Error:
+        print("Warning: German Locale couldnt be set. Weekdays will be in English and wont work with statistics")
 
 class CustomerTransactionException(Exception):
     """Special exception for customer transaction-related errors"""
@@ -116,10 +128,14 @@ class CustomerTransaction:
         cursor = conn.cursor(dictionary=True)
         try:
             cursor.execute("SELECT * FROM kundenstatistik WHERE wochentage = %s",
-                           (current_weekday,))
-            if not cursor.fetchone():
+                           (current_weekday,)
+            )
+            row = cursor.fetchone()
+
+            if not row:
                 cursor.execute("INSERT INTO kundenstatistik (wochentage, gesamtumsatz) VALUES (%s, %s)",
-                               (current_weekday, self.amount))
+                               (current_weekday, self.amount)
+                )
             else:
                 cursor.execute("UPDATE kundenstatistik SET gesamtumsatz = gesamtumsatz + %s WHERE wochentage = %s",
                                (self.amount, current_weekday))
@@ -163,8 +179,6 @@ class CustomerTransaction:
             result["customer_name"] = self.customer_name
         return result
 
-    # ... (getter methods)
-
     @staticmethod
     def transfer(db:DbConnector, from_stutengarten_id, to_stutengarten_id, amount, purpose=""):
         """
@@ -194,7 +208,6 @@ class CustomerTransaction:
             Customer.get_by_stutengarten_id(db, from_stutengarten_id)
             Customer.get_by_stutengarten_id(db, to_stutengarten_id)
 
-            # KORREKTUR: Lock savings books using the correct foreign key (stutengarten_id)
             cursor.execute("SELECT id, saldo FROM kundensparbuecher WHERE kunden_fk = %s FOR UPDATE",
                            (from_stutengarten_id,))
             sb_sender = cursor.fetchone()

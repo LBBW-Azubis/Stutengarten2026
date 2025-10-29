@@ -27,6 +27,7 @@ class DbConnector:
 
     def __init__(self):
         self.pool = None
+        log.info("DbConnector-Instance created")
 
     def connect(
         self,
@@ -92,5 +93,9 @@ class DbConnector:
                 time.sleep(RETRY_SLEEP_S)
 
     def close(self):
-        self.pool = None
+        """
+        Must be empty so the connection doesnt close unintended
+        """
+        pass
+
 # End of file
