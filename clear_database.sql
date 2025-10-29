@@ -15,7 +15,6 @@ TRUNCATE TABLE kundenstatistik;
 TRUNCATE TABLE unternehmensstatistik;
 TRUNCATE TABLE kunden;
 TRUNCATE TABLE unternehmen;
-TRUNCATE TABLE aktien;
 
 -- 4. Fremdschlüsselprüfung wieder einschalten
 SET FOREIGN_KEY_CHECKS = 1;

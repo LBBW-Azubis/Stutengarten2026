@@ -1,6 +1,6 @@
 """import db_connector for connection to database"""
 from db_connector import DbConnector
-from customer import Customer
+from customer import Customer, CustomerException
 from customer import CustomException
 
 class CustomerSavingsBook:
@@ -70,8 +70,6 @@ class CustomerSavingsBook:
         Creates a new savings book for the given customer.
         Returns: dict {"customer_id": ..., "balance": 0}
         """
-        # Ensure customer exists before creating a savings book
-        Customer.get_by_stutengarten_id(db, stutengarten_id)
 
         conn = db.get_connection()
         cursor = conn.cursor()
@@ -83,9 +81,12 @@ class CustomerSavingsBook:
             conn.commit()
             return {"stutengarten_id": stutengarten_id, "balance": 0}
         except Exception as e:
+            conn.rollback()
             # Check for duplicate entry
             if "Duplicate entry" in str(e):
                 raise CustomException(f"Savings book for customer {stutengarten_id} already exists.") from e #pylint: disable=line-too-long
+            if "foreign key constraint fails" in str(e).lower():
+                 raise CustomException(f"Customer with stutengarten_id {stutengarten_id} does not exist.") from e
             raise CustomException(f"Error creating savings book: {e}") from e
         finally:
             cursor.close()
@@ -100,21 +101,24 @@ class CustomerSavingsBook:
         conn = db.get_connection()
         cursor = conn.cursor()
         try:
-            # Check if customer exists
-            Customer.get_by_stutengarten_id(db, stutengarten_id)
 
             cursor.execute(
                 "UPDATE kundensparbuecher SET saldo=%s WHERE kunden_fk=%s",
                 (balance, stutengarten_id)
             )
             if cursor.rowcount == 0:
-                raise CustomException("Could not update balance. Savings book might not exist.")
+                try:
+                    Customer.get_by_stutengarten_id(db, stutengarten_id)
+                    raise CustomException("Could not update balance. Savings book might not exist.")
+                except CustomException:
+                    raise CustomerException(f"Customer with stutengarten_id {stutengarten_id} does not exist.")
+
             conn.commit()
             return {"stutengarten_id": stutengarten_id, "balance": balance}
         except Exception as e:
+            conn.rollback()
             raise CustomException(f"Error updating balance: {e}") from e
         finally:
             cursor.close()
             conn.close()
-
 #End-of-file

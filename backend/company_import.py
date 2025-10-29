@@ -38,7 +38,8 @@ class CompanyImport:
             print("No company data to insert")
             return 0
 
-        cursor = self.db_connector.get_connection().cursor()
+        conn = self.db_connector.get_connection()
+        cursor = conn.cursor()
         inserted_count = 0
 
         # insert query for unternehmen table
@@ -47,33 +48,37 @@ class CompanyImport:
         VALUES (%s)
         """
 
-        for company in company_data:
-            try:
-                # map xlsx columns to database columns
-                company_name =      company.get('Unternehmen' or \
-                                    company.get('Bezeichnung') or \
-                                    company.get('Name')) or \
-                                    company.get('Firma')
+        try:
+            for company in company_data:
+                try:
+                    company_name =      company.get('Unternehmen' or \
+                                        company.get('Bezeichnung') or \
+                                        company.get('Name')) or \
+                                        company.get('Firma')
 
-                if not company_name:
-                    print(f"Skipping company with missing required fields; {company}")
-                    continue
+                    if not company_name:
+                        print(f"Skipping company with missing required fields; {company}")
+                        continue
 
-                values = (company_name,) # comma is necessary because its a tuple
+                    values = (company_name,)
 
-                cursor.execute(insert_query, values)
-                inserted_count += 1
+                    cursor.execute(insert_query, values)
+                    inserted_count += 1
 
-                print(f"Inserted company: {company_name}")
+                    print(f"Inserted company: {company_name}")
 
-            except Exception as e: # pylint: disable=broad-except
-                print(f"Error inserting company {company}: {e}")
-                continue
+                except Exception as e: # pylint: disable=broad-except
+                    print(f"Error inserting company {company}: {e}")
+                    continue 
 
-        # commit all changes
-        self.db_connector.get_connection().commit()
-        cursor.close()
-        self.db_connector.close()
+            conn.commit()
+
+        except Exception as e:
+            print(f"Major error during insert loop: {e}")
+            conn.rollback() 
+        finally:
+            cursor.close()
+            conn.close() 
 
         return inserted_count
 

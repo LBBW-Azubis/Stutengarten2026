@@ -18,27 +18,27 @@ class CompanySavingsBook:
         result = []
         conn = db.get_connection()
         cursor = conn.cursor(dictionary=True)
-        cursor2 = conn.cursor(dictionary=True)
+        
+        query = """
+        SELECT 
+            u.bezeichnung AS name, 
+            u.mappe_abgegeben AS folder_handed_over, 
+            us.saldo AS balance
+        FROM unternehmenssparbuecher us
+        JOIN unternehmen u ON us.unternehmen_fk = u.id
+        """
 
         try:
-            cursor.execute("SELECT * FROM unternehmenssparbuecher")
+            cursor.execute(query)
             for row in cursor.fetchall():
-                company_id = row.get("unternehmen_fk")
-                balance = row["saldo"]
-                cursor2.execute("SELECT * FROM unternehmen WHERE id = %s", (company_id,))
-                company_row = cursor2.fetchone()
-                if company_row:
-                    result.append({
-                        "name":company_row["bezeichnung"],
-                        "folder_handed_over":company_row["mappe_abgegeben"],
-                        "balance":balance
-                    })
-                else:
-                    raise CustomCompanyException("No company found for this savings book!")
+                result.append({
+                    "name": row["name"],
+                    "folder_handed_over": row["folder_handed_over"],
+                    "balance": row["balance"]
+                })
             return result
         finally:
             cursor.close()
-            cursor2.close()
             conn.close()
 
     @staticmethod
@@ -50,25 +50,26 @@ class CompanySavingsBook:
         result = []
         conn = db.get_connection()
         cursor = conn.cursor(dictionary=True)
-        cursor2 = conn.cursor(dictionary=True)
+
+        query = """
+        SELECT 
+            u.bezeichnung AS name,
+            us.saldo AS balance
+        FROM unternehmenssparbuecher us
+        JOIN unternehmen u ON us.unternehmen_fk = u.id
+        WHERE us.unternehmen_fk = %s
+        """
 
         try:
-            cursor.execute("SELECT * FROM unternehmenssparbuecher WHERE unternehmen_fk = %s", (company_id,)) # pylint:disable=line-too-long
+            cursor.execute(query, (company_id,))
             for row in cursor.fetchall():
-                balance = row["saldo"]
-                cursor2.execute("SELECT * FROM unternehmen WHERE id = %s", (company_id,))
-                customer_row = cursor2.fetchone()
-                if customer_row:
-                    result.append({
-                        "name": customer_row["bezeichnung"],
-                        "balance": balance
-                    })
-                else:
-                    raise CustomCompanyException("No company found for this savings book!")
+                result.append({
+                    "name": row["name"],
+                    "balance": row["balance"]
+                })
             return result
         finally:
             cursor.close()
-            cursor2.close()
             conn.close()
 
     @staticmethod

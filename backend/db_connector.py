@@ -14,7 +14,7 @@ AUTOCOMMIT = False
 CHARSET = "utf8mb4"
 
 # Ausleihen aus dem Pool: feste Warte-/Logging-Parameter
-GET_CONN_MAX_WAIT_S = 2.0    # max. Wartezeit auf eine freie Verbindung; None = kein Retry
+GET_CONN_MAX_WAIT_S = 2.0   # max. Wartezeit auf eine freie Verbindung; None = kein Retry
 WARN_THRESHOLD_S = 0.3       # ab dieser Wartezeit wird gewarnt (Logging)
 RETRY_SLEEP_S = 0.05         # Pause zwischen Retries, falls Pool voll
 #-----------------------------------------------------------------------------------------------------
@@ -94,8 +94,15 @@ class DbConnector:
 
     def close(self):
         """
-        Must be empty so the connection doesnt close unintended
+        Closes the connection pool. Called once on app shutdown.
         """
-        pass
-
+        # Diese Methode existiert für mysql.connector.pooling nicht direkt.
+        # Den Pool auf None zu setzen oder 'del self.pool' zu verwenden,
+        # signalisiert Python, die Ressourcen freizugeben.
+        if self.pool:
+            log.info("Closing DB pool '%s'", POOL_NAME)
+            # Der Pool selbst hat keine 'closeall()'-Methode.
+            # Das Löschen der Referenz ist der vorgesehene Weg.
+            self.pool = None
+        log.info("DbConnector closed.")
 # End of file

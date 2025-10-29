@@ -37,7 +37,9 @@ class CustomerImport:
             print("No customer data to insert")
             return 0
 
-        cursor = self.db_connector.get_connection().cursor()
+        # Hole die Verbindung EINMAL am Anfang
+        conn = self.db_connector.get_connection()
+        cursor = conn.cursor()
         inserted_count = 0
 
         # insert query for kunden table
@@ -46,37 +48,41 @@ class CustomerImport:
         VALUES (%s, %s, %s)
         """
 
-        for customer in customer_data:
-            try:
-                # map xlsx columns to database columns
-                # handels both Stungarten_ID and without underscore (Stutengarten ID)
-                stutengarten_id =   customer.get('Stutengarten ID' or \
-                                    customer.get('Stutengarten_ID') or \
-                                    customer.get('ID'))
+        try:
+            for customer in customer_data:
+                try:
+                    # map xlsx columns to database columns
+                    # handels both Stungarten_ID and without underscore (Stutengarten ID)
+                    stutengarten_id =   customer.get('Stutengarten ID' or \
+                                        customer.get('Stutengarten_ID') or \
+                                        customer.get('ID'))
 
-                vorname = customer.get('Vorname')
-                nachname = customer.get('Nachname')
+                    vorname = customer.get('Vorname')
+                    nachname = customer.get('Nachname')
 
-                if not stutengarten_id or not vorname or not nachname:
-                    print(f"Skipping customer with missing required fields; {customer}")
-                    continue
+                    if not stutengarten_id or not vorname or not nachname:
+                        print(f"Skipping customer with missing required fields; {customer}")
+                        continue
 
-                values = (stutengarten_id, vorname, nachname)
+                    values = (stutengarten_id, vorname, nachname)
 
-                cursor.execute(insert_query, values)
-                inserted_count += 1
+                    cursor.execute(insert_query, values)
+                    inserted_count += 1
 
-                print(f"Inserted customer: {stutengarten_id} {vorname} {nachname}")
+                    print(f"Inserted customer: {stutengarten_id} {vorname} {nachname}")
 
-            except Exception as e: # pylint: disable=broad-except
-                print(f"Error inserting customer {customer}: {e}")
-                continue
+                except Exception as e: # pylint: disable=broad-except
+                    print(f"Error inserting customer {customer}: {e}")
+                    continue 
+            
+            conn.commit()
 
-        # commit all changes
-        self.db_connector.get_connection().commit()
-        cursor.close()
-        self.db_connector.close()
+        except Exception as e:
+            print(f"Major error during insert loop: {e}")
+            conn.rollback()
+        finally:
+            cursor.close()
+            conn.close()
 
         return inserted_count
-
     # End-of-file
