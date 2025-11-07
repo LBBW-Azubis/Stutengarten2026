@@ -18,7 +18,7 @@ class CompanySavingsBook:
         result = []
         conn = db.get_connection()
         cursor = conn.cursor(dictionary=True)
-        
+
         query = """
         SELECT 
             u.bezeichnung AS name, 

@@ -13,39 +13,39 @@ from company_transactions import CompanyTransaction, CompanyTransactionException
 
 companies_bp = Blueprint("companies", __name__)
 
-@companies_bp.route("/company/<int:company_id>", methods=["GET"])
-def get_company(company_id):
+def _load_company(connector, company_name: str) -> Company:
     """
-    Retrieve a company by database ID
+    Resolve a company object by its unique name
     """
-    connector = current_app.config["DB_CONNECTOR"]
     try:
-        company = Company.get_by_db_id(connector, company_id)
-        return jsonify(company.to_dict()), 200
-    except (CustomCompanyException, CompanyException) as e:
-        return jsonify({"error": str(e)}), 404
-    except Exception as e:  # pylint: disable=broad-except
-        return jsonify({"error": "Internal server error", "details": str(e)}), 500
+        return Company.get_by_name(connector, company_name)
+    except (CustomCompanyException, CompanyException) as err:
+        raise CompanyException(str(err)) from err
 
-@companies_bp.route("/company/<string:bezeichnung>", methods=["GET"])
-def get_company_by_name(bezeichnung):
+@companies_bp.route("/company/<string:company_name>", methods=["GET"])
+def get_company(company_name):
     """
-    Retrieve a company by name in database
+    Retrieve a company by its name.
     """
     connector = current_app.config["DB_CONNECTOR"]
     try:
-        company = Company.get_by_name(connector, bezeichnung)
+        company = _load_company(connector, company_name)
         return jsonify(company.to_dict()), 200
-    except (CustomCompanyException, CompanyException) as e:
-        return jsonify({"error": str(e)}), 404
-    except Exception as e: #pylint: disable=broad-except
-        return jsonify({"error": "Internal server error", "details": str(e)}), 500
+    except CompanyException as err:
+        return jsonify({"error": str(err)}), 404
+    except Exception as err:  # pylint: disable=broad-except
+        return jsonify({"error": "Internal server error", "details": str(err)}), 500
 
 
 @companies_bp.route("/company", methods=["POST"])
 def create_company():
     """
-    Create a new company
+    Create a new company.
+    Expected JSON body:
+    {
+        "name": "Company Name",
+        "folder_handed_over": false
+    }
     """
     data = request.json
     if not data:
@@ -58,19 +58,20 @@ def create_company():
             name=data.get("name"),
             folder_handed_over=data.get("folder_handed_over", False),
         )
-        return jsonify(company.to_dict()), 200
-    except CompanyException as e:
-        return jsonify({"error": str(e)}), 400
-    except CustomCompanyException as e:
-        return jsonify({"error": str(e)}), 500
-    except Exception as e:  # pylint: disable=broad-except
-        return jsonify({"error": "Internal server error", "details": str(e)}), 500
+        return jsonify(company.to_dict()), 201
+    except CompanyException as err:
+        return jsonify({"error": str(err)}), 400
+    except CustomCompanyException as err:
+        return jsonify({"error": str(err)}), 500
+    except Exception as err:  # pylint: disable=broad-except
+        return jsonify({"error": "Internal server error", "details": str(err)}), 500
 
 
-@companies_bp.route("/company/<int:company_id>", methods=["PATCH"])
-def update_company(company_id):
+@companies_bp.route("/company/<string:company_name>", methods=["PATCH"])
+def update_company(company_name):
     """
-    Partially update company data (name, folder_handed_over)
+    Partially update company fields.
+    Allowed fields: name, folder_handed_over
     """
     data = request.json
     if not data:
@@ -78,9 +79,9 @@ def update_company(company_id):
 
     connector = current_app.config["DB_CONNECTOR"]
     try:
-        company = Company.get_by_db_id(connector, company_id)
-    except (CustomCompanyException, CompanyException) as e:
-        return jsonify({"error": str(e)}), 404
+        company = _load_company(connector, company_name)
+    except CompanyException as err:
+        return jsonify({"error": str(err)}), 404
 
     updates = []
     try:
@@ -90,105 +91,129 @@ def update_company(company_id):
         if "folder_handed_over" in data:
             company.update_folder_handed_over(data["folder_handed_over"])
             updates.append("folder_handed_over")
+
         if not updates:
             return jsonify({"error": "No valid fields to update"}), 400
 
-        return jsonify({"status": "success", "updated": updates, "company": company.to_dict()}), 200
-    except Exception as e:  # pylint: disable=broad-except
-        return jsonify({"error": str(e)}), 500
+        return jsonify({
+            "status": "success",
+            "updated": updates,
+            "company": company.to_dict()
+        }), 200
+    except Exception as err:  # pylint: disable=broad-except
+        return jsonify({"error": str(err)}), 500
 
 
-@companies_bp.route("/company/<int:company_id>", methods=["DELETE"])
-def delete_company(company_id):
+@companies_bp.route("/company/<string:company_name>", methods=["DELETE"])
+def delete_company(company_name):
     """
-    Delete a company by database ID
+    Delete a company by its name.
     """
     connector = current_app.config["DB_CONNECTOR"]
     try:
-        company = Company.get_by_db_id(connector, company_id)
+        company = _load_company(connector, company_name)
         company.delete()
-        return jsonify({"status": "success", "deleted id": company_id}), 200
-    except (CustomCompanyException, CompanyException) as e:
-        return jsonify({"error": str(e)}), 404
-    except Exception as e:  # pylint: disable=broad-except
-        return jsonify({"error": "Internal server error", "details": str(e)}), 500
+        return jsonify({"status": "success", "deleted": company_name}), 200
+    except CompanyException as err:
+        return jsonify({"error": str(err)}), 404
+    except Exception as err:  # pylint: disable=broad-except
+        return jsonify({"error": "Internal server error", "details": str(err)}), 500
 
 
 @companies_bp.route("/companysavingsbook", methods=["GET"])
 def get_all_company_savings_books():
     """
-    Retrieve an overview of all company savings books.
+    Retrieve all company savings books overview.
     """
     connector = current_app.config["DB_CONNECTOR"]
     try:
         result = CompanySavingsBook.get_all_company_savings_books(connector)
         return jsonify(result), 200
-    except Exception as e:  # pylint: disable=broad-except
-        return jsonify({"error": str(e)}), 500
+    except Exception as err:  # pylint: disable=broad-except
+        return jsonify({"error": str(err)}), 500
 
 
-@companies_bp.route("/company/<int:company_id>/savingsbook", methods=["GET"])
-def get_savings_book_for_company(company_id):
+@companies_bp.route("/company/<string:company_name>/savingsbook", methods=["GET"])
+def get_savings_book_for_company(company_name):
     """
-    Retrieve the savings book overview for a specific company.
+    Retrieve savings book overview for a specific company by name.
     """
     connector = current_app.config["DB_CONNECTOR"]
     try:
-        result = CompanySavingsBook.get_company_savings_book_overview(connector, company_id)
+        company = _load_company(connector, company_name)
+        result = CompanySavingsBook.get_company_savings_book_overview(connector, company.id)
         return jsonify(result), 200
-    except Exception as e:  # pylint: disable=broad-except
-        return jsonify({"error": str(e)}), 404
+    except CompanyException as err:
+        return jsonify({"error": str(err)}), 404
+    except Exception as err:  # pylint: disable=broad-except
+        return jsonify({"error": str(err)}), 500
 
 
-@companies_bp.route("/company/<int:company_id>/savingsbook", methods=["POST"])
-def create_savings_book_for_company(company_id):
+@companies_bp.route("/company/<string:company_name>/savingsbook", methods=["POST"])
+def create_savings_book_for_company(company_name):
     """
-    Create a new savings book for a company.
+    Create a new savings book for a company identified by name.
     """
     connector = current_app.config["DB_CONNECTOR"]
     try:
-        new_book = CompanySavingsBook.create_new(connector, company_id)
+        company = _load_company(connector, company_name)
+        new_book = CompanySavingsBook.create_new(connector, company.id)
         return jsonify(new_book), 201
-    except Exception as e:  # pylint: disable=broad-except
-        return jsonify({"error": str(e)}), 500
+    except CompanyException as err:
+        return jsonify({"error": str(err)}), 404
+    except Exception as err:  # pylint: disable=broad-except
+        return jsonify({"error": str(err)}), 500
 
 
-@companies_bp.route("/company/<int:company_id>/savingsbook/balance", methods=["PATCH"])
-def update_balance_for_company(company_id):
+@companies_bp.route("/company/<string:company_name>/savingsbook/balance", methods=["PATCH"])
+def update_balance_for_company(company_name):
     """
     Update the balance of a company's savings book.
-    Expects JSON: {"balance": new_balance}
+    Expected JSON body:
+    {
+        "balance": 123
+    }
     """
     data = request.json
-    if not data:
+    if not data or "balance" not in data:
         return jsonify({"error": "No new balance provided"}), 400
 
     connector = current_app.config["DB_CONNECTOR"]
     try:
-        updated = CompanySavingsBook.set_balance(connector, company_id, data["balance"])
+        company = _load_company(connector, company_name)
+        updated = CompanySavingsBook.set_balance(connector, company.id, data["balance"])
         return jsonify(updated), 200
-    except Exception as e:  # pylint: disable=broad-except
-        return jsonify({"error": str(e)}), 500
+    except CompanyException as err:
+        return jsonify({"error": str(err)}), 404
+    except Exception as err:  # pylint: disable=broad-except
+        return jsonify({"error": str(err)}), 500
 
 
-@companies_bp.route("/company/<int:company_id>/transactions", methods=["GET"])
-def get_company_transactions(company_id):
+@companies_bp.route("/company/<string:company_name>/transactions", methods=["GET"])
+def get_company_transactions(company_name):
     """
-    Retrieve all transactions for a specific company.
+    Retrieve all transactions for a specific company by name.
     """
     connector = current_app.config["DB_CONNECTOR"]
     try:
-        transactions = CompanyTransaction.get_all_transactions_for_company(connector, company_id)
+        company = _load_company(connector, company_name)
+        transactions = CompanyTransaction.get_all_transactions_for_company(connector, company.id)
         return jsonify([transaction.to_dict() for transaction in transactions]), 200
-    except Exception as e:  # pylint: disable=broad-except
-        return jsonify({"error": f"Error retrieving transactions: {str(e)}"}), 500
+    except CompanyException as err:
+        return jsonify({"error": str(err)}), 404
+    except Exception as err:  # pylint: disable=broad-except
+        return jsonify({"error": f"Error retrieving transactions: {str(err)}"}), 500
 
 
-@companies_bp.route("/company/<int:company_id>/transactions", methods=["POST"])
-def create_company_transaction(company_id):
+@companies_bp.route("/company/<string:company_name>/transactions", methods=["POST"])
+def create_company_transaction(company_name):
     """
-    Create a new transaction for a company
-    Expects JSON: {"amount": 100, "purpose": "..."}
+    Create a new transaction for a company identified by name.
+    Expected JSON body:
+    {
+        "amount": 100,
+        "purpose": "Some text"
+    }
     """
     data = request.json
     if not data:
@@ -196,25 +221,20 @@ def create_company_transaction(company_id):
 
     amount = data.get("amount")
     purpose = data.get("purpose", "")
-
     if amount is None:
         return jsonify({"error": "Amount is required"}), 400
 
     connector = current_app.config["DB_CONNECTOR"]
     try:
-        # Ensure company exists
-        company = Company.get_by_db_id(connector, company_id)
-
-        # Get company savings book object
+        company = _load_company(connector, company_name)
         company_savings_book = company.get_savings_book()
 
-        # Get savings book ID from database
         conn = connector.get_connection()
         cursor = conn.cursor(dictionary=True)
         try:
             cursor.execute(
                 "SELECT id FROM unternehmenssparbuecher WHERE unternehmen_fk = %s",
-                (company_id,),
+                (company.id,),
             )
             savings_book_row = cursor.fetchone()
             if not savings_book_row:
@@ -224,7 +244,6 @@ def create_company_transaction(company_id):
             cursor.close()
             conn.close()
 
-        # Create transaction
         transaction = CompanyTransaction(
             connector,
             savings_book_id,
@@ -232,26 +251,24 @@ def create_company_transaction(company_id):
             purpose,
             company_savings_book,
         )
-
         return jsonify(transaction.to_dict()), 201
-
-    except (CustomCompanyException, CompanyException) as e:
-        return jsonify({"error": str(e)}), 404
-    except CompanyTransactionException as e:
-        return jsonify({"error": str(e)}), 400
-    except Exception as e:  # pylint: disable=broad-except
-        return jsonify({"error": f"Internal server error: {str(e)}"}), 500
+    except (CustomCompanyException, CompanyException) as err:
+        return jsonify({"error": str(err)}), 404
+    except CompanyTransactionException as err:
+        return jsonify({"error": str(err)}), 400
+    except Exception as err:  # pylint: disable=broad-except
+        return jsonify({"error": f"Internal server error: {str(err)}"}), 500
 
 
 @companies_bp.route("/company/statistics", methods=["GET"])
 def get_company_statistics():
     """
-    Retrieve company transaction statistics by weekday
+    Retrieve company transaction statistics grouped by weekday.
     """
     connector = current_app.config["DB_CONNECTOR"]
     try:
         statistics = CompanyTransaction.get_company_statistics(connector)
         return jsonify(statistics), 200
-    except Exception as e:  # pylint: disable=broad-except
-        return jsonify({"error": f"Error retrieving statistics: {str(e)}"}), 500
+    except Exception as err:  # pylint: disable=broad-except
+        return jsonify({"error": f"Error retrieving statistics: {str(err)}"}), 500
 #End-of-file

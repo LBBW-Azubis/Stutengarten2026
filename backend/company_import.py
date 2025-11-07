@@ -69,16 +69,16 @@ class CompanyImport:
 
                 except Exception as e: # pylint: disable=broad-except
                     print(f"Error inserting company {company}: {e}")
-                    continue 
+                    continue
 
             conn.commit()
 
-        except Exception as e:
+        except Exception as e: #pylint: disable=broad-except
             print(f"Major error during insert loop: {e}")
-            conn.rollback() 
+            conn.rollback()
         finally:
             cursor.close()
-            conn.close() 
+            conn.close()
 
         return inserted_count
 
