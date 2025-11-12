@@ -10,8 +10,10 @@ from blueprints.imports_bp import imports_bp  # pylint: disable=import-error
 from blueprints.customers_bp import customers_bp  # pylint: disable=import-error
 from blueprints.companies_bp import companies_bp  # pylint: disable=import-error
 from db_connector import DbConnector
+from flask_cors import CORS 
 
 app = Flask(__name__)
+CORS(app)
 
 config = configparser.ConfigParser()
 config.read("server.config")
@@ -33,7 +35,7 @@ app.register_blueprint(companies_bp)
 
 if __name__ == "__main__":
     try:
-        app.run(host="0.0.0.0", port=5000)
+        app.run(host="127.0.0.1", port=5000)
     finally:
         connector = app.config.get("DB_CONNECTOR")
         if connector:
