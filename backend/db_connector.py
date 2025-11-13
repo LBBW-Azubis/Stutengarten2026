@@ -8,7 +8,7 @@ log = logging.getLogger(__name__)
 #-----------------------------------------------------------------------------------------------------
 # Feste Defaults (hier anpassen, wenn ihr andere Werte braucht)
 POOL_NAME = "stutengarten_pool"
-POOL_SIZE = 20               # Anzahl Verbindungen im Pool (pro App-Instanz)
+POOL_SIZE = 5               # Anzahl Verbindungen im Pool (pro App-Instanz)
 CONNECTION_TIMEOUT = 5       # Sekunden für Verbindungsaufbau (nicht Pool-Wartezeit)
 AUTOCOMMIT = False
 CHARSET = "utf8mb4"
