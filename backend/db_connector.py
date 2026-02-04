@@ -8,13 +8,13 @@ log = logging.getLogger(__name__)
 #-----------------------------------------------------------------------------------------------------
 # Feste Defaults (hier anpassen, wenn ihr andere Werte braucht)
 POOL_NAME = "stutengarten_pool"
-POOL_SIZE = 5               # Anzahl Verbindungen im Pool (pro App-Instanz)
+POOL_SIZE = 10               # Anzahl Verbindungen im Pool (pro App-Instanz)
 CONNECTION_TIMEOUT = 5       # Sekunden für Verbindungsaufbau (nicht Pool-Wartezeit)
 AUTOCOMMIT = False
 CHARSET = "utf8mb4"
 
 # Ausleihen aus dem Pool: feste Warte-/Logging-Parameter
-GET_CONN_MAX_WAIT_S = 2.0   # max. Wartezeit auf eine freie Verbindung; None = kein Retry
+GET_CONN_MAX_WAIT_S = 5.0   # max. Wartezeit auf eine freie Verbindung; None = kein Retry
 WARN_THRESHOLD_S = 0.3       # ab dieser Wartezeit wird gewarnt (Logging)
 RETRY_SLEEP_S = 0.05         # Pause zwischen Retries, falls Pool voll
 #-----------------------------------------------------------------------------------------------------

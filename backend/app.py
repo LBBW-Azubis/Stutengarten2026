@@ -4,13 +4,13 @@
 
 import configparser
 from flask import Flask
+from flask_cors import CORS
 
 from blueprints.health_bp import health_bp  # pylint: disable=import-error
 from blueprints.imports_bp import imports_bp  # pylint: disable=import-error
 from blueprints.customers_bp import customers_bp  # pylint: disable=import-error
 from blueprints.companies_bp import companies_bp  # pylint: disable=import-error
 from db_connector import DbConnector
-from flask_cors import CORS 
 
 app = Flask(__name__)
 CORS(app)
