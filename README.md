@@ -7,3 +7,6 @@ Die Dokumentation für das Backend ist in der OneDrive
 
 Nur die Ansprechpartner mergen die Branches
 
+Benötigte Downloads:
+- MariaDB
+- Flask + CORS
