@@ -41,7 +41,7 @@ def health_check():
         conn = connector.get_connection()
         waited_ms = int((time.perf_counter() - t0) * 1000)
         if waited_ms >= WARN_WAIT_MS:
-            log.warning("Health: waited %d ms for DB connection (threshold=%d ms)", waited_ms, WARN_WAIT_MS)
+            print("Health: waited %d ms for DB connection (threshold=%d ms)", waited_ms, WARN_WAIT_MS)
 
         _run_select_1(conn)
 
