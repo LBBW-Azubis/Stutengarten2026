@@ -1,0 +1,88 @@
+.MS_Konto_Icon{
+    width: 200px;
+    height: auto;
+    position: fixed;
+    top: 15em;
+    left: 15em;
+}
+
+.MS_Einzahlen_Icon{
+    width: 200px;
+    height: auto;
+    position: fixed;
+    top: 15em;
+    left: 35em;
+}
+
+.MS_Auszahlen_Icon{
+    width: 200px;
+    height: auto;
+    position: fixed;
+    top: 15em;
+    left: 55em;
+}   
+
+.MS_Ueberweisung_Icon{
+    width: 200px;
+    height: auto;
+    position: fixed;
+    top: 15em;
+    left: 75em;
+}   
+.MS_Aktien_Icon{
+    width: 200px;
+    height: auto;
+    position: fixed;
+    top: 15em;
+    left: 95em;
+}
+
+
+.MS_Spiele_Icon{
+    width: 200px;
+    height: auto;
+    position: fixed;
+    top: 35em;
+    left: 15em;
+}
+
+.MS_Kontoerstellen_Icon{
+    width: 200px;
+    height: auto;
+    position: fixed;
+    top: 35em;
+    left: 35em;
+}
+
+.MS_Info_Icon{
+    width: 200px;
+    height: auto;
+    position: fixed;
+    top: 35em;
+    left: 55em;
+}
+
+.MS_Icon_Text{
+    position: fixed;
+    top: 25em;
+    left: 15em;
+    font-size: 20px;
+    color: black;
+
+}
+
+.menu-item {
+  position: relative; /* Wrapper für Text unter Bild */
+  display: inline-block; /* damit sie nebeneinander stehen */
+  text-align: center;
+}
+
+.menu-item .MS_Icon_Text {
+  position: absolute;   /* relativ zum Wrapper */
+  top: 100%;            /* direkt unter dem Bild */
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 20px;
+  color: black;
+  margin-top: 0.5em;    /* optional Abstand */
+}

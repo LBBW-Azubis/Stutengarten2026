@@ -8,7 +8,8 @@ export default function Login() {
   const navigate = useNavigate()
 
   function LoginWeiter() {
-    navigate('/dashboard')
+    navigate('/mainsite')
+    //Logik für LOGIN 
   }
 //type => text (normaler String) // password (normaler String aber versteckt)
   return (

@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom'
 import Login from './1_Loginsite'
-import Dashboard from './Dashboard'
+import Mainsite from './2_Mainsite'
 import './App.css'  //Wichtig immer CSS importieren
 
 
@@ -54,7 +54,7 @@ export default function App() {
       {/* Die eigentlichen Seiten */}
       <Routes>
         <Route path="/" element={<Login />} />
-        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/mainsite" element={<Mainsite/>} /> {/* /mainsite muss bei z.B. LoginSite in "navigate" eingebaut werden */}
         <Route path="*" element={<NoMatch />} />
       </Routes>
     </Router>
