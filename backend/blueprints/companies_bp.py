@@ -198,7 +198,7 @@ def get_company_transactions(company_name):
     try:
         company = _load_company(connector, company_name)
         transactions = CompanyTransaction.get_all_transactions_for_company(connector, company.id)
-        return jsonify([transaction.to_dict() for transaction in transactions]), 200
+        return jsonify(transactions), 200
     except CompanyException as err:
         return jsonify({"error": str(err)}), 404
     except Exception as err:  # pylint: disable=broad-except

@@ -94,7 +94,12 @@ class CustomerTransaction:
         try:
             # This query correctly joins through the tables using the correct keys.
             query = """
-            SELECT ku.*, k.vorname, k.nachname
+            SELECT 
+                ku.id,
+                ku.kundensparbuch_fk as customer_savings_book_id,
+                ku.betrag as amount,
+                ku.verwendungszweck as purpose,
+                CONCAT(k.vorname, ' ', k.nachname) as customer_name
             FROM kundenumsaetze ku
             JOIN kundensparbuecher ks ON ku.kundensparbuch_fk = ks.id
             JOIN kunden k ON ks.kunden_fk = k.stutengarten_id
@@ -103,18 +108,7 @@ class CustomerTransaction:
             """
             cursor.execute(query, (stutengarten_id,))
 
-            for row in cursor.fetchall():
-                transaction = CustomerTransaction(
-                    db,
-                    row["kundensparbuch_fk"],
-                    row["betrag"],
-                    row["verwendungszweck"],
-                    transaction_id=row["id"]
-                )
-                transaction.customer_name = f'{row["vorname"]} {row["nachname"]}'
-                transactions.append(transaction)
-
-            return transactions
+            return cursor.fetchall()
         finally:
             cursor.close()
             conn.close()

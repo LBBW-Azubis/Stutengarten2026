@@ -20,13 +20,13 @@ class CompanySavingsBook:
         cursor = conn.cursor(dictionary=True)
 
         query = """
-        SELECT 
+            SELECT 
             u.bezeichnung AS name, 
             u.mappe_abgegeben AS folder_handed_over, 
             us.saldo AS balance
-        FROM unternehmenssparbuecher us
-        JOIN unternehmen u ON us.unternehmen_fk = u.id
-        """
+            FROM unternehmenssparbuecher us
+            JOIN unternehmen u ON us.unternehmen_fk = u.id
+            """
 
         try:
             cursor.execute(query)

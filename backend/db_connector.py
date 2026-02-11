@@ -5,7 +5,7 @@ from mysql.connector import pooling, Error, errors
 
 log = logging.getLogger(__name__)
 
-#-----------------------------------------------------------------------------------------------------
+#-----------------------------------------------------------------------------------------------------#pylint: disable=line-too-long
 # Feste Defaults (hier anpassen, wenn ihr andere Werte braucht)
 POOL_NAME = "stutengarten_pool"
 POOL_SIZE = 10               # Anzahl Verbindungen im Pool (pro App-Instanz)
@@ -17,7 +17,7 @@ CHARSET = "utf8mb4"
 GET_CONN_MAX_WAIT_S = 5.0   # max. Wartezeit auf eine freie Verbindung; None = kein Retry
 WARN_THRESHOLD_S = 0.3       # ab dieser Wartezeit wird gewarnt (Logging)
 RETRY_SLEEP_S = 0.05         # Pause zwischen Retries, falls Pool voll
-#-----------------------------------------------------------------------------------------------------
+#-----------------------------------------------------------------------------------------------------#pylint: disable=line-too-long
 
 class AcquireTimeout(RuntimeError):
     """Wird geworfen, wenn zu lange auf eine DB-Verbindung gewartet wurde"""
@@ -53,7 +53,7 @@ class DbConnector:
                 charset=CHARSET,
             )
             log.info("DB pool '%s' initialized (size=%s)", POOL_NAME, POOL_SIZE)
-        except Error as e:
+        except Error:
             log.exception("Error creating connection pool")
             raise
 
@@ -70,20 +70,13 @@ class DbConnector:
         while True:
             try:
                 conn = self.pool.get_connection()
-                # Pre-Ping vermeidet 'MySQL server has gone away' bei Idle-Verbindungen
-                try:
-                    conn.ping(reconnect=True, attempts=1, delay=0)
-                except Exception:
-                    conn.close()
-                    conn = self.pool.get_connection()
-                    conn.ping(reconnect=True, attempts=1, delay=0)
 
                 waited = time.perf_counter() - t0
                 if waited >= WARN_THRESHOLD_S:
                     log.warning("Waited %.0f ms for DB connection (pool_size=%d)", waited * 1000, POOL_SIZE)
                 try:
                     setattr(conn, "_wait_time_s", waited)
-                except Exception:
+                except (AttributeError, TypeError):
                     pass
                 return conn
 

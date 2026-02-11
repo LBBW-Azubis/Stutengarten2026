@@ -99,13 +99,16 @@ class CompanyTransaction:
         Returns:
             List of CompanyTransaction object with company info
         """
-        transactions = []
         conn = db.get_connection()
         cursor = conn.cursor(dictionary=True)
 
         try:
             query = """
-            SELECT uu.*, u.bezeichnung as company_name
+            SELECT uu.id,
+                uu.unternehmenssparbuecher_fk as company_savings_book_id,
+                uu.betrag as amount,
+                uu.verwendungszweck as purpose,
+                u.bezeichnung as company_name
             FROM unternehmensumsaetze uu
             JOIN unternehmenssparbuecher us ON uu.unternehmenssparbuecher_fk = us.id
             JOIN unternehmen u ON us.unternehmen_fk = u.id
@@ -114,19 +117,7 @@ class CompanyTransaction:
             """
             cursor.execute(query, (company_id,))
 
-            for row in cursor.fetchall():
-                transaction = CompanyTransaction(
-                    db,
-                    row["unternehmenssparbuecher_fk"],
-                    row["betrag"],
-                    row["verwendungszweck"],
-                    transaction_id=row["id"]
-                )
-                #Add company name for convenience
-                transaction.company_name = row["company_name"] # pylint:disable=attribute-defined-outside-init
-                transactions.append(transaction)
-
-            return transactions
+            return cursor.fetchall()
         finally:
             cursor.close()
             conn.close()

@@ -15,24 +15,16 @@ class CustomerSavingsBook:
         Returns a list of all savings books with corresponding customer data.
         Returns: List of dicts: [{"stutengarten_id", "first_name", "last_name", "balance"}]
         """
-        result = []
         conn = db.get_connection()
         cursor = conn.cursor(dictionary=True)
         try:
             query = """
-            SELECT ks.saldo, k.stutengarten_id, k.vorname, k.nachname
+            SELECT ks.saldo AS balance, k.stutengarten_id, k.vorname AS first_name, k.nachname AS last_name
             FROM kundensparbuecher ks
             JOIN kunden k ON ks.kunden_fk = k.stutengarten_id
             """
             cursor.execute(query)
-            for row in cursor.fetchall():
-                result.append({
-                    "stutengarten_id": row["stutengarten_id"],
-                    "first_name": row["vorname"],
-                    "last_name": row["nachname"],
-                    "balance": row["saldo"],
-                })
-            return result
+            return cursor.fetchall()
         finally:
             cursor.close()
             conn.close()
@@ -43,23 +35,17 @@ class CustomerSavingsBook:
         Returns a list with the balance and stutengarten_id for a specific customer's savings book.
         Returns: List of dicts: [{"stutengarten_id", "balance"}]
         """
-        result = []
         conn = db.get_connection()
         cursor = conn.cursor(dictionary=True)
         try:
             query = """
-            SELECT ks.saldo, k.stutengarten_id
+            SELECT ks.saldo AS balance, k.stutengarten_id
             FROM kundensparbuecher ks
             JOIN kunden k ON ks.kunden_fk = k.stutengarten_id
             WHERE k.stutengarten_id = %s
             """
             cursor.execute(query, (stutengarten_id,))
-            for row in cursor.fetchall():
-                result.append({
-                    "stutengarten_id": row["stutengarten_id"],
-                    "balance": row["saldo"],
-                })
-            return result
+            return cursor.fetchall()
         finally:
             cursor.close()
             conn.close()
@@ -86,7 +72,7 @@ class CustomerSavingsBook:
             if "Duplicate entry" in str(e):
                 raise CustomException(f"Savings book for customer {stutengarten_id} already exists.") from e #pylint: disable=line-too-long
             if "foreign key constraint fails" in str(e).lower():
-                 raise CustomException(f"Customer with stutengarten_id {stutengarten_id} does not exist.") from e
+                raise CustomException(f"Customer with stutengarten_id {stutengarten_id} does not exist.") from e
             raise CustomException(f"Error creating savings book: {e}") from e
         finally:
             cursor.close()
@@ -110,8 +96,9 @@ class CustomerSavingsBook:
                 try:
                     Customer.get_by_stutengarten_id(db, stutengarten_id)
                     raise CustomException("Could not update balance. Savings book might not exist.")
-                except CustomException:
-                    raise CustomerException(f"Customer with stutengarten_id {stutengarten_id} does not exist.")
+                except CustomException as exc:
+                    raise CustomerException(
+                        f"Customer with stutengarten_id {stutengarten_id} does not exist.") from exc
 
             conn.commit()
             return {"stutengarten_id": stutengarten_id, "balance": balance}

@@ -231,7 +231,7 @@ def get_customer_transactions(stutengarten_id):
     connector = current_app.config["DB_CONNECTOR"]
     try:
         transactions = CustomerTransaction.get_all_transactions_for_customer(connector, stutengarten_id) #pylint: disable=line-too-long
-        return jsonify([transaction.to_dict() for transaction in transactions]), 200
+        return jsonify(transactions), 200
     except Exception as e:  # pylint: disable=broad-except
         return jsonify({"error": f"Error retrieving transactions: {str(e)}"}), 500
 
