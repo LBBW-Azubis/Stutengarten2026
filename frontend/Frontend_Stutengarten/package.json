@@ -1,0 +1,13 @@
+{
+  "name": "frontendstutengarten-root",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "npm --prefix FrontendStutengarten run dev",
+    "build": "npm --prefix FrontendStutengarten run build",
+    "preview": "npm --prefix FrontendStutengarten run preview",
+    "lint": "npm --prefix FrontendStutengarten run lint"
+  },
+  "dependencies": {}
+}
