@@ -1,15 +1,13 @@
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom'
-import Login from './Login'
+import Login from './1_Loginsite'
 import Dashboard from './Dashboard'
+import './App.css'  //Wichtig immer CSS importieren
 
-function DebugLocation() {
-  const loc = useLocation()
-  return (
-    <div style={{ fontSize: 12, opacity: 0.75, marginBottom: 8 }}>
-      current path: <code>{loc.pathname}</code>
-    </div>
-  )
-}
+
+//Alle images werden hier importiert
+import logo from './images/bwbank_logo.png';
+
+
 
 function NoMatch() {
   const loc = useLocation()
@@ -23,18 +21,35 @@ function NoMatch() {
 
 export default function App() {
   return (
+
+    //Router agiert nur für die URL
+    //z.B. "http://localhost:3000/dashboard" zeigt Dashboard an
+
+    //Alles innerhalb Router (außerhalb routes) wird auf jeder Seite angezeigt!
     <Router>
-      <header style={{ textAlign: 'center', padding: '12px 0' }}>
-        <strong>Stutengarten</strong>
+      <header className="StutengartenLogo">
+        {"Stutengarten Bankfiliale".split("").map((char, index) => {
+          const colors = [
+            "#f85954", "#ffa64d", "#ffff4d", "#4dff4d",
+            "#4dd2ff", "#81fff4", "#b84dff", "#ff4da6"
+          ];
+
+          return (
+            <span key={index} style={{ color: colors[index % colors.length] }}>
+              {char}
+            </span>
+          );
+        })}
       </header>
 
-      <DebugLocation />
 
-      <nav className="app-nav">
-        {/* Navigation Links */}
-        <Link to="/" aria-current="page">Login</Link>
-        <Link to="/dashboard">Dashboard</Link>
-      </nav>
+      <img src={logo} alt="Logo" className="BwBankLogo" />
+
+      <p className ="betreuerlogin_text">Betreuer Login:</p>
+      <input type="text" className="betreuerlogin_textfeld" placeholder="[EINGABE ...]"/>
+
+      <button class="close-button">X</button>
+
 
       {/* Die eigentlichen Seiten */}
       <Routes>

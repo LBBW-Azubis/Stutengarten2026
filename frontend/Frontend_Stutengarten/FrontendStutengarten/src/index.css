@@ -40,17 +40,24 @@ body {
   flex-direction: column;
 }
 
-/* Page-level centering container for routes */
+
+
 .page-center {
+  /*Wichtig immer 100% bei den größen => Abhängig vom Bildschirm*/
   width: 100%;
-  min-height: calc(100vh - 64px); /* leave space for header if present */
+  height: 100%;
+
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 20px;
+
+  padding: 0;
   box-sizing: border-box;
+  overflow: hidden;
 }
+
+
 
 /* Center the top navigation across the full width */
 .app-nav {
