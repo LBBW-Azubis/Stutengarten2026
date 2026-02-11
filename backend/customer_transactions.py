@@ -87,7 +87,6 @@ class CustomerTransaction:
         """
         Returns all transactions for a specific customer.
         """
-        transactions = []
         conn = db.get_connection()
         cursor = conn.cursor(dictionary=True)
 
