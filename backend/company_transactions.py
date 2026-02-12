@@ -1,7 +1,23 @@
-"""Import db_connector for connection to database and datetime for statistics"""
+"""
+    Import db_connector for connection to database
+    datetime for statistics
+    company for unique exceptions
+    import locale for german wording of current_weekday
+"""
+
+import locale
 from datetime import datetime
 from db_connector import DbConnector
 from company import CustomCompanyException
+
+try:
+    locale.setlocale(locale.LC_TIME, 'de_DE.UTF-8')
+except locale.Error:
+    try:
+        locale.setlocale(locale.LC_TIME, 'German_Germany.1252')
+    except locale.Error:
+        print("Warning: German Locale couldnt be set. Weekdays will be in English and wont work with statistics")
+
 
 class CompanyTransactionException(Exception):
     """Special exception for company transaction-related errors"""
@@ -62,6 +78,7 @@ class CompanyTransaction:
                 raise CustomCompanyException(f"Error creating company transaction: {err}") from err
             finally:
                 cursor.close()
+                conn.close()
         else:
             #Load existing transactions from database
             self.id = transaction_id
@@ -82,13 +99,16 @@ class CompanyTransaction:
         Returns:
             List of CompanyTransaction object with company info
         """
-        transactions = []
         conn = db.get_connection()
         cursor = conn.cursor(dictionary=True)
 
         try:
             query = """
-            SELECT uu.*, u.bezeichnung as company_name
+            SELECT uu.id,
+                uu.unternehmenssparbuecher_fk as company_savings_book_id,
+                uu.betrag as amount,
+                uu.verwendungszweck as purpose,
+                u.bezeichnung as company_name
             FROM unternehmensumsaetze uu
             JOIN unternehmenssparbuecher us ON uu.unternehmenssparbuecher_fk = us.id
             JOIN unternehmen u ON us.unternehmen_fk = u.id
@@ -97,21 +117,10 @@ class CompanyTransaction:
             """
             cursor.execute(query, (company_id,))
 
-            for row in cursor.fetchall():
-                transaction = CompanyTransaction(
-                    db,
-                    row["unternehmenssparbuecher_fk"],
-                    row["betrag"],
-                    row["verwendungszweck"],
-                    transaction_id=row["id"]
-                )
-                #Add company name for convenience
-                transaction.company_name = row["company_name"] # pylint:disable=attribute-defined-outside-init
-                transactions.append(transaction)
-
-            return transactions
+            return cursor.fetchall()
         finally:
             cursor.close()
+            conn.close()
 
     def add_to_statistics(self):
         """
@@ -151,6 +160,7 @@ class CompanyTransaction:
             print(f"Error updating company statistics: {err}")
         finally:
             cursor.close()
+            conn.close()
 
     @staticmethod
     def get_company_statistics(db:DbConnector):
@@ -174,6 +184,7 @@ class CompanyTransaction:
             return result
         finally:
             cursor.close()
+            conn.close()
 
     def to_dict(self):
         """

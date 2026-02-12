@@ -1,4 +1,5 @@
 """Importing xlsx_fle_reader for importing data from xlsx-file"""
+
 from xlsx_file_reader import XlsxFileReader
 
 class CompanyImport:
@@ -32,47 +33,53 @@ class CompanyImport:
             return {"status": "error", "message": error_msg}
 
     def insert_companies(self, company_data):
-        """Insert company data into database"""
+        """Insert company data into database using Bulk Insert"""
         if not company_data:
             print("No company data to insert")
             return 0
 
-        cursor = self.db_connector.get_connection().cursor()
-        inserted_count = 0
+        conn = self.db_connector.get_connection()
+        cursor = conn.cursor()
 
-        # insert query for unternehmen table
+        # INSERT IGNORE verhindert Absturz bei doppelten Namen
         insert_query = """
-        INSERT INTO unternehmen (bezeichnung)
+        INSERT IGNORE INTO unternehmen (bezeichnung)
         VALUES (%s)
         """
 
-        for company in company_data:
-            try:
-                # map xlsx columns to database columns
-                company_name =      company.get('Unternehmen' or \
-                                    company.get('Bezeichnung') or \
-                                    company.get('Name')) or \
-                                    company.get('Firma')
+        data_to_insert = []
 
-                if not company_name:
-                    print(f"Skipping company with missing required fields; {company}")
+        try:
+            # 1. Daten sammeln
+            for company in company_data:
+                try:
+                    company_name =      company.get('Unternehmen' or \
+                                        company.get('Bezeichnung') or \
+                                        company.get('Name')) or \
+                                        company.get('Firma')
+
+                    if not company_name:
+                        continue
+
+                    # WICHTIG: Das Komma macht es zu einem Tupel (company_name,)
+                    data_to_insert.append((company_name,))
+
+                except Exception:
                     continue
 
-                values = (company_name,) # comma is necessary because its a tuple
+            # 2. Alles auf einmal einfügen
+            if data_to_insert:
+                cursor.executemany(insert_query, data_to_insert)
+                conn.commit()
+                return cursor.rowcount
+            else:
+                return 0
 
-                cursor.execute(insert_query, values)
-                inserted_count += 1
-
-                print(f"Inserted company: {company_name}")
-
-            except Exception as e: # pylint: disable=broad-except
-                print(f"Error inserting company {company}: {e}")
-                continue
-
-        # commit all changes
-        self.db_connector.get_connection().commit()
-        cursor.close()
-
-        return inserted_count
-
-    # End-of-file
+        except Exception as e: #pylint: disable=broad-except
+            print(f"Major error during bulk insert: {e}")
+            conn.rollback()
+            raise e # Fehler weiterwerfen, damit er oben gefangen wird
+        finally:
+            cursor.close()
+            conn.close()
+# End-of-file

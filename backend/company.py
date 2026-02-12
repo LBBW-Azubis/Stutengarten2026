@@ -1,4 +1,5 @@
 """import db_connector for connection to database"""
+
 from db_connector import DbConnector
 
 class CustomCompanyException(Exception):
@@ -59,6 +60,7 @@ class Company:
             conn.commit()
         finally:
             cursor.close()
+            conn.close()
 
     #Static methods
     @staticmethod
@@ -71,6 +73,7 @@ class Company:
             row = cursor.fetchone()
         finally:
             cursor.close()
+            conn.close()
         if row:
             return Company(db,
                         row["bezeichnung"],
@@ -89,6 +92,7 @@ class Company:
             row = cursor.fetchone()
         finally:
             cursor.close()
+            conn.close()
         if row:
             return Company(db,
                         row["bezeichnung"],
@@ -107,6 +111,7 @@ class Company:
             row = cursor.fetchone()
         finally:
             cursor.close()
+            conn.close()
         if row:
             return CompanySavingsBookRef(self.id, row["saldo"])
         else:
@@ -122,6 +127,7 @@ class Company:
             self.name = new_name
         finally:
             cursor.close()
+            conn.close()
 
     def update_folder_handed_over(self, folder_handed_over):
         """updating status on folder"""
@@ -133,6 +139,7 @@ class Company:
             self.folder_handed_over = folder_handed_over
         finally:
             cursor.close()
+            conn.close()
 
     def to_dict(self):
         """converting object into dictionary"""
