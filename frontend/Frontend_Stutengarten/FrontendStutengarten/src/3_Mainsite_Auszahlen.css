@@ -1,0 +1,48 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.Auszahlen_Betrag{
+    width: 305px;
+    height: 40px;
+    position: fixed;
+    border: 2px solid black; /* Schwarzer Rahmen */
+    top: 36vw;
+    left: 47vw;
+    font-size: 30px;           /* Schriftgröße */
+    font-weight: bold;         /* fett */
+    color: black;
+    background-color: white;
+}
+
+.Auszahlen_Betrag_Text{
+    position: fixed;
+    top: 34.2vw;
+    left: 40.9vw;
+    font-size: 30px;           /* Schriftgröße */
+    color: black;
+}
