@@ -11,7 +11,12 @@ import ls_icon from './images/LoginSeite_Icon.png';
 
 export default function Dashboard() {
   const [Tester, setTester] = useState("Testname"); // 👈 hier dein stutengarten_id-State
-  
+    
+  const navigate = useNavigate()
+  function OnClick_Startseite() {
+      navigate('/mainsite')
+    }
+
 
 
 
@@ -22,6 +27,7 @@ export default function Dashboard() {
           <input type="text" className="Mainsite_Konto" placeholder="Ausweisnummer eingeben"/>
           <p className = "Mainsite_Konto_Text">Kontonummer: </p>
           <button className="Mainsite_Konto_Button">Weiter</button>
+          <p className = "Mainsite_Konto_Startseite" onClick={OnClick_Startseite}>zur Startseite</p>
         
 
 

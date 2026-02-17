@@ -96,7 +96,7 @@ export default function Login() {
       <img src={ls_icon2} className="LS_Icon_Lupe" onClick={LoginWeiter}/>
       <input type="text" className="LS_Ausweisnummer" placeholder="Ausweisnummer eingeben"/>
       <input type="password" className="LS_Passwort" placeholder="Passwort eingeben"/>
-      <p className = "LS_Ausweisnummer_text">{stutengartenId}</p>
+      <p className = "LS_Ausweisnummer_text">Ausweisnummer:</p>
       <p className = "LS_Passwort_text">Passwort:</p>
 
 

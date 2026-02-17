@@ -1,8 +1,8 @@
 .Mainsite_Konto_Text{
     position: fixed;
-    bottom: 20.5em;
-    right: 56em;
-    font-size: 20px;           /* Schriftgröße */
+    bottom: 20.3vw;
+    left: 31vw;
+    font-size: 30px;           /* Schriftgröße */
     color: black;
 }
 
@@ -19,13 +19,38 @@
 }
 
 .Mainsite_Konto_Button{
-    width: 100px;
-    height: 40px;
     position: fixed;
-    bottom: 26.2em;
-    right: 43em;
-    font-size: 16px;           /* Schriftgröße */
+    bottom: 21.8vw;
+    right: 31vw;
+    font-size: 20px;           /* Schriftgröße */
     font-weight: bold;         /* fett */
     color: White;
     background-color: rgb(1, 80, 250);
+    padding: 7px 50px;  /* 🔥 Das macht den Button größer */
+}
+
+.Mainsite_Konto_Button:hover {
+    cursor: pointer; /* Cursor ändert sich beim Hover */
+    transform: scale(1.2); /* Vergrößert die Lupe leicht beim Hover */
+    transition: transform 0.5s; /* Sanfte Übergangsanimation */
+}
+
+
+.Mainsite_Konto_Startseite{
+    position: fixed;
+    left: 2vw;
+    top: 5.5vw;
+    font-size: 25px;
+    font-style: italic;
+    font-weight: bold;
+    color: Black;
+    background-color: rgb(140, 255, 169);
+    text-decoration: underline;  /* Unterstrichen */
+}
+
+.Mainsite_Konto_Startseite:hover {
+    
+    cursor: pointer; /* Cursor ändert sich beim Hover */
+    transform: scale(1.2); /* Vergrößert die Lupe leicht beim Hover */
+    transition: transform 0.5s; /* Sanfte Übergangsanimation */
 }
