@@ -185,3 +185,25 @@
     transform: scale(1.2); /* Vergrößert die Lupe leicht beim Hover */
     transition: transform 0.5s; /* Sanfte Übergangsanimation */
 }
+
+
+.Einzahlen_Betrag_Text{
+    position: fixed;
+    top: 34.2vw;
+    left: 40.9vw;
+    font-size: 30px;           /* Schriftgröße */
+    color: black;
+}
+
+.Einzahlen_Betrag{
+    width: 305px;
+    height: 40px;
+    position: fixed;
+    border: 2px solid black; /* Schwarzer Rahmen */
+    top: 36vw;
+    left: 47vw;
+    font-size: 30px;           /* Schriftgröße */
+    font-weight: bold;         /* fett */
+    color: black;
+    background-color: white;
+}
