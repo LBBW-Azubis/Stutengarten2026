@@ -15,3 +15,4 @@ Benötigte Downloads:
 - Python 3.11.9
 - Pandas
 - MySQL
+- Node.JS
