@@ -1,7 +1,7 @@
 """import db_connector for connection to database"""
 
 from db_connector import DbConnector
-from company import CustomCompanyException
+from company import CustomCompanyException, Company, CompanyException
 
 class CompanySavingsBook:
     """
@@ -94,7 +94,7 @@ class CompanySavingsBook:
     def set_balance(db:DbConnector, company_id, balance):
         """
         Updates the balance for a company's savings book.
-        Returns: dict {"company_id": ..., "balance": ...}
+        Returns: dict {"company_id": ..., "name": ..., "balance": ...}
         """
         conn = db.get_connection()
         cursor = conn.cursor()
@@ -102,10 +102,24 @@ class CompanySavingsBook:
             cursor.execute("UPDATE unternehmenssparbuecher SET saldo=%s WHERE unternehmen_fk=%s",
                            (balance, company_id))
             if cursor.rowcount == 0:
-                raise CustomCompanyException("Could not update balance")
+                try:
+                    Company.get_by_db_id(db, company_id)
+                    raise CustomCompanyException("Could not update balance. Savings book might not exist.")
+                except CompanyException as exc:
+                    raise CustomCompanyException(
+                        f"Company with id {company_id} does not exist.") from exc
+
             conn.commit()
-            return {"company_id": company_id, "balance": balance}
+
+            # Get company data to return with the balance
+            company = Company.get_by_db_id(db, company_id)
+            return {
+                "company_id": company_id,
+                "name": company.name,
+                "balance": balance                
+            }
         except Exception as e:
+            conn.rollback()
             raise CustomCompanyException(f"Error updating balance: {e}") from e
         finally:
             cursor.close()
