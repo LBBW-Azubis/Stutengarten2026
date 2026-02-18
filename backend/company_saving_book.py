@@ -96,6 +96,11 @@ class CompanySavingsBook:
         Updates the balance for a company's savings book.
         Returns: dict {"company_id": ..., "name": ..., "balance": ...}
         """
+        try:
+            balance = int(balance)
+        except ValueError as exc:
+            raise CustomCompanyException("Der Betrag muss eine Zahl sein.") from exc
+
         conn = db.get_connection()
         cursor = conn.cursor()
         try:

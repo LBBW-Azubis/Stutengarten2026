@@ -84,6 +84,11 @@ class CustomerSavingsBook:
         Updates the balance for a customer's savings book.
         Returns: dict {"customer_id": ..., "first_name": ..., "last_name": ..., "balance": ...}
         """
+        try:
+            balance = int(balance)
+        except ValueError as exc:
+            raise CustomException("Der Betrag muss eine Zahl sein.") from exc
+
         conn = db.get_connection()
         cursor = conn.cursor()
         try:
