@@ -33,24 +33,7 @@ export default function Login() {
     //Logik für LOGIN 
     //GET-Abfrage
     
-    try {
-      
-      const response = await fetch("http://192.168.1.10:5000/customer/K2");
 
-      const data = await response.json(); // 👈 JSON parsen (UTF-8 korrekt)
-
-      setStutengartenId(data.stutengarten_id); // Zugriff auf stutengarten_id
-      const firstName = data.first_name; // Zugriff auf first_name
-      const lastName = data.last_name; //Zugriff auf last_name
-
- 
-
-      // Beispiel: data.name, data.city, etc.
-      setTmpTextGET_DB(JSON.stringify(data, null, 2)); // nur zum Anzeigen (stringify nutzen für JSON zu Text)
-    } catch (error) {
-      console.error("Fehler bei der API-Anfrage:", error);
-      setTmpTextGET_DB("Fehler beim Laden der Daten");
-    }
     
 
 
