@@ -1,248 +1,202 @@
+/* ============================= */
+/* Reihe 1 */
+/* ============================= */
+
 .MS_Konto_Icon {
-    width: 200px;
+    width: 10.4vw;
     height: auto;
     position: fixed;
-    top: 15em;
-    left: 15em;
-
-    /* Smooth transition für Hover-Effekt */
+    top: 20vh;
+    left: 12.5vw;
     transition: transform 0.3s ease, filter 0.3s ease;
 }
 
-/* Hover-Effekt */
 .MS_Konto_Icon:hover {
-    transform: scale(1.1);  /* 10% größer */
-    cursor: pointer;         /* zeigt an, dass klickbar */
+    transform: scale(1.1);
+    cursor: pointer;
 }
-
 
 .MS_Konto_Icon_Text{
     position: fixed;
-    top: 21em;
-    left: 15.5em;
-    font-size: 20px;
+    top: 37vh;
+    left: 16.3vw;
+    font-size: 1.04vw;
     color: black;
 }
 
 
-
-
-
-
-
-
+/* ----------------------------- */
 
 .MS_Einzahlen_Icon{
-    width: 200px;
+    width: 10.4vw;
     height: auto;
     position: fixed;
-    top: 15em;
-    left: 35em;
-    /* Smooth transition für Hover-Effekt */
+    top: 20vh;
+    left: 29.2vw;
     transition: transform 0.3s ease, filter 0.3s ease;
 }
 
-/* Hover-Effekt */
 .MS_Einzahlen_Icon:hover {
-    transform: scale(1.1);  /* 10% größer */
-    cursor: pointer;         /* zeigt an, dass klickbar */
+    transform: scale(1.1);
+    cursor: pointer;
 }
 
 .MS_Einzahlen_Icon_Text{
     position: fixed;
-    top: 21em;
-    left: 31em;
-    font-size: 20px;
+    top: 37vh;
+    left: 32.3vw;
+    font-size: 1.04vw;
     color: black;
 }
 
 
-
-
-
-
+/* ----------------------------- */
 
 .MS_Auszahlen_Icon{
-    width: 200px;
+    width: 10.4vw;
     height: auto;
     position: fixed;
-    top: 15em;
-    left: 55em;
-    /* Smooth transition für Hover-Effekt */
+    top: 20vh;
+    left: 45.8vw;
     transition: transform 0.3s ease, filter 0.3s ease;
 }
 
-/* Hover-Effekt */
 .MS_Auszahlen_Icon:hover {
-    transform: scale(1.1);  /* 10% größer */
-    cursor: pointer;         /* zeigt an, dass klickbar */
+    transform: scale(1.1);
+    cursor: pointer;
 }
- 
 
 .MS_Auszahlen_Icon_Text{
     position: fixed;
-    top: 21em;
-    left: 46.8em;
-    font-size: 20px;
+    top: 37vh;
+    left: 48.9vw;
+    font-size: 1.04vw;
     color: black;
 }
 
 
-
-
-
-
+/* ----------------------------- */
 
 .MS_Ueberweisung_Icon{
-    width: 200px;
+    width: 10.4vw;
     height: auto;
     position: fixed;
-    top: 15em;
-    left: 75em;
-    /* Smooth transition für Hover-Effekt */
+    top: 20vh;
+    left: 62.5vw;
     transition: transform 0.3s ease, filter 0.3s ease;
 }
 
-/* Hover-Effekt */
 .MS_Ueberweisung_Icon:hover {
-    transform: scale(1.1);  /* 10% größer */
-    cursor: pointer;         /* zeigt an, dass klickbar */
-}   
+    transform: scale(1.1);
+    cursor: pointer;
+}
 
 .MS_Ueberweisung_Icon_Text{
     position: fixed;
-    top: 21em;
-    left: 62.5em;
-    font-size: 20px;
+    top: 37vh;
+    left: 64.9vw;
+    font-size: 1.04vw;
     color: black;
 }
 
 
-
-
-
-
+/* ----------------------------- */
 
 .MS_Aktien_Icon{
-    width: 200px;
+    width: 10.4vw;
     height: auto;
     position: fixed;
-    top: 15em;
-    left: 95em;
-    /* Smooth transition für Hover-Effekt */
+    top: 20vh;
+    left: 79.2vw;
     transition: transform 0.3s ease, filter 0.3s ease;
 }
 
-/* Hover-Effekt */
 .MS_Aktien_Icon:hover {
-    transform: scale(1.1);  /* 10% größer */
-    cursor: pointer;         /* zeigt an, dass klickbar */
-}   
+    transform: scale(1.1);
+    cursor: pointer;
+}
 
 .MS_Aktien_Icon_Text{
     position: fixed;
-    top: 21em;
-    left: 79.5em;
-    font-size: 20px;
+    top: 37vh;
+    left: 82.9vw;
+    font-size: 1.04vw;
     color: black;
 }
 
 
-
-
-
-
-
-
-
-
-
+/* ============================= */
+/* Reihe 2 */
+/* ============================= */
 
 .MS_Spiele_Icon{
-    width: 200px;
+    width: 10.4vw;
     height: auto;
     position: fixed;
-    top: 35em;
-    left: 15em;
-    /* Smooth transition für Hover-Effekt */
+    top: 46.7vh;
+    left: 12.5vw;
     transition: transform 0.3s ease, filter 0.3s ease;
 }
 
-/* Hover-Effekt */
 .MS_Spiele_Icon:hover {
-    transform: scale(1.1);  /* 10% größer */
-    cursor: pointer;         /* zeigt an, dass klickbar */
-}   
-
+    transform: scale(1.1);
+    cursor: pointer;
+}
 
 .MS_Spiele_Icon_Text{
     position: fixed;
-    bottom: 12.8em;
-    left: 15.5em;
-    font-size: 20px;
+    bottom: 30vh;
+    left: 16.3vw;
+    font-size: 1.04vw;
     color: black;
 }
 
 
-
-
-
-
-
-
+/* ----------------------------- */
 
 .MS_Kontoerstellen_Icon{
-    width: 200px;
+    width: 10.4vw;
     height: auto;
     position: fixed;
-    top: 35em;
-    left: 35em;
-    /* Smooth transition für Hover-Effekt */
+    top: 46.7vh;
+    left: 29.2vw;
     transition: transform 0.3s ease, filter 0.3s ease;
 }
 
-/* Hover-Effekt */
 .MS_Kontoerstellen_Icon:hover {
-    transform: scale(1.1);  /* 10% größer */
-    cursor: pointer;         /* zeigt an, dass klickbar */  
+    transform: scale(1.1);
+    cursor: pointer;
 }
 
 .MS_Kontoerstellen_Icon_Text{
     position: fixed;
-    bottom: 12.8em;
-    left: 29.7em;
-    font-size: 20px;
+    bottom: 30vh;
+    left: 31vw;
+    font-size: 1.04vw;
     color: black;
 }
 
 
-
-
-
-
+/* ----------------------------- */
 
 .MS_Info_Icon{
-    width: 200px;
+    width: 10.4vw;
     height: auto;
     position: fixed;
-    top: 35em;
-    left: 55em;
-    /* Smooth transition für Hover-Effekt */
+    top: 46.7vh;
+    left: 45.8vw;
     transition: transform 0.3s ease, filter 0.3s ease;
 }
 
-/* Hover-Effekt */
 .MS_Info_Icon:hover {
-    transform: scale(1.1);  /* 10% größer */
-    cursor: pointer;         /* zeigt an, dass klickbar */
+    transform: scale(1.1);
+    cursor: pointer;
 }
-
 
 .MS_Info_Icon_Text {
     position: fixed;
-    bottom: 12.8em;
-    left: 48em;
-    font-size: 20px;
+    bottom: 30vh;
+    left: 50vw;
+    font-size: 1.04vw;
     color: black;
 }
-

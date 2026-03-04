@@ -1,56 +1,78 @@
+/* ============================= */
+/* Konto Text */
+/* ============================= */
+
 .Mainsite_Konto_Text{
     position: fixed;
-    bottom: 20.3vw;
+    bottom: 40vh;      /* vorher 20.3vw → vertikal korrekt */
     left: 31vw;
-    font-size: 30px;           /* Schriftgröße */
+    font-size: 1.56vw; /* 30px */
     color: black;
 }
 
+
+/* ============================= */
+/* Konto Input Feld */
+/* ============================= */
+
 .Mainsite_Konto{
-    width: 300px;
-    height: 40px;
+    width: 15.6vw;     /* 300px */
+    height: 3.3vh;     /* 40px */
     position: fixed;
-    bottom: 26em;
-    right: 50em;
-    font-size: 16px;           /* Schriftgröße */
-    font-weight: bold;         /* fett */
+    bottom: 43vh;    /* 26em */
+    right: 41.7vw;     /* 50em */
+    font-size: 0.83vw; /* 16px */
+    font-weight: bold;
     color: black;
     background-color: white;
 }
 
+
+/* ============================= */
+/* Button */
+/* ============================= */
+
 .Mainsite_Konto_Button{
     position: fixed;
-    bottom: 21.8vw;
+    bottom: 43vh;    
     right: 31vw;
-    font-size: 20px;           /* Schriftgröße */
-    font-weight: bold;         /* fett */
-    color: White;
+    font-size: 1.04vw; /* 20px */
+    font-weight: bold;
+    color: white;
     background-color: rgb(1, 80, 250);
-    padding: 7px 50px;  /* 🔥 Das macht den Button größer */
+    padding: 0.6vh 2.6vw;
 }
 
 .Mainsite_Konto_Button:hover {
-    cursor: pointer; /* Cursor ändert sich beim Hover */
-    transform: scale(1.2); /* Vergrößert die Lupe leicht beim Hover */
-    transition: transform 0.5s; /* Sanfte Übergangsanimation */
+    cursor: pointer;
+    transform: scale(1.2);
+    transition: transform 0.5s;
 }
 
+.Mainsite_Konto_Button:active {
+    background-color: rgb(0, 55, 180); /* dunkleres Blau */
+    transform: scale(0.95); /* leicht gedrückt */
+}
+
+
+/* ============================= */
+/* Startseite Link */
+/* ============================= */
 
 .Mainsite_Konto_Startseite{
     position: fixed;
     left: 2vw;
-    top: 5.5vw;
-    font-size: 25px;
+    top: 6vh;
+    font-size: 1.3vw; /* 25px */
     font-style: italic;
     font-weight: bold;
-    color: Black;
+    color: black;
     background-color: rgb(140, 255, 169);
-    text-decoration: underline;  /* Unterstrichen */
+    text-decoration: underline;
 }
 
 .Mainsite_Konto_Startseite:hover {
-    
-    cursor: pointer; /* Cursor ändert sich beim Hover */
-    transform: scale(1.2); /* Vergrößert die Lupe leicht beim Hover */
-    transition: transform 0.5s; /* Sanfte Übergangsanimation */
+    cursor: pointer;
+    transform: scale(1.2);
+    transition: transform 0.5s;
 }

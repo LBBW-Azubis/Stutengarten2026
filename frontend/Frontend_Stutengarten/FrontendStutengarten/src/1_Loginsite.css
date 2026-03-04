@@ -1,61 +1,64 @@
 .LS_Icon{
-    width: 250px;
+    width: 15vw;
     height: auto;
     position: fixed;
-    top: 15em;   
+
+    top: 30%;
+    left: 50%;
+
+    transform: translate(-50%, -50%);
 }
 
 .LS_Icon_Lupe{
-    width: 100px;
+    width: 6vw;
     height: auto;
     position: fixed;
-    bottom: 23em;
-    right: 42em;
+    bottom: 39vh;
+    right: 32vw;
     cursor: pointer;
-
 }
 
 .LS_Icon_Lupe:hover {
-    transform: scale(1.3); /* Vergrößert die Lupe leicht beim Hover */
-    transition: transform 0.5s; /* Sanfte Übergangsanimation */
+    transform: scale(1.3);
+    transition: transform 0.5s;
 }
 
 .LS_Ausweisnummer{
-    width: 300px;
-    height: 40px;
+    width: 20vw;
+    height: 4vh;
     position: fixed;
-    bottom: 26em;
-    right: 50em;
-    font-size: 16px;           /* Schriftgröße */
-    font-weight: bold;         /* fett */
+    bottom: 45vh;
+    right: 40vw;
+    font-size: 1vw;
+    font-weight: bold;
     color: black;
     background-color: white;
 }
 
 .LS_Passwort{
-    width: 300px;
-    height: 40px;
+    width: 20vw;
+    height: 4vh;
     position: fixed;
-    bottom: 22em;
-    right: 50em;
-    font-size: 16px;           /* Schriftgröße */
-    font-weight: bold;         /* fett */
+    bottom: 38vh;
+    right: 40vw;
+    font-size: 1vw;
+    font-weight: bold;
     color: black;
     background-color: white;
 }
 
 .LS_Ausweisnummer_text{
     position: fixed;
-    bottom: 20.5em;
-    right: 56em;
-    font-size: 20px;           /* Schriftgröße */
+    bottom: 44vh;
+    right: 62vw;
+    font-size: 1.2vw;
     color: black;
 }
 
 .LS_Passwort_text{
     position: fixed;
-    bottom: 17.1em;
-    right: 56em;
-    font-size: 20px;           /* Schriftgröße */
-    color: black;   
+    bottom: 36.8vh;
+    right: 62vw;
+    font-size: 1.2vw;
+    color: black;
 }
