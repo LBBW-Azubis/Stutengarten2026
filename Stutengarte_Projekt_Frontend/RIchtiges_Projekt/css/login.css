@@ -1,0 +1,26 @@
+.login{
+
+display:flex;
+flex-direction:column;
+width:300px;
+gap:10px;
+
+}
+
+.login input{
+
+padding:10px;
+border:2px solid #36C291;
+border-radius:6px;
+
+}
+
+.login button{
+
+background:#36C291;
+border:none;
+padding:10px;
+font-weight:bold;
+cursor:pointer;
+
+}
