@@ -1,202 +1,293 @@
 /* ============================= */
+/* Hauptmenü Container - verschiebbar */
+/* ============================= */
+
+.MS_MenuContainer {
+    position: fixed;
+    top: 25vh;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+}
+
+.MS_MenuContainer > div {
+    pointer-events: auto;
+}
+/* ============================= */
+/* Benutzer Container - oben links */
+/* ============================= */
+
+.MS_User_Container {
+    position: fixed;
+    top: 15vh;
+    left: 2vw;
+    display: flex;
+    align-items: center;
+    gap: 1vw;
+    z-index: 10;
+}
+
+/* Anpassung für Laptops/kleinere Bildschirme */
+@media (max-height: 900px) {
+    .MS_User_Container {
+        top: 20vh;
+    }
+}
+
+/* Anpassung für sehr kleine Bildschirme */
+@media (max-height: 700px) {
+    .MS_User_Container {
+        top: 22vh;
+    }
+}
+
+.MS_User_Text {
+    font-size: 1.04vw;
+    color: black;
+    margin: 0;
+    font-weight: bold;
+}
+/* ============================= */
 /* Reihe 1 */
 /* ============================= */
+
+/* Konto Container */
+.MS_Konto_Container {
+    position: absolute;
+    top: 0;
+    left: 12.5vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.8vh;
+}
 
 .MS_Konto_Icon {
     width: 10.4vw;
     height: auto;
-    position: fixed;
-    top: 20vh;
-    left: 12.5vw;
     transition: transform 0.3s ease, filter 0.3s ease;
+    cursor: pointer;
 }
 
 .MS_Konto_Icon:hover {
     transform: scale(1.1);
-    cursor: pointer;
 }
 
 .MS_Konto_Icon_Text{
-    position: fixed;
-    top: 37vh;
-    left: 16.3vw;
     font-size: 1.04vw;
     color: black;
+    margin: 0;
 }
 
-
 /* ----------------------------- */
+
+/* Einzahlen Container */
+.MS_Einzahlen_Container {
+    position: absolute;
+    top: 0;
+    left: 29.2vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.8vh;
+}
 
 .MS_Einzahlen_Icon{
     width: 10.4vw;
     height: auto;
-    position: fixed;
-    top: 20vh;
-    left: 29.2vw;
     transition: transform 0.3s ease, filter 0.3s ease;
+    cursor: pointer;
 }
 
 .MS_Einzahlen_Icon:hover {
     transform: scale(1.1);
-    cursor: pointer;
 }
 
 .MS_Einzahlen_Icon_Text{
-    position: fixed;
-    top: 37vh;
-    left: 32.3vw;
     font-size: 1.04vw;
     color: black;
+    margin: 0;
 }
 
-
 /* ----------------------------- */
+
+/* Auszahlen Container */
+.MS_Auszahlen_Container {
+    position: absolute;
+    top: 0;
+    left: 45.8vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.8vh;
+}
 
 .MS_Auszahlen_Icon{
     width: 10.4vw;
     height: auto;
-    position: fixed;
-    top: 20vh;
-    left: 45.8vw;
     transition: transform 0.3s ease, filter 0.3s ease;
+    cursor: pointer;
 }
 
 .MS_Auszahlen_Icon:hover {
     transform: scale(1.1);
-    cursor: pointer;
 }
 
 .MS_Auszahlen_Icon_Text{
-    position: fixed;
-    top: 37vh;
-    left: 48.9vw;
     font-size: 1.04vw;
     color: black;
+    margin: 0;
 }
 
-
 /* ----------------------------- */
+
+/* Überweisen Container */
+.MS_Ueberweisung_Container {
+    position: absolute;
+    top: 0;
+    left: 62.5vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.8vh;
+}
 
 .MS_Ueberweisung_Icon{
     width: 10.4vw;
     height: auto;
-    position: fixed;
-    top: 20vh;
-    left: 62.5vw;
     transition: transform 0.3s ease, filter 0.3s ease;
+    cursor: pointer;
 }
 
 .MS_Ueberweisung_Icon:hover {
     transform: scale(1.1);
-    cursor: pointer;
 }
 
 .MS_Ueberweisung_Icon_Text{
-    position: fixed;
-    top: 37vh;
-    left: 64.9vw;
     font-size: 1.04vw;
     color: black;
+    margin: 0;
 }
 
-
 /* ----------------------------- */
+
+/* Aktien Container */
+.MS_Aktien_Container {
+    position: absolute;
+    top: 0;
+    left: 79.2vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.8vh;
+}
 
 .MS_Aktien_Icon{
     width: 10.4vw;
     height: auto;
-    position: fixed;
-    top: 20vh;
-    left: 79.2vw;
     transition: transform 0.3s ease, filter 0.3s ease;
+    cursor: pointer;
 }
 
 .MS_Aktien_Icon:hover {
     transform: scale(1.1);
-    cursor: pointer;
 }
 
 .MS_Aktien_Icon_Text{
-    position: fixed;
-    top: 37vh;
-    left: 82.9vw;
     font-size: 1.04vw;
     color: black;
+    margin: 0;
 }
-
 
 /* ============================= */
 /* Reihe 2 */
 /* ============================= */
 
+/* Spiele Container */
+.MS_Spiele_Container {
+    position: absolute;
+    top: 26.7vh;
+    left: 12.5vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.8vh;
+}
+
 .MS_Spiele_Icon{
     width: 10.4vw;
     height: auto;
-    position: fixed;
-    top: 46.7vh;
-    left: 12.5vw;
     transition: transform 0.3s ease, filter 0.3s ease;
+    cursor: pointer;
 }
 
 .MS_Spiele_Icon:hover {
     transform: scale(1.1);
-    cursor: pointer;
 }
 
 .MS_Spiele_Icon_Text{
-    position: fixed;
-    bottom: 30vh;
-    left: 16.3vw;
     font-size: 1.04vw;
     color: black;
+    margin: 0;
 }
 
-
 /* ----------------------------- */
+
+/* Konto erstellen Container */
+.MS_Kontoerstellen_Container {
+    position: absolute;
+    top: 26.7vh;
+    left: 29.2vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.8vh;
+}
 
 .MS_Kontoerstellen_Icon{
     width: 10.4vw;
     height: auto;
-    position: fixed;
-    top: 46.7vh;
-    left: 29.2vw;
     transition: transform 0.3s ease, filter 0.3s ease;
+    cursor: pointer;
 }
 
 .MS_Kontoerstellen_Icon:hover {
     transform: scale(1.1);
-    cursor: pointer;
 }
 
 .MS_Kontoerstellen_Icon_Text{
-    position: fixed;
-    bottom: 30vh;
-    left: 31vw;
     font-size: 1.04vw;
     color: black;
+    margin: 0;
 }
 
-
 /* ----------------------------- */
+
+/* Info Container */
+.MS_Info_Container {
+    position: absolute;
+    top: 26.7vh;
+    left: 45.8vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.8vh;
+}
 
 .MS_Info_Icon{
     width: 10.4vw;
     height: auto;
-    position: fixed;
-    top: 46.7vh;
-    left: 45.8vw;
     transition: transform 0.3s ease, filter 0.3s ease;
+    cursor: pointer;
 }
 
 .MS_Info_Icon:hover {
     transform: scale(1.1);
-    cursor: pointer;
 }
 
 .MS_Info_Icon_Text {
-    position: fixed;
-    bottom: 30vh;
-    left: 50vw;
     font-size: 1.04vw;
     color: black;
+    margin: 0;
 }

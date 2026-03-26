@@ -1,0 +1,247 @@
+/* ===================================== */
+/* RESPONSIVE CSS - Mobile First */
+/* ===================================== */
+
+/* ===== BASE SIZES ===== */
+:root {
+  /* Desktop Font Size Base */
+  --font-size-base: 16px;
+  --font-size-small: 0.875rem;
+  --font-size-medium: 1rem;
+  --font-size-large: 1.25rem;
+  --font-size-xl: 1.5rem;
+  
+  /* Spacing */
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  
+  /* Border */
+  --border-thin: 0.05rem;
+  --border-medium: 0.1rem;
+  --border-thick: 0.2rem;
+}
+
+/* ===== RESPONSIVE BREAKPOINTS ===== */
+
+/* Large Desktop (1920px and above) */
+@media (min-width: 1920px) {
+  :root {
+    --font-size-base: 18px;
+  }
+}
+
+/* Desktop (1024px to 1919px) */
+@media (min-width: 1024px) and (max-width: 1919px) {
+  :root {
+    --font-size-base: 16px;
+  }
+}
+
+/* Tablet (768px to 1023px) */
+@media (min-width: 768px) and (max-width: 1023px) {
+  :root {
+    --font-size-base: 14px;
+  }
+  
+  /* Adjust vw/vh scaling for tablets */
+  .MS_Konto_Icon,
+  .MS_Einzahlen_Icon,
+  .MS_Auszahlen_Icon,
+  .MS_Ueberweisung_Icon,
+  .MS_Aktien_Icon,
+  .MS_Spiele_Icon,
+  .MS_Kontoerstellen_Icon,
+  .MS_Info_Icon {
+    width: 12vw !important;
+  }
+  
+  input[type="text"],
+  .Einzahlen_Kontonummer_Eingabe,
+  .Mainsite_Konto,
+  .Einzahlen_Betrag {
+    width: 20vw !important;
+  }
+}
+
+/* Mobile (480px to 767px) */
+@media (max-width: 767px) {
+  :root {
+    --font-size-base: 13px;
+  }
+  
+  /* Stack layouts vertically */
+  .MS_Konto_Icon,
+  .MS_Einzahlen_Icon,
+  .MS_Auszahlen_Icon,
+  .MS_Ueberweisung_Icon,
+  .MS_Aktien_Icon,
+  .MS_Spiele_Icon,
+  .MS_Kontoerstellen_Icon,
+  .MS_Info_Icon {
+    width: 15vw !important;
+    top: auto !important;
+    left: auto !important;
+    position: relative !important;
+  }
+  
+  input[type="text"],
+  .Einzahlen_Kontonummer_Eingabe,
+  .Mainsite_Konto,
+  .Einzahlen_Betrag {
+    width: 25vw !important;
+    font-size: 1rem !important;
+  }
+  
+  .Einzahlen_Betrag_Text,
+  .Einzahlen_Kontonummer_Text,
+  .Einzahlen_Kontoname_Text,
+  .Einzahlen_Kontostand_Text {
+    font-size: 1.1rem !important;
+  }
+}
+
+/* Small Mobile (below 480px) */
+@media (max-width: 479px) {
+  :root {
+    --font-size-base: 12px;
+  }
+  
+  /* Full width for small screens */
+  .MS_Konto_Icon,
+  .MS_Einzahlen_Icon,
+  .MS_Auszahlen_Icon,
+  .MS_Ueberweisung_Icon,
+  .MS_Aktien_Icon,
+  .MS_Spiele_Icon,
+  .MS_Kontoerstellen_Icon,
+  .MS_Info_Icon {
+    width: 20vw !important;
+  }
+  
+  input[type="text"],
+  .Einzahlen_Kontonummer_Eingabe,
+  .Mainsite_Konto,
+  .Einzahlen_Betrag {
+    width: 30vw !important;
+    font-size: 0.9rem !important;
+  }
+}
+
+/* ===== GENERAL RESPONSIVE RULES ===== */
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+/* Ensure images scale properly */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Better input and select styling across devices */
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="number"],
+select,
+textarea {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  width: 100%;
+  padding: 0.5rem;
+  font-size: 1rem;
+  border: 0.1rem solid #ccc;
+  border-radius: 0.25rem;
+}
+
+/* Button optimization for touch */
+button,
+input[type="button"],
+input[type="submit"] {
+  min-height: 44px; /* Minimum touch target size */
+  min-width: 44px;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+/* ===== TOUCH DEVICE OPTIMIZATIONS ===== */
+@media (hover: none) and (pointer: coarse) {
+  /* Touch devices - increase touch targets */
+  button,
+  a,
+  input[type="button"],
+  input[type="submit"] {
+    min-height: 48px;
+    min-width: 48px;
+  }
+  
+  /* Remove hover effects on touch devices */
+  button:hover,
+  a:hover,
+  .MS_Konto_Icon:hover,
+  .MS_Einzahlen_Icon:hover,
+  .MS_Auszahlen_Icon:hover,
+  .MS_Ueberweisung_Icon:hover,
+  .MS_Aktien_Icon:hover,
+  .MS_Spiele_Icon:hover,
+  .MS_Kontoerstellen_Icon:hover,
+  .MS_Info_Icon:hover {
+    transform: none;
+  }
+}
+
+/* ===== LANDSCAPE MODE OPTIMIZATION ===== */
+@media (orientation: landscape) and (max-height: 600px) {
+  .MS_Konto_Icon,
+  .MS_Einzahlen_Icon,
+  .MS_Auszahlen_Icon,
+  .MS_Ueberweisung_Icon,
+  .MS_Aktien_Icon,
+  .MS_Spiele_Icon,
+  .MS_Kontoerstellen_Icon,
+  .MS_Info_Icon {
+    width: 8vw !important;
+  }
+  
+  .MS_Konto_Icon_Text,
+  .MS_Einzahlen_Icon_Text,
+  .MS_Auszahlen_Icon_Text,
+  .MS_Ueberweisung_Icon_Text,
+  .MS_Aktien_Icon_Text,
+  .MS_Spiele_Icon_Text,
+  .MS_Kontoerstellen_Icon_Text,
+  .MS_Info_Icon_Text {
+    font-size: 0.8vw !important;
+  }
+}
+
+/* ===== ACCESSIBILITY ===== */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: more) {
+  body {
+    background-color: #ffffff;
+    color: #000000;
+  }
+}

@@ -23,7 +23,7 @@ export default function Dashboard() {
   return (
     <main className="page-center">
 
-          <img src={ls_icon} className="LS_Icon" />
+          <img src={ls_icon} className="Mainsite_Konto_Icon" />
           <input type="text" className="Mainsite_Konto" placeholder="Ausweisnummer eingeben"/>
           <p className = "Mainsite_Konto_Text">Kontonummer: </p>
           <button className="Mainsite_Konto_Button">Weiter</button>

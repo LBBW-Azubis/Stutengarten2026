@@ -10,6 +10,7 @@ import Mainsite_Aktien from './3_Mainsite_Aktien'
 import Mainsite_Spiele from './3_Mainsite_Spiele'
 import Mainsite_KontoErstellen from './3_Mainsite_KontoErstellen'
 import Mainsite_Info from './3_Mainsite_Info'
+import Mainsite_Konto_Daten from './3_Mainsite_Konto_Daten'
 
 
 import './App.css'  //Wichtig immer CSS importieren
@@ -49,6 +50,7 @@ import logo from './images/bwbank_logo.png';
         <option value="/">Loginseite</option>
         <option value="/mainsite">Mainsite</option>
         <option value="/mainsite/konto">Konto</option>
+        <option value="/mainsite/konto/daten">Konto Daten</option>
         <option value="/mainsite/einzahlen">Einzahlen</option>
         <option value="/mainsite/auszahlen">Auszahlen</option>
         <option value="/mainsite/ueberweisen">Überweisen</option>
@@ -103,6 +105,7 @@ export default function App() {
         <Route path="/" element={<Login />} />
         <Route path="/mainsite" element={<Mainsite />} />
         <Route path="/mainsite/konto" element={<Mainsite_Konto />} />
+        <Route path="/mainsite/konto/daten" element={<Mainsite_Konto_Daten />} />
         <Route path="/mainsite/einzahlen" element={<Mainsite_Einzahlen />} />
         <Route path="/mainsite/auszahlen" element={<Mainsite_Auszahlen />} />
         <Route path="/mainsite/ueberweisen" element={<Mainsite_Ueberweisen />} />

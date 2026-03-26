@@ -1,21 +1,80 @@
-.LS_Icon{
-    width: 15vw;
-    height: auto;
-    position: fixed;
-
-    top: 30%;
-    left: 50%;
-
-    transform: translate(-50%, -50%);
+/* Haupt-Container */
+main.page-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    padding-top: 2vh;
+    gap: 1vh;
+    justify-content: flex-start;
 }
 
-.LS_Icon_Lupe{
+/* Icon zentriert oben */
+.LS_Icon {
+    width: 15vw;
+    height: auto;
+    margin-bottom: 2vh;
+    margin-top: 3vh;
+}
+
+/* Äußerer Container für Form + Button nebeneinander */
+.LS_LoginContainer {
+    display: flex;
+    align-items: flex-start;
+    gap: 2vw;
+    justify-content: center;
+    position: relative;
+    width: 100%;
+    height: 15vh;
+}
+
+/* Login-Felder Container - Dort drinne ist LS_Ausweisnummer/_Passwort sowie LS_LS_Ausweisnummer_text/_Passwort_text */
+.LS_Form {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.5vh;
+    position: absolute;
+    left: 30vw;
+    top: 0;
+}
+
+/* Zeile: Label + Input nebeneinander */
+.LS_Row {
+    display: flex;
+    align-items: center;
+    gap: 1vw;
+}
+
+.LS_Ausweisnummer_text,
+.LS_Passwort_text {
+    font-size: 1.2vw;
+    color: black;
+    width: 10vw;
+    text-align: right;
+    margin: 0;
+    ;
+}
+
+.LS_Ausweisnummer,
+.LS_Passwort {
+    width: 20vw;
+    height: 4vh;
+    font-size: 1vw;
+    font-weight: bold;
+    color: black;
+    background-color: white;
+    border: 1px solid #ccc;
+}
+
+/* Lupe rechts parallel neben den Inputs */
+.LS_Icon_Lupe {
     width: 6vw;
     height: auto;
-    position: fixed;
-    bottom: 39vh;
-    right: 32vw;
     cursor: pointer;
+    align-self: flex-start;
+    margin-top: 2vh;
+    margin-left: 25vw;
 }
 
 .LS_Icon_Lupe:hover {
@@ -23,42 +82,28 @@
     transition: transform 0.5s;
 }
 
-.LS_Ausweisnummer{
-    width: 20vw;
-    height: 4vh;
-    position: fixed;
-    bottom: 45vh;
-    right: 40vw;
-    font-size: 1vw;
+/* Weiter Button - absolut positioniert */
+.LS_Button_Weiter {
+    padding: 0.8vh 2vw;
+    font-size: 1.1vw;
     font-weight: bold;
-    color: black;
-    background-color: white;
+    color: white;
+    background-color: rgb(1, 80, 250);
+    border: none;
+    border-radius: 0.3rem;
+    cursor: pointer;
+    position: absolute;
+    top: 0;
+    left: 65vw;
+    transition: all 0.3s ease;
 }
 
-.LS_Passwort{
-    width: 20vw;
-    height: 4vh;
-    position: fixed;
-    bottom: 38vh;
-    right: 40vw;
-    font-size: 1vw;
-    font-weight: bold;
-    color: black;
-    background-color: white;
+.LS_Button_Weiter:hover {
+    background-color: rgb(0, 55, 180);
+    transform: scale(1.1);
 }
 
-.LS_Ausweisnummer_text{
-    position: fixed;
-    bottom: 44vh;
-    right: 62vw;
-    font-size: 1.2vw;
-    color: black;
-}
-
-.LS_Passwort_text{
-    position: fixed;
-    bottom: 36.8vh;
-    right: 62vw;
-    font-size: 1.2vw;
-    color: black;
+.LS_Button_Weiter:active {
+    background-color: rgb(0, 40, 140);
+    transform: scale(0.95);
 }

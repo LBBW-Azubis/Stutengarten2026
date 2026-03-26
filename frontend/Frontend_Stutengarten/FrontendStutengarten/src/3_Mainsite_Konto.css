@@ -1,10 +1,21 @@
 /* ============================= */
+/* Icon wie in Loginseite */
+/* ============================= */
+
+.Mainsite_Konto_Icon {
+    width: 15vw;
+    height: auto;
+    margin-bottom: 2vh;
+    margin-top: 3vh;
+}
+
+/* ============================= */
 /* Konto Text */
 /* ============================= */
 
 .Mainsite_Konto_Text{
     position: fixed;
-    bottom: 40vh;      /* vorher 20.3vw → vertikal korrekt */
+    bottom: 38vh;      /* vorher 20.3vw → vertikal korrekt */
     left: 31vw;
     font-size: 1.56vw; /* 30px */
     color: black;
@@ -19,7 +30,7 @@
     width: 15.6vw;     /* 300px */
     height: 3.3vh;     /* 40px */
     position: fixed;
-    bottom: 43vh;    /* 26em */
+    bottom: 41.5vh;     /* 26em */
     right: 41.7vw;     /* 50em */
     font-size: 0.83vw; /* 16px */
     font-weight: bold;
@@ -34,7 +45,7 @@
 
 .Mainsite_Konto_Button{
     position: fixed;
-    bottom: 43vh;    
+    bottom: 41.5vh;    
     right: 31vw;
     font-size: 1.04vw; /* 20px */
     font-weight: bold;

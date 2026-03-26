@@ -1,0 +1,35 @@
+.snake-container {
+  text-align: center;
+  margin-top: 40px;
+  color: white;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(20, 20px);
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.cell {
+  width: 20px;
+  height: 20px;
+  border: 1px solid #333;
+  background-color: #111;
+}
+
+.snake {
+  background: linear-gradient(45deg, #00ff88, #00cc66);
+  border-radius: 4px;
+}
+
+.food {
+  background: red;
+  border-radius: 50%;
+}
+
+.gameover {
+  color: red;
+  font-size: 20px;
+  margin-top: 10px;
+}
