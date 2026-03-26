@@ -34,28 +34,28 @@ export default function Dashboard() {
 
     //setKontostandNeu("Test");
     try{
-      const kontostand_num = parseFloat(Kontostand);
-      const betrag_num = parseFloat(Betrag);
-      const kontostand_neu = kontostand_num + betrag_num;
-      setKontostandNeu(kontostand_neu.toString());
-      const response = await fetch("http://192.168.1.10:5000/customer/" + Name_Eingabe + "/savingsbook/balance", { // ID = 1
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json; charset=utf-8",
-      },
-      body: JSON.stringify({
-        balance: kontostand_neu // nur das Feld, das geändert wird
-      }),
-    });
+        const kontostand_num = parseFloat(Kontostand);
+        const betrag_num = parseFloat(Betrag);
+        const kontostand_neu = kontostand_num + betrag_num;
+        setKontostandNeu(kontostand_neu.toString());
+        const response = await fetch("http://192.168.1.10:5000/customer/" + Name_Eingabe + "/savingsbook/balance", { // ID = 1
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json; charset=utf-8",
+        },
+        body: JSON.stringify({
+          balance: kontostand_neu // nur das Feld, das geändert wird
+        }),
+      });
 
-    const data = await response.json();
-    setKontostandNeu(data.balance.toString()); // aktualisierten Kontostand anzeigen
+      const data = await response.json();
+      setKontostandNeu(data.balance.toString()); // aktualisierten Kontostand anzeigen
 
-    
+      
 
-    }catch (error) {
-    console.error("Fehler bei der API-Anfrage:", error);
-  }
+      }catch (error) {
+      console.error("Fehler bei der API-Anfrage:", error);
+    }
   }
 
 const OnClick_Search_Kontonummer = async () => {
