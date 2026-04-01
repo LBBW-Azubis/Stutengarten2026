@@ -1,107 +1,114 @@
 import { useEffect, useState } from "react";
-import "./3_Mainsite_Spiele.css"  //Wichtig immer CSS importieren;
+import "./3_Mainsite_Spiele.css"; // Wichtig immer CSS importieren;
 
-const GRID_SIZE = 20;
-const INITIAL_SNAKE = [{ x: 10, y: 10 }];
-const INITIAL_FOOD = { x: 5, y: 5 };
+const EMOJIS = ["🚀", "🛸", "🌍", "🌟", "🍕", "🍔", "🍟", "🌭"];
 
-export default function SnakeGame() {
-  const [snake, setSnake] = useState(INITIAL_SNAKE);
-  const [food, setFood] = useState(INITIAL_FOOD);
-  const [direction, setDirection] = useState("RIGHT");
-  const [gameOver, setGameOver] = useState(false);
+export default function MemoryGame() {
+  const [cards, setCards] = useState([]);
+  const [flippedIndices, setFlippedIndices] = useState([]);
+  const [moves, setMoves] = useState(0);
+  const [gameWon, setGameWon] = useState(false);
 
-  // Steuerung
+  // Initialize Game
   useEffect(() => {
-  const handleKey = (e) => {
-    setDirection((prev) => {
-      if (e.key === "ArrowUp" && prev !== "DOWN") return "UP";
-      if (e.key === "ArrowDown" && prev !== "UP") return "DOWN";
-      if (e.key === "ArrowLeft" && prev !== "RIGHT") return "LEFT";
-      if (e.key === "ArrowRight" && prev !== "LEFT") return "RIGHT";
-      return prev; // 👉 verhindert Umkehr
-    });
-  };
-
-    window.addEventListener("keydown", handleKey);
-    return () => window.removeEventListener("keydown", handleKey);
+    initializeGame();
   }, []);
 
-  // Game Loop
-  useEffect(() => {
-    if (gameOver) return;
+  const initializeGame = () => {
+    const shuffledCards = [...EMOJIS, ...EMOJIS]
+      .sort(() => Math.random() - 0.5)
+      .map((emoji, index) => ({
+        id: index,
+        emoji,
+        isFlipped: false,
+        isMatched: false,
+      }));
+    setCards(shuffledCards);
+    setFlippedIndices([]);
+    setMoves(0);
+    setGameWon(false);
+  };
 
-    const interval = setInterval(() => {
-      moveSnake();
-    }, 150);
+  const handleCardClick = (index) => {
+    if (flippedIndices.length === 2) return; // Wait for animation
+    if (cards[index].isFlipped || cards[index].isMatched) return;
 
-    return () => clearInterval(interval);
-  });
+    const newFlippedIndices = [...flippedIndices, index];
+    setFlippedIndices(newFlippedIndices);
 
-  const moveSnake = () => {
-    const newSnake = [...snake];
-    const head = { ...newSnake[0] };
+    const newCards = [...cards];
+    newCards[index].isFlipped = true;
+    setCards(newCards);
 
-    if (direction === "UP") head.y -= 1;
-    if (direction === "DOWN") head.y += 1;
-    if (direction === "LEFT") head.x -= 1;
-    if (direction === "RIGHT") head.x += 1;
-
-    // Wand-Kollision
-    if (
-      head.x < 0 ||
-      head.y < 0 ||
-      head.x >= GRID_SIZE ||
-      head.y >= GRID_SIZE
-    ) {
-      setGameOver(true);
-      return;
+    if (newFlippedIndices.length === 2) {
+      setMoves((m) => m + 1);
+      checkForMatch(newFlippedIndices, newCards);
     }
+  };
 
-    // Selbst-Kollision
-    if (newSnake.some((s) => s.x === head.x && s.y === head.y)) {
-      setGameOver(true);
-      return;
-    }
+  const checkForMatch = (currentFlipped, currentCards) => {
+    const [firstIndex, secondIndex] = currentFlipped;
 
-    newSnake.unshift(head);
+    if (currentCards[firstIndex].emoji === currentCards[secondIndex].emoji) {
+      // It's a match
+      setTimeout(() => {
+        const matchedCards = [...currentCards];
+        matchedCards[firstIndex].isMatched = true;
+        matchedCards[secondIndex].isMatched = true;
+        setCards(matchedCards);
+        setFlippedIndices([]);
 
-    // Essen
-    if (head.x === food.x && head.y === food.y) {
-      setFood({
-        x: Math.floor(Math.random() * GRID_SIZE),
-        y: Math.floor(Math.random() * GRID_SIZE),
-      });
+        if (matchedCards.every((card) => card.isMatched)) {
+          setGameWon(true);
+        }
+      }, 500);
     } else {
-      newSnake.pop();
+      // Not a match, flip back
+      setTimeout(() => {
+        const resetCards = [...currentCards];
+        resetCards[firstIndex].isFlipped = false;
+        resetCards[secondIndex].isFlipped = false;
+        setCards(resetCards);
+        setFlippedIndices([]);
+      }, 1000);
     }
-
-    setSnake(newSnake);
   };
 
   return (
-    <div className="snake-container">
-      <h2>🐍 Snake Game</h2>
+    <div className="memory-container">
+      <div className="memory-header">
+        <h2>🧠 Memory Match</h2>
+        <div className="memory-stats">
+          <p>Züge: <span>{moves}</span></p>
+          <button className="restart-btn" onClick={initializeGame}>
+            Neu Starten
+          </button>
+        </div>
+      </div>
 
-      {gameOver && <p className="gameover">Game Over</p>}
+      {gameWon && (
+        <div className="victory-message">
+          🎉 Du hast gewonnen in {moves} Zügen! 🎉
+        </div>
+      )}
 
-      <div className="grid">
-        {Array.from({ length: GRID_SIZE * GRID_SIZE }).map((_, i) => {
-          const x = i % GRID_SIZE;
-          const y = Math.floor(i / GRID_SIZE);
-
-          const isSnake = snake.some((s) => s.x === x && s.y === y);
-          const isFood = food.x === x && food.y === y;
-
-          return (
-            <div
-              key={i}
-              className={`cell ${
-                isSnake ? "snake" : isFood ? "food" : ""
-              }`}
-            />
-          );
-        })}
+      <div className="memory-grid">
+        {cards.map((card, index) => (
+          <div
+            key={card.id}
+            className={`memory-card ${card.isFlipped || card.isMatched ? "flipped" : ""}`}
+            onClick={() => handleCardClick(index)}
+          >
+            <div className="memory-card-inner">
+              <div className="memory-card-front">
+                ?
+              </div>
+              <div className="memory-card-back">
+                {card.emoji}
+              </div>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );
