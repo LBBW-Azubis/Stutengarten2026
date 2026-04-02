@@ -1,0 +1,10 @@
+/* css/login.css – Login-Seite spezifische Styles
+   Eingebunden via: <link rel="stylesheet" href="css/login.css">
+   (Optional – alle nötigen Styles sind bereits in app.css) */
+
+/* Zentrierter Login-Container bei sehr großen Bildschirmen */
+@media (min-width: 700px) {
+  #app .page {
+    padding-top: 20px;
+  }
+}

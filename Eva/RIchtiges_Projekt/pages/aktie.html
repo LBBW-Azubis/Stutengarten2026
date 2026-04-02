@@ -1,0 +1,31 @@
+<!-- pages/aktie.html – Aktien-Vorlage -->
+<div class="page">
+  <div class="seite-layout">
+    <div class="seite-icon">
+      <!-- BILD EINSETZEN: images/Bild1.png -->
+      <img src="images/Bild1.png" alt="Aktien" style="width:140px;height:140px;object-fit:contain;" />
+    </div>
+    <div class="seite-felder">
+      <div class="feld-zeile"><label>Kontonummer:</label><span class="feld-input anzeige">F7ZTF0</span></div>
+      <div class="feld-zeile"><label>Name:</label><span class="feld-input anzeige">Maria Gerbert</span></div>
+      <div class="feld-zeile"><label>Kontostand:</label><span class="feld-input anzeige">12</span></div>
+      <div class="feld-zeile"><label>Anzahl Aktien:</label><input id="aktien-kaufen-anzahl" class="feld-input" type="number" min="1" max="3" value="" placeholder="1–3" /><button class="btn btn-dunkel" onclick="aktienKaufen()">kaufen</button></div>
+      <div id="aktien-fehler" style="color:red;font-size:0.85em;margin-left:4px;display:none;">Maximal 3 Aktien pro Person erlaubt.</div>
+      <div class="counter-zeile">
+        <button class="cnt-btn minus-gross">- -</button>
+        <button class="cnt-btn minus-klein">-</button>
+        <div class="cnt-val">0</div>
+        <button class="cnt-btn plus-klein">+</button>
+        <button class="cnt-btn plus-gross">+ +</button>
+        <button class="btn btn-dunkel" style="margin-left:12px;">eintragen</button>
+      </div>
+      <table class="daten-tabelle" style="margin-top:12px;">
+        <thead><tr><th></th><th>Aktiennummer</th><th>Wert</th></tr></thead>
+        <tbody>
+          <tr><td><input type="checkbox" /></td><td>14363849</td><td>4</td></tr>
+        </tbody>
+      </table>
+      <button class="btn btn-dunkel" style="margin-top:8px;">verkaufen</button>
+    </div>
+  </div>
+</div>

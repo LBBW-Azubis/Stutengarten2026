@@ -1,0 +1,31 @@
+/* css/betreuer.css – separate stylesheet for Betreuer menu
+   Edit this file to change Betreuer-specific styles without touching app.css.
+*/
+
+/* Keep the same look as the main menu but center the single tile */
+.betreuer-page .menu-grid {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 80px - 50px);
+  /* leicht nach oben schieben, damit die Kachel etwas höher sitzt */
+  transform: translateY(-6%);
+}
+
+/* Optionally adjust the tile size for Betreuer */
+.betreuer-page .kachel {
+  width: 220px;
+  height: 220px;
+}
+
+/* You can add more Betreuer-specific overrides here */
+
+/* Ensure betreuer back-arrow and button match the global size */
+body.seite-betreuer .zurueck-pfeil {
+  height: 48px;
+}
+
+body.seite-betreuer .zurueck-btn {
+  padding: 8px 22px;
+  font-size: 0.95rem;
+}

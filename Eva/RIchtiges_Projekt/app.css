@@ -1,0 +1,771 @@
+/* ==============================================
+   STUTENGARTEN BANKFILIALE – app.css
+   Design: exakt nach Stutengarten_Anwendung.pdf
+   Farben:
+     #123250  Dunkelblau  (Header, Footer, Buttons dunkel)
+     #36C291  Grün        (Felder, Buttons grün)
+     #19AAD2  Hellblau
+     #F0825A  Coral
+     #FFD719  Gelb
+     #c3aad2  Lila
+     Weiß     Seitenhintergrund
+============================================== */
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: Arial, sans-serif;
+  background: #fff;
+  min-height: 100vh;
+  color: #123250;
+}
+
+/* Keine Scrollbar: Inhalt soll immer auf eine Seite passen */
+html, body {
+  height: 100%;
+  overflow: hidden;
+}
+
+/* ── HEADER ── */
+.header {
+  background: #123250;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 24px;
+}
+
+.header-title {
+  font-size: clamp(1rem, 3.5vw, 2.4rem);
+  font-weight: bold;
+  letter-spacing: 0.08em;
+  text-align: center;
+}
+
+/* ── FOOTER-LEISTE (Betreuer-Login + Logo + X) ── */
+.fusszeile {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 50px;
+  background: #fff;
+  border-top: 1px solid #dde5ee;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  gap: 12px;
+  z-index: 200;
+}
+
+.x-btn {
+  background: #d32f2f;
+  color: white;
+  border: none;
+  width: 34px;
+  height: 34px;
+  font-weight: bold;
+  font-size: 0.9rem;
+  cursor: pointer;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+.betreuer-bereich {
+  display: flex;
+  align-items: center;
+  gap: 4px; /* etwas näher zusammenrücken */
+  flex: 1;
+}
+
+.betreuer-label {
+  font-size: 0.78rem;
+  color: #555;
+  white-space: nowrap;
+}
+
+.betreuer-bereich input {
+  width: 120px;
+  padding: 4px 8px;
+  border: 1px solid #bbb;
+  border-radius: 3px;
+  font-size: 0.82rem;
+  outline: none;
+}
+
+.betreuer-bereich input:focus {
+  border-color: #36C291;
+}
+
+/* Footer: Betreuer-Suchbutton (Lupen-Icon) sized to match the input height */
+.betreuer-such-btn {
+  background: none;
+  border: none;
+  padding: 0 2px; /* enger am Eingabefeld */
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.betreuer-such-btn img {
+  height: 20px; /* leicht größer, aber unauffällig */
+  width: auto;
+  object-fit: contain;
+}
+
+.bwbank-logo {
+  height: 28px;
+  object-fit: contain;
+  margin-left: auto;
+}
+
+.bwbank-fallback {
+  font-weight: bold;
+  font-size: 1rem;
+  color: #123250;
+  margin-left: auto;
+  letter-spacing: 0.05em;
+}
+
+/* ── ZURÜCK-BAR ── */
+.zurueck-bar {
+  position: fixed;
+  top: 72px; /* leicht nach oben verschoben, damit die Trennlinie höher sitzt */
+  left: 0;
+  right: 0;
+  background: #fff;
+  padding: 8px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 100;
+  border-bottom: 1px solid #e8f0ea;
+}
+
+.zurueck-btn {
+  background: #36C291;
+  color: white;
+  border: none;
+  padding: 8px 22px;
+  font-size: 0.95rem;
+  font-weight: bold;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.zurueck-btn:hover { background: #2aab7e; }
+
+.zurueck-pfeil {
+  height: 48px;
+  object-fit: contain;
+}
+
+/* make it obvious the arrow is clickable */
+.zurueck-pfeil { cursor: pointer; }
+
+/* ── MAIN ── */
+main#app {
+  min-height: calc(100vh - 80px - 50px);
+  padding: 36px 40px 70px;
+  background: #fff;
+  overflow: hidden;
+}
+
+/* Wenn Zurück-Bar sichtbar ist, etwas mehr Abstand oben (angepasst an die neue Bar-Position) */
+body.hat-zurueck main#app {
+  padding-top: 72px;
+}
+
+/* ── SEITEN-WRAPPER ── */
+.page {
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+/* Kunden-Selector: occupies full width so its .feld-zeile lines up with others */
+.kunden-selector { display:block; width:100%; margin-bottom:12px; }
+.kunden-selector .row { display:flex; gap:8px; align-items:center; }
+.kunden-selector .feld-zeile { margin-bottom:0; }
+
+/* Auf Konto- und Konto-erstellen-Seiten: gleiche Breite für Eingabefelder und feste Label-Breite */
+.page.konto-erstellen-seite .feld-zeile { display:flex; align-items:center; gap:16px; }
+.page.konto-erstellen-seite .feld-zeile label { min-width: 160px; text-align: right; }
+.page.konto-erstellen-seite .feld-input { width: 420px; min-width: 420px; }
+.page.konto-erstellen-seite .feld-input.anzeige { width: 420px; min-width: 420px; }
+
+/* Ensure kunden selector input uses the same sizing when inserted into .seite-felder */
+.page.konto-erstellen-seite .kunden-selector .feld-input { width: 420px; min-width: 420px; }
+
+/* ── LAYOUT: Icon links, Felder rechts ── */
+.seite-layout {
+  display: flex;
+  align-items: flex-start;
+  gap: 48px;
+}
+
+.seite-icon {
+  flex-shrink: 0;
+  width: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.seite-icon img {
+  width: 140px;
+  height: 140px;
+  object-fit: contain;
+}
+
+.seite-felder {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* ── FELD-ZEILE: Label + grünes Feld ── */
+.feld-zeile {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.feld-zeile label {
+  font-size: 1.1rem;
+  color: #123250;
+  min-width: 160px;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.feld-input {
+  background: #36C291;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 14px;
+  font-size: 1rem;
+  font-weight: bold;
+  min-width: 220px;
+  outline: none;
+}
+
+/* Make spans with .feld-input respect width too */
+.feld-input { display: inline-block; box-sizing: border-box; vertical-align: middle; }
+
+.feld-input::placeholder {
+  color: rgba(255,255,255,0.7);
+  font-weight: normal;
+}
+
+.feld-input:focus {
+  background: #2aab7e;
+}
+
+/* Lesbare (nicht editierbare) Felder – etwas heller */
+.feld-input.anzeige {
+  background: #36C291;
+  cursor: default;
+}
+
+/* Such-Icon Button neben Feld */
+.such-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0 4px;
+}
+
+.such-btn img {
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+}
+
+/* ── BUTTONS ── */
+.btn {
+  padding: 8px 22px;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.95rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.btn:hover { opacity: 0.85; }
+
+.btn-gruen  { background: #36C291; color: white; }
+.btn-dunkel { background: #123250; color: white; }
+.btn-voll   { width: 100%; text-align: center; }
+
+/* ── AKTIONS-ZEILE (Betrag + Button) ── */
+.aktions-zeile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+/* ── COUNTER (-- - Wert + ++) ── */
+.counter-zeile {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.cnt-btn {
+  width: 44px;
+  height: 44px;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.cnt-btn.minus-gross { background: #F0825A; color: white; }
+.cnt-btn.minus-klein { background: #FFD719; color: #123250; }
+.cnt-btn.plus-klein  { background: #c3aad2; color: white; border: 2px solid #123250; }
+.cnt-btn.plus-gross  { background: #36C291; color: white; }
+.cnt-btn.cnt-btn-aktiv { outline: 3px solid #123250; outline-offset: 2px; box-shadow: 0 0 0 4px rgba(18,50,80,0.25); }
+.cnt-val.cnt-val-aktiv { outline: 3px solid #123250; outline-offset: 2px; background: #d0eedd; }
+
+.cnt-val {
+  min-width: 52px;
+  height: 44px;
+  background: #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #123250;
+  border-radius: 4px;
+}
+
+/* ── TABELLE ── */
+.daten-tabelle {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 12px;
+  font-size: 0.95rem;
+}
+
+.daten-tabelle th {
+  background: #19AAD2;
+  color: white;
+  padding: 8px 14px;
+  text-align: left;
+  font-weight: bold;
+}
+
+.daten-tabelle td {
+  padding: 8px 14px;
+  border-bottom: 1px solid #e0ede8;
+}
+
+.daten-tabelle tr:nth-child(odd) td  { background: #e8d5e8; } /* lila */
+.daten-tabelle tr:nth-child(even) td { background: #e8e8f0; } /* hellgrau-lila */
+
+/* ── MENÜ-KACHELN ── */
+.menu-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 28px;
+  margin: 40px 0 28px;
+}
+
+.kachel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.kachel-bild {
+  width: 88px;
+  height: 88px;
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #36C291;
+}
+
+.kachel-bild img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain; /* show whole image, not cropped */
+  display: block;
+  border-radius: 12px;
+}
+
+.kachel-label {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #123250;
+  text-align: center;
+}
+
+/* Größere Kachelfläche auf der Haupt-Menüseite (Kinder-Arbeitsfläche)
+   Die Bilder in den Kacheln bleiben bei 100x100; die Kachel selbst wird
+   größer, hat mehr Abstand und eine größere Beschriftung. */
+body.seite-menu .menu-grid {
+  column-gap: 36px; /* horizontal spacing between tiles */
+  row-gap: 18px;    /* reduced vertical spacing between rows */
+  margin: -20px 0 44px; /* deutlich weiter oben anzeigen */
+}
+
+body.seite-menu .kachel {
+  gap: 14px;
+  padding: 16px 8px;
+  min-height: 200px; /* moderate clickable area, tighter rows */
+}
+
+/* Leicht größere Icon-Fläche; Bild im Inneren bleibt zentriert */
+body.seite-menu .kachel-bild {
+  width: 100px;
+  height: 100px;
+}
+
+body.seite-menu .kachel-label {
+  font-size: 1.2rem;
+}
+
+/* Responsive adjustments for the menu page */
+@media (max-width: 900px) {
+  /* Use two columns on narrow screens */
+  .menu-grid { grid-template-columns: repeat(2, 1fr); column-gap: 18px; row-gap: 14px; margin: 0 0 20px; }
+  body.seite-menu .kachel { gap: 10px; padding: 12px 6px; min-height: 150px; }
+  body.seite-menu .kachel-label { font-size: 1rem; }
+  /* Slightly smaller images on small screens to keep spacing */
+  body.seite-menu .kachel-bild { width: 88px; height: 88px; }
+}
+
+@media (min-width: 1400px) {
+  /* Larger spacing and tiles on very wide screens */
+  body.seite-menu .menu-grid { column-gap: 48px; row-gap: 22px; margin: -28px 0 56px; }
+  body.seite-menu .kachel { gap: 18px; padding: 20px 10px; min-height: 240px; }
+  body.seite-menu .kachel-label { font-size: 1.35rem; }
+  /* Slightly larger images on very wide screens */
+  body.seite-menu .kachel-bild { width: 120px; height: 120px; }
+}
+
+/* ── LOGIN-SEITE ── */
+.login-seite {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* Vertically center inside the available main area (header 80px + footer 50px) */
+  min-height: calc(100vh - 80px - 50px);
+  justify-content: center;
+  /* Nudge slightly upward so the box sits a bit higher than exact center */
+  transform: translateY(-6%);
+  padding-top: 20px;
+}
+
+.login-icon {
+  width: 160px;
+  height: 160px;
+  margin-bottom: 36px;
+}
+
+.login-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.login-felder {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: 100%;
+  max-width: 520px;
+}
+
+/* Konto erstellen: nudge the central content slightly downwards */
+.page.konto-erstellen-seite .seite-layout {
+  padding-top: 120px; /* stärker nach unten schieben */
+  padding-left: 80px; /* schiebe den Inhalt nach rechts */
+}
+
+@media (max-width: 900px) {
+  .page.konto-erstellen-seite .seite-layout { padding-top: 64px; padding-left: 24px; }
+}
+
+/* ── HACKER-SEITE ── */
+.hacker-seite {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 64px - 50px);
+  gap: 20px;
+}
+
+.hacker-icon-wrap {
+  width: 140px;
+  height: 140px;
+}
+
+.hacker-icon-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.hacker-text {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #123250;
+  text-align: center;
+}
+
+/* Hacker-Angriff-Box (dunkelblauer Hintergrund) */
+.hacker-angriff-box {
+  background: #123250;
+  margin: 0 -40px;
+  padding: 40px;
+  min-height: calc(100vh - 64px - 50px);
+  display: flex;
+  gap: 40px;
+  align-items: center;
+}
+
+.hacker-angriff-inhalt {
+  background: #36C291;
+  flex: 1;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 280px;
+  font-size: 1rem;
+  color: white;
+}
+
+/* ── HACKER MINI-SPIEL (Vollbild) ── */
+.hacker-spiel-box {
+  background: #123250;
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 28px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.hk-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #36C291;
+  font-size: 1.1rem;
+  font-weight: bold;
+  margin-bottom: 14px;
+  flex-shrink: 0;
+}
+
+.hk-code-block {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 5px;
+  flex: 1;
+  background: #0d2035;
+  border-radius: 8px;
+  padding: 14px;
+  overflow-y: auto;
+  align-content: start;
+}
+
+.hk-cell {
+  font-family: monospace;
+  font-size: 0.78rem;
+  padding: 4px 6px;
+  border-radius: 4px;
+  white-space: nowrap;
+  overflow: visible;
+  user-select: none;
+}
+
+.hk-code {
+  color: #7fffba;
+  background: transparent;
+  cursor: default;
+}
+
+.hk-fehler {
+  font-size: 1.5rem;
+  line-height: 1.8rem;
+  cursor: pointer;
+  background: rgba(240, 130, 90, 0.25);
+  border: 2px solid rgba(240, 130, 90, 0.6);
+  text-align: center;
+  overflow: visible;
+  transition: transform 0.15s;
+  animation: hk-pulse 1.4s ease-in-out infinite;
+}
+
+.hk-fehler:hover { transform: scale(1.4); background: rgba(240,130,90,0.5); }
+
+@keyframes hk-pulse {
+  0%,100% { box-shadow: 0 0 0 0 rgba(240,130,90,0.5); }
+  50%      { box-shadow: 0 0 0 5px rgba(240,130,90,0); }
+}
+
+.hk-gefunden {
+  background: #36C291 !important;
+  cursor: default;
+  opacity: 0.5;
+}
+
+@keyframes hk-shake-anim {
+  0%,100% { transform: translateX(0); }
+  25%      { transform: translateX(-4px); }
+  75%      { transform: translateX(4px); }
+}
+.hk-shake { animation: hk-shake-anim 0.4s ease; background: rgba(240,130,90,0.35) !important; }
+
+/* ── TSCHÜSS-SEITE ── */
+.tschuess-seite {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 64px - 50px);
+  gap: 24px;
+}
+
+.tschuess-logo img {
+  height: 50px;
+  object-fit: contain;
+}
+
+.tschuess-logo-text {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #123250;
+  letter-spacing: 0.05em;
+}
+
+/* ── ÜBERWEISUNGS-LAYOUT ── */
+.ueberw-layout {
+  display: flex;
+  align-items: flex-start;
+  gap: 32px;
+}
+
+.ueberw-mitte {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-top: 20px;
+  flex-shrink: 0;
+  width: 100px;
+}
+
+.ueberw-mitte img {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+}
+
+/* ── FEHLER / HINWEIS ── */
+.fehler-text {
+  color: #d32f2f;
+  font-size: 0.88rem;
+  margin-top: 6px;
+  display: none;
+}
+
+.ok-text {
+  color: #36C291;
+  font-size: 0.88rem;
+  margin-top: 6px;
+  display: none;
+}
+
+/* ── SPIEL-SEITE ── */
+.spiel-layout {
+  display: flex;
+  gap: 32px;
+  align-items: flex-start;
+}
+
+.spiel-box {
+  background: #123250;
+  border-radius: 8px;
+  padding: 14px;
+  flex: 1;
+}
+
+.spiel-canvas-wrap {
+  background: #36C291;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#snakeCanvas {
+  border-radius: 4px;
+  display: block;
+  max-height: 380px;
+  width: auto;
+}
+
+.snake-score-zeile {
+  display: flex;
+  justify-content: space-between;
+  color: white;
+  font-size: 0.9rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+/* ── RANKING ── */
+.ranking-layout {
+  display: flex;
+  gap: 40px;
+  align-items: flex-start;
+}
+
+.ranking-icon {
+  width: 120px;
+  flex-shrink: 0;
+}
+
+.ranking-icon img {
+  width: 100%;
+  object-fit: contain;
+}
+
+/* ── BERUFE ── */
+.berufe-such-layout {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+}
+
+.berufe-such-icon {
+  width: 140px;
+  height: 140px;
+}
+
+.berufe-such-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
