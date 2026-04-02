@@ -1,0 +1,4 @@
+   card_id  surname      name  date_of_birth  picked_up  animal_group_name  public_note  private_note
+0        1   Julian  Jesinger            NaN        NaN                NaN          NaN           NaN
+1        2   Jannik      Klys            NaN        NaN                NaN          NaN           NaN
+2        3  Keviiin      Fink            NaN        NaN                NaN          NaN           NaN

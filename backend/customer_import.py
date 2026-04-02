@@ -55,12 +55,13 @@ class CustomerImport:
             for customer in customer_data:
                 try:
                     # map xlsx columns to database columns
-                    stutengarten_id =   customer.get('Stutengarten ID' or \
+                    stutengarten_id =   customer.get('card_id') or \
+                                        customer.get('Stutengarten ID') or \
                                         customer.get('Stutengarten_ID') or \
-                                        customer.get('ID'))
+                                        customer.get('ID')
 
-                    vorname = customer.get('Vorname')
-                    nachname = customer.get('Nachname')
+                    vorname = customer.get('name') or customer.get('Vorname')
+                    nachname = customer.get('surname') or customer.get('Nachname')
 
                     if not stutengarten_id or not vorname or not nachname:
                         # Stille Skip oder Loggen ohne I/O Blockierung

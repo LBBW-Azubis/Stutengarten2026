@@ -1,0 +1,4 @@
+   card_id     name  capacity  restricted
+0     1001  Polizei       NaN         NaN
+1     1002     Bank       NaN         NaN
+2     1003       DM       NaN         NaN

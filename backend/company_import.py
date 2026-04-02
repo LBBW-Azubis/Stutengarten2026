@@ -53,9 +53,10 @@ class CompanyImport:
             # 1. Daten sammeln
             for company in company_data:
                 try:
-                    company_name =      company.get('Unternehmen' or \
+                    company_name =      company.get('name') or \
+                                        company.get('Unternehmen') or \
                                         company.get('Bezeichnung') or \
-                                        company.get('Name')) or \
+                                        company.get('Name') or \
                                         company.get('Firma')
 
                     if not company_name:
