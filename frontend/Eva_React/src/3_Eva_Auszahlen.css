@@ -1,0 +1,80 @@
+/* Auszahlen Styles - identisch zu Einzahlen */
+
+.az-seite {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 0;
+  width: 100%;
+}
+
+.az-titel {
+  font-size: 2.2rem;
+  color: #123250;
+  margin: 0 0 24px 0;
+  font-weight: bold;
+}
+
+.az-inhalt {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  max-width: 900px;
+}
+
+.az-feld {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.az-feld label {
+  font-size: 1.35rem;
+  font-weight: bold;
+  color: #123250;
+  min-width: 220px;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.az-feld .feld-input {
+  flex: 1;
+  min-width: 0;
+  padding: 14px 20px;
+  font-size: 1.2rem;
+}
+
+.az-action-btn {
+  padding: 14px 36px;
+  font-size: 1.15rem;
+  white-space: nowrap;
+}
+
+.az-trennlinie {
+  width: 100%;
+  height: 3px;
+  background: #dde5ee;
+  margin: 10px 0;
+}
+
+.az-kontostand-neu {
+  background: #123250 !important;
+  color: white;
+  font-weight: bold;
+}
+
+@media (max-width: 700px) {
+  .az-inhalt {
+    max-width: 100%;
+  }
+
+  .az-feld {
+    flex-wrap: wrap;
+  }
+
+  .az-feld label {
+    min-width: auto;
+    text-align: left;
+  }
+}

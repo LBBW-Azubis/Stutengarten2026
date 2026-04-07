@@ -1,0 +1,93 @@
+/* Einzahlen Styles */
+
+.ez-seite {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 0;
+  width: 100%;
+}
+
+/* Icon oben zentriert */
+.ez-icon {
+  width: 160px;
+  height: 160px;
+  object-fit: contain;
+}
+
+.ez-titel {
+  font-size: 2.2rem;
+  color: #123250;
+  margin: 0 0 24px 0;
+  font-weight: bold;
+}
+
+/* Formular zentriert, volle Breite nutzen */
+.ez-inhalt {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  max-width: 900px;
+}
+
+/* Feld-Zeile */
+.ez-feld {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.ez-feld label {
+  font-size: 1.35rem;
+  font-weight: bold;
+  color: #123250;
+  min-width: 220px;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.ez-feld .feld-input {
+  flex: 1;
+  min-width: 0;
+  padding: 14px 20px;
+  font-size: 1.2rem;
+}
+
+/* Action Buttons neben Eingabefeldern */
+.ez-action-btn {
+  padding: 14px 36px;
+  font-size: 1.15rem;
+  white-space: nowrap;
+}
+
+/* Trennlinie */
+.ez-trennlinie {
+  width: 100%;
+  height: 3px;
+  background: #dde5ee;
+  margin: 10px 0;
+}
+
+/* Kontostand Neu hervorgehoben */
+.ez-kontostand-neu {
+  background: #123250 !important;
+  color: white;
+  font-weight: bold;
+}
+
+/* Responsive */
+@media (max-width: 700px) {
+  .ez-inhalt {
+    max-width: 100%;
+  }
+
+  .ez-feld {
+    flex-wrap: wrap;
+  }
+
+  .ez-feld label {
+    min-width: auto;
+    text-align: left;
+  }
+}

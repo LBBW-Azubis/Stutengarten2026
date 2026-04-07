@@ -1,0 +1,159 @@
+/* BetreuerMenu Styles */
+
+/* Haupt-Layout: Einstellungen links, Kachel rechts */
+.betreuer-layout {
+  display: flex;
+  align-items: flex-start;
+  gap: 40px;
+  padding-top: 10px;
+  justify-content: flex-start;
+}
+
+/* Einstellungen links - mehrere Boxen untereinander */
+.betreuer-settings {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Berufe-Kachel rechts */
+.betreuer-kacheln {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  flex-shrink: 0;
+  padding-top: 20px;
+}
+
+.betreuer-kacheln .kachel { padding: 20px; }
+.betreuer-kacheln .kachel-bild { width: 150px; height: 150px; }
+.betreuer-kacheln .kachel-label { font-size: 1.4rem; }
+
+/* Generische Settings-Box (fuer Hacker, Spiele, etc.) */
+.settings-box {
+  background: #f5f8fa;
+  border: 2px solid #dde5ee;
+  border-radius: 14px;
+  padding: 24px 28px;
+  max-width: 620px;
+}
+
+.settings-box-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #dde5ee;
+}
+
+.settings-box-icon {
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+}
+
+.settings-box-header h2 {
+  font-size: 1.3rem;
+  color: #123250;
+  margin: 0;
+}
+
+.settings-box-body {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.setting-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.setting-label {
+  font-size: 1.05rem;
+  font-weight: bold;
+  color: #123250;
+  white-space: nowrap;
+}
+
+.setting-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* AN / AUS Toggle Buttons */
+.toggle-group {
+  display: flex;
+  gap: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 2px solid #123250;
+}
+
+.toggle-btn {
+  padding: 8px 22px;
+  font-size: 0.95rem;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  background: #e8e8f0;
+  color: #123250;
+  transition: background 0.2s, color 0.2s;
+}
+
+.toggle-btn.aktiv { background: #36C291; color: white; }
+.toggle-btn.inaktiv { background: #d32f2f; color: white; }
+
+/* Status-Anzeige */
+.status-badge {
+  font-size: 0.9rem;
+  font-weight: bold;
+  padding: 5px 14px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+
+.status-badge.status-an { background: #d4edda; color: #155724; }
+.status-badge.status-aus { background: #f8d7da; color: #721c24; }
+
+/* Intervall Buttons */
+.intervall-group {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.intervall-btn {
+  padding: 8px 16px;
+  font-size: 0.95rem;
+  font-weight: bold;
+  border: 2px solid #123250;
+  border-radius: 8px;
+  cursor: pointer;
+  background: white;
+  color: #123250;
+  transition: background 0.2s, color 0.2s;
+}
+
+.intervall-btn.ausgewaehlt { background: #123250; color: white; }
+.intervall-btn:hover:not(.ausgewaehlt) { background: #e8f0fe; }
+
+/* Responsive */
+@media (max-width: 900px) {
+  .betreuer-layout {
+    flex-direction: column-reverse;
+    align-items: center;
+    gap: 30px;
+  }
+
+  .setting-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+}
