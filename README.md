@@ -16,3 +16,4 @@ Benötigte Downloads:
 - Pandas
 - MySQL
 - Node.JS (inkl. npm install im direkten Unterordner)
+- Pyinstaller
