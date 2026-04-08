@@ -127,7 +127,8 @@ class CompanyTransaction:
         Adds this transaction amount to the daily statistics.
         Updates or creates entry for current weekday.
         """
-        current_weekday = datetime.now().strftime("%A").upper()
+        weekdays_german = ['MONTAG', 'DIENSTAG', 'MITTWOCH', 'DONNERSTAG', 'FREITAG', 'SAMSTAG', 'SONNTAG']
+        current_weekday = weekdays_german[datetime.now().weekday()]
 
         conn = self.db.get_connection()
         cursor = conn.cursor(dictionary=True)

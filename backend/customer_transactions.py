@@ -116,7 +116,8 @@ class CustomerTransaction:
         """
         Adds this transaction amount to the daily statistics.
         """
-        current_weekday = datetime.now().strftime("%A").upper()
+        weekdays_german = ['MONTAG', 'DIENSTAG', 'MITTWOCH', 'DONNERSTAG', 'FREITAG', 'SAMSTAG', 'SONNTAG']
+        current_weekday = weekdays_german[datetime.now().weekday()]
         conn = self.db.get_connection()
         cursor = conn.cursor(dictionary=True)
         try:
@@ -224,6 +225,19 @@ class CustomerTransaction:
                            (sb_sender["id"], -amount, purpose))
             cursor.execute("INSERT INTO kundenumsaetze (kundensparbuch_fk, betrag, verwendungszweck) VALUES (%s, %s, %s)",
                            (sb_receiver["id"], amount, purpose))
+
+            # Wochentag ermitteln
+            weekdays_german = ['MONTAG', 'DIENSTAG', 'MITTWOCH', 'DONNERSTAG', 'FREITAG', 'SAMSTAG', 'SONNTAG']
+            current_weekday = weekdays_german[datetime.now().weekday()]
+            
+            # Statistik prüfen
+            cursor.execute("SELECT * FROM kundenstatistik WHERE wochentage = %s", (current_weekday,))
+            if not cursor.fetchone():
+                cursor.execute("INSERT INTO kundenstatistik (wochentage, gesamtumsatz) VALUES (%s, %s)",
+                               (current_weekday, amount))  # amount (positiv) als Volumen nehmen
+            else:
+                cursor.execute("UPDATE kundenstatistik SET gesamtumsatz = gesamtumsatz + %s WHERE wochentage = %s",
+                               (amount, current_weekday))
 
             conn.commit()
             return {"status": "success", "from": from_stutengarten_id,
