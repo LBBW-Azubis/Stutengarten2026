@@ -1,94 +1,16 @@
-/* KontoErstellen Styles */
+/* KontoErstellen Styles - viewport-relativ */
 
-.ke-seite {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  padding-top: 0;
-  width: 100%;
-}
+.ke-seite { display: flex; justify-content: center; align-items: flex-start; width: 100%; flex: 1; }
+.ke-card { display: flex; flex-direction: column; align-items: center; background: white; padding: clamp(20px, 2.5vh, 40px) clamp(24px, 3.5vw, 64px); gap: clamp(16px, 2vh, 26px); width: 100%; max-width: clamp(500px, 52vw, 720px); }
+.ke-card-formular { max-width: clamp(550px, 58vw, 820px); }
+.ke-icon { width: clamp(80px, 12vh, 140px); height: clamp(80px, 12vh, 140px); object-fit: contain; }
+.ke-frage-text { background: #36C291; color: white; font-size: clamp(1.15rem, 2.4vh, 1.6rem); font-weight: bold; padding: clamp(10px, 1.5vh, 18px) clamp(20px, 2.4vw, 40px); border-radius: 8px; text-align: center; }
+.ke-titel { color: #123250; font-size: clamp(1.4rem, 3vh, 1.85rem); margin: 0; }
+.ke-buttons { display: flex; gap: clamp(12px, 1.8vw, 22px); justify-content: flex-end; }
+.ke-btn { min-width: clamp(120px, 12vw, 160px); padding: clamp(10px, 1.3vh, 16px) 0; font-size: clamp(1.05rem, 1.7vh, 1.2rem); text-align: center; }
+.ke-formular { display: flex; flex-direction: column; gap: clamp(10px, 1.5vh, 20px); width: 100%; }
+.ke-feld { display: flex; align-items: center; gap: clamp(10px, 1.2vw, 18px); }
+.ke-feld label { font-size: clamp(1rem, 1.8vh, 1.3rem); font-weight: bold; color: #123250; min-width: clamp(140px, 14vw, 200px); text-align: right; white-space: nowrap; }
+.ke-feld .feld-input { flex: 1; min-width: 0; padding: clamp(8px, 1.2vh, 12px) clamp(12px, 1.2vw, 18px); font-size: clamp(1rem, 1.6vh, 1.15rem); }
 
-.ke-card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background: white;
-  padding: clamp(24px, 3vw, 40px) clamp(30px, 5vw, 80px);
-  gap: clamp(16px, 2vw, 30px);
-  width: 100%;
-  max-width: 700px;
-}
-
-.ke-card-formular {
-  max-width: 800px;
-}
-
-.ke-icon {
-  width: clamp(80px, 10vw, 150px);
-  height: clamp(80px, 10vw, 150px);
-  object-fit: contain;
-}
-
-.ke-frage-text {
-  background: #36C291;
-  color: white;
-  font-size: clamp(1.2rem, 1.4vw, 1.6rem);
-  font-weight: bold;
-  padding: clamp(12px, 1.5vw, 18px) clamp(24px, 3vw, 44px);
-  border-radius: 10px;
-  text-align: center;
-}
-
-.ke-titel {
-  color: #123250;
-  font-size: clamp(1.4rem, 1.6vw, 1.8rem);
-  margin: 0;
-}
-
-.ke-buttons {
-  display: flex;
-  gap: 20px;
-  justify-content: flex-end;
-}
-
-.ke-btn {
-  min-width: clamp(120px, 12vw, 160px);
-  padding: clamp(10px, 1.2vw, 14px) 0;
-  font-size: clamp(1rem, 1.1vw, 1.2rem);
-  text-align: center;
-}
-
-.ke-formular {
-  display: flex;
-  flex-direction: column;
-  gap: clamp(14px, 1.5vw, 22px);
-  width: 100%;
-}
-
-.ke-feld {
-  display: flex;
-  align-items: center;
-  gap: clamp(12px, 1.5vw, 20px);
-}
-
-.ke-feld label {
-  font-size: clamp(1rem, 1.1vw, 1.3rem);
-  font-weight: bold;
-  color: #123250;
-  min-width: clamp(130px, 14vw, 200px);
-  text-align: right;
-  white-space: nowrap;
-}
-
-.ke-feld .feld-input {
-  flex: 1;
-  min-width: 0;
-  padding: clamp(8px, 1vw, 12px) clamp(12px, 1.2vw, 18px);
-  font-size: clamp(1rem, 1vw, 1.15rem);
-}
-
-@media (max-width: 600px) {
-  .ke-card { padding: 20px 16px; }
-  .ke-feld { flex-direction: column; align-items: flex-start; gap: 6px; }
-  .ke-feld label { min-width: auto; text-align: left; }
-}
+@media (max-width: 600px) { .ke-card { padding: 16px; } .ke-feld { flex-direction: column; align-items: flex-start; gap: 4px; } .ke-feld label { min-width: auto; text-align: left; } }

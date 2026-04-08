@@ -202,7 +202,7 @@ function AppLayout() {
       <Header />
       <ZurueckBar />
 
-      <main id="app" className={!istLogin ? 'hat-zurueck' : ''}>
+      <main id="app">
         <Routes>
           <Route path="/" element={<Eva_Login />} />
           <Route path="/mainsite" element={<Eva_Menu />} />

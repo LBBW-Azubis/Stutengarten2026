@@ -1,132 +1,26 @@
-/* Ranking Styles */
+/* Ranking Styles - viewport-relativ */
 
-.rk-seite {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-  padding-top: 0;
-}
+.rk-seite { display: flex; flex-direction: column; align-items: center; width: 100%; flex: 1; }
+.rk-titel { font-size: clamp(1.5rem, 3vh, 2.2rem); color: #123250; margin: 0; }
+.rk-untertitel { font-size: clamp(1rem, 1.7vh, 1.15rem); color: #888; margin: clamp(4px, 0.5vh, 6px) 0 clamp(12px, 1.8vh, 22px) 0; }
 
-.rk-titel {
-  font-size: 2.2rem;
-  color: #123250;
-  margin: 0;
-}
+.rk-liste { width: 100%; max-width: clamp(550px, 58vw, 780px); display: flex; flex-direction: column; gap: clamp(8px, 1vh, 12px); }
 
-.rk-untertitel {
-  font-size: 1.1rem;
-  color: #888;
-  margin: 4px 0 24px 0;
-}
+.rk-eintrag { display: flex; align-items: center; gap: clamp(12px, 1.8vw, 22px); padding: clamp(10px, 1.3vh, 16px) clamp(16px, 2vw, 26px); background: #f5f8fa; border-radius: 10px; border: 2px solid #e8edf2; transition: transform 0.1s; }
+.rk-eintrag:hover { transform: translateX(4px); }
+.rk-top3 { border-color: #36C291; background: #f0faf5; }
+.rk-platz1 { border-color: #FFD719; background: #fffde6; }
 
-/* Liste */
-.rk-liste {
-  width: 100%;
-  max-width: 750px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
+.rk-platz { width: clamp(40px, 5vh, 54px); flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+.rk-medaille { font-size: clamp(1.4rem, 3vh, 2.2rem); }
+.rk-nummer { font-size: clamp(1.1rem, 1.8vh, 1.4rem); font-weight: bold; color: #123250; background: #e8edf2; width: clamp(34px, 4.2vh, 42px); height: clamp(34px, 4.2vh, 42px); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
 
-/* Einzelner Eintrag */
-.rk-eintrag {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  padding: 14px 24px;
-  background: #f5f8fa;
-  border-radius: 14px;
-  border: 2px solid #e8edf2;
-  transition: transform 0.1s;
-}
+.rk-name { flex: 1; font-size: clamp(1.05rem, 1.8vh, 1.3rem); font-weight: bold; color: #123250; }
+.rk-platz1 .rk-name { font-size: clamp(1.15rem, 2vh, 1.45rem); }
 
-.rk-eintrag:hover {
-  transform: translateX(4px);
-}
+.rk-wert { font-size: clamp(1.05rem, 1.8vh, 1.3rem); font-weight: bold; color: white; background: #123250; padding: clamp(6px, 0.9vh, 10px) clamp(12px, 1.5vw, 22px); border-radius: 8px; min-width: clamp(50px, 5vw, 65px); text-align: center; }
+.rk-platz1 .rk-wert { background: #36C291; }
 
-/* Top 3 hervorgehoben */
-.rk-top3 {
-  border-color: #36C291;
-  background: #f0faf5;
-}
+.rk-leer { text-align: center; color: #999; font-size: clamp(1.05rem, 1.7vh, 1.2rem); padding: 4vh; }
 
-.rk-platz1 {
-  border-color: #FFD719;
-  background: #fffde6;
-  padding: 18px 24px;
-}
-
-/* Platz */
-.rk-platz {
-  width: 50px;
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.rk-medaille {
-  font-size: 2rem;
-}
-
-.rk-nummer {
-  font-size: 1.4rem;
-  font-weight: bold;
-  color: #123250;
-  background: #e8edf2;
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* Name */
-.rk-name {
-  flex: 1;
-  font-size: 1.25rem;
-  font-weight: bold;
-  color: #123250;
-}
-
-.rk-platz1 .rk-name {
-  font-size: 1.4rem;
-}
-
-/* Wert */
-.rk-wert {
-  font-size: 1.3rem;
-  font-weight: bold;
-  color: white;
-  background: #123250;
-  padding: 8px 20px;
-  border-radius: 10px;
-  min-width: 60px;
-  text-align: center;
-}
-
-.rk-platz1 .rk-wert {
-  background: #36C291;
-  font-size: 1.4rem;
-  padding: 10px 24px;
-}
-
-/* Leer */
-.rk-leer {
-  text-align: center;
-  color: #999;
-  font-size: 1.2rem;
-  padding: 40px;
-}
-
-@media (max-width: 600px) {
-  .rk-eintrag {
-    gap: 12px;
-    padding: 12px 16px;
-  }
-
-  .rk-name { font-size: 1.05rem; }
-  .rk-wert { font-size: 1.05rem; padding: 6px 14px; }
-}
+@media (max-width: 600px) { .rk-eintrag { gap: 8px; padding: 8px 12px; } }

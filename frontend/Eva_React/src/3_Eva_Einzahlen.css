@@ -1,93 +1,13 @@
-/* Einzahlen Styles */
+/* Einzahlen Styles - viewport-relativ */
 
-.ez-seite {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding-top: 0;
-  width: 100%;
-}
+.ez-seite { display: flex; flex-direction: column; align-items: center; width: 100%; flex: 1; }
+.ez-titel { font-size: clamp(1.5rem, 3vh, 2.2rem); color: #123250; margin: 0 0 clamp(10px, 1.8vh, 22px) 0; font-weight: bold; }
+.ez-inhalt { display: flex; flex-direction: column; gap: clamp(10px, 1.5vh, 16px); width: 100%; max-width: clamp(550px, 60vw, 900px); }
+.ez-feld { display: flex; align-items: center; gap: clamp(10px, 1.2vw, 18px); }
+.ez-feld label { font-size: clamp(1rem, 1.8vh, 1.35rem); font-weight: bold; color: #123250; min-width: clamp(150px, 16vw, 220px); text-align: right; white-space: nowrap; }
+.ez-feld .feld-input { flex: 1; min-width: 0; padding: clamp(8px, 1.2vh, 14px) clamp(12px, 1.2vw, 20px); font-size: clamp(1rem, 1.6vh, 1.2rem); }
+.ez-action-btn { padding: clamp(8px, 1.2vh, 14px) clamp(20px, 2.4vw, 34px); font-size: clamp(1rem, 1.6vh, 1.15rem); white-space: nowrap; }
+.ez-trennlinie { width: 100%; height: 2px; background: #dde5ee; margin: clamp(6px, 0.8vh, 10px) 0; }
+.ez-kontostand { background: #123250 !important; color: white; font-weight: bold; }
 
-/* Icon oben zentriert */
-.ez-icon {
-  width: 160px;
-  height: 160px;
-  object-fit: contain;
-}
-
-.ez-titel {
-  font-size: 2.2rem;
-  color: #123250;
-  margin: 0 0 24px 0;
-  font-weight: bold;
-}
-
-/* Formular zentriert, volle Breite nutzen */
-.ez-inhalt {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  width: 100%;
-  max-width: 900px;
-}
-
-/* Feld-Zeile */
-.ez-feld {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-}
-
-.ez-feld label {
-  font-size: 1.35rem;
-  font-weight: bold;
-  color: #123250;
-  min-width: 220px;
-  text-align: right;
-  white-space: nowrap;
-}
-
-.ez-feld .feld-input {
-  flex: 1;
-  min-width: 0;
-  padding: 14px 20px;
-  font-size: 1.2rem;
-}
-
-/* Action Buttons neben Eingabefeldern */
-.ez-action-btn {
-  padding: 14px 36px;
-  font-size: 1.15rem;
-  white-space: nowrap;
-}
-
-/* Trennlinie */
-.ez-trennlinie {
-  width: 100%;
-  height: 3px;
-  background: #dde5ee;
-  margin: 10px 0;
-}
-
-/* Kontostand Neu hervorgehoben */
-.ez-kontostand-neu {
-  background: #123250 !important;
-  color: white;
-  font-weight: bold;
-}
-
-/* Responsive */
-@media (max-width: 700px) {
-  .ez-inhalt {
-    max-width: 100%;
-  }
-
-  .ez-feld {
-    flex-wrap: wrap;
-  }
-
-  .ez-feld label {
-    min-width: auto;
-    text-align: left;
-  }
-}
+@media (max-width: 700px) { .ez-feld { flex-wrap: wrap; } .ez-feld label { min-width: auto; text-align: left; } }

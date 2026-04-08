@@ -1,276 +1,63 @@
-/* Spiel - Robo-Programmierer: Tablet-Style fuer Kinder */
+/* Spiel - Robo-Programmierer: viewport-relativ */
 
 /* Wrapper: Hilfe links, Spiel mittig */
-.game-wrapper {
-  display: flex;
-  gap: 24px;
-  align-items: flex-start;
-  width: 100%;
-  justify-content: center;
-}
-
-/* Unsichtbarer Platzhalter rechts, damit das Spiel wirklich mittig bleibt */
-.game-wrapper::after {
-  content: '';
-  width: 280px;
-  flex-shrink: 0;
-}
+.game-wrapper { display: flex; gap: clamp(12px, 1.5vw, 24px); align-items: flex-start; width: 100%; justify-content: center; }
+.game-wrapper::after { content: ''; width: clamp(160px, 16vw, 240px); flex-shrink: 0; }
 
 /* Erklaerung */
-.game-hilfe {
-  width: 280px;
-  flex-shrink: 0;
-  background: #123250;
-  border-radius: 20px;
-  padding: 28px 26px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  margin-top: 0;
-}
+.game-hilfe { width: clamp(160px, 16vw, 240px); flex-shrink: 0; background: #123250; border-radius: clamp(10px, 1.5vh, 18px); padding: clamp(12px, 1.5vh, 22px) clamp(10px, 1.2vw, 18px); display: flex; flex-direction: column; gap: clamp(8px, 1.2vh, 14px); }
+.game-hilfe-titel { font-size: clamp(0.95rem, 1.6vh, 1.3rem); font-weight: bold; color: white; text-align: center; }
+.game-hilfe-schritt { display: flex; align-items: flex-start; gap: clamp(6px, 0.8vw, 10px); color: rgba(255,255,255,0.9); font-size: clamp(0.75rem, 1.2vh, 0.95rem); line-height: 1.4; }
+.game-hilfe-schritt strong { color: #36C291; }
+.game-hilfe-nr { width: clamp(20px, 2.5vh, 28px); height: clamp(20px, 2.5vh, 28px); background: #36C291; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: clamp(0.7rem, 1vh, 0.85rem); flex-shrink: 0; }
 
-.game-hilfe-titel {
-  font-size: 1.6rem;
-  font-weight: bold;
-  color: white;
-  text-align: center;
-}
+@media (max-width: 900px) { .game-wrapper { flex-direction: column; align-items: center; } .game-wrapper::after { display: none; } .game-hilfe { width: 100%; max-width: 500px; flex-direction: row; flex-wrap: wrap; justify-content: center; } .game-hilfe-titel { width: 100%; } }
 
-.game-hilfe-schritt {
-  display: flex;
-  align-items: flex-start;
-  gap: 14px;
-  color: rgba(255,255,255,0.9);
-  font-size: 1.1rem;
-  line-height: 1.5;
-}
+.game { display: flex; flex-direction: column; align-items: center; gap: clamp(6px, 1vh, 14px); flex: 1; max-width: clamp(320px, 40vw, 550px); }
 
-.game-hilfe-schritt strong {
-  color: #36C291;
-}
-
-.game-hilfe-nr {
-  width: 32px;
-  height: 32px;
-  background: #36C291;
-  color: white;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-  font-size: 0.9rem;
-  flex-shrink: 0;
-}
-
-@media (max-width: 900px) {
-  .game-wrapper {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .game-hilfe {
-    width: 100%;
-    max-width: 600px;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-
-  .game-hilfe-titel {
-    width: 100%;
-  }
-}
-
-.game {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 16px;
-  flex: 1;
-  max-width: 600px;
-}
-
-/* ── Spielfeld ── */
-.game-board {
-  display: grid;
-  gap: 6px;
-  width: 100%;
-  aspect-ratio: 1;
-  max-width: 420px;
-  background: #123250;
-  padding: 10px;
-  border-radius: 20px;
-}
-
-.game-tile {
-  background: #d4edda;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 2.8rem;
-  aspect-ratio: 1;
-}
-
+/* Spielfeld */
+.game-board { display: grid; gap: clamp(2px, 0.4vh, 5px); width: 100%; aspect-ratio: 1; max-width: clamp(240px, 30vw, 380px); background: #123250; padding: clamp(4px, 0.6vh, 8px); border-radius: clamp(10px, 1.5vh, 18px); }
+.game-tile { background: #d4edda; border-radius: clamp(4px, 0.6vh, 10px); display: flex; align-items: center; justify-content: center; font-size: clamp(1.2rem, 3vh, 2.5rem); aspect-ratio: 1; }
 .tile-robo { background: #bbdefb; animation: bounce 0.25s ease; }
 .tile-goal { background: #fff3cd; }
-.tile-wall { background: #3a5a7c; border-radius: 8px; }
-.tile-win  { background: #36C291; animation: party 0.5s ease; }
+.tile-wall { background: #3a5a7c; border-radius: clamp(2px, 0.3vh, 6px); }
+.tile-win { background: #36C291; animation: party 0.5s ease; }
+@keyframes bounce { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.25); } }
+@keyframes party { 0% { transform: scale(1); } 30% { transform: scale(1.35) rotate(-8deg); } 60% { transform: scale(1.15) rotate(8deg); } 100% { transform: scale(1); } }
 
-@keyframes bounce {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.25); }
-}
-@keyframes party {
-  0% { transform: scale(1); }
-  30% { transform: scale(1.35) rotate(-8deg); }
-  60% { transform: scale(1.15) rotate(8deg); }
-  100% { transform: scale(1) rotate(0); }
-}
+/* Programm */
+.game-program { display: flex; flex-wrap: wrap; gap: clamp(3px, 0.4vh, 6px); justify-content: center; min-height: clamp(30px, 4vh, 44px); padding: clamp(4px, 0.6vh, 8px) clamp(8px, 1vw, 14px); background: #f0f4f8; border-radius: clamp(6px, 1vh, 12px); width: 100%; max-width: clamp(240px, 30vw, 380px); align-items: center; }
+.game-program-hint { color: #999; font-size: clamp(0.75rem, 1.2vh, 0.95rem); }
+.game-cmd { width: clamp(24px, 3.5vh, 36px); height: clamp(24px, 3.5vh, 36px); background: white; border: 2px solid #ccc; border-radius: clamp(4px, 0.6vh, 8px); display: flex; align-items: center; justify-content: center; font-size: clamp(0.8rem, 1.3vh, 1.1rem); font-weight: bold; font-family: monospace; color: #123250; transition: all 0.2s; }
+.cmd-active { background: #36C291; color: white; border-color: #123250; transform: scale(1.2); }
 
-/* ── Befehls-Anzeige ── */
-.game-program {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  justify-content: center;
-  min-height: 48px;
-  padding: 10px 16px;
-  background: #f0f4f8;
-  border-radius: 14px;
-  width: 100%;
-  max-width: 420px;
-  align-items: center;
-}
-
-.game-program-hint {
-  color: #999;
-  font-size: 1.1rem;
-}
-
-.game-cmd {
-  width: 40px;
-  height: 40px;
-  background: white;
-  border: 2px solid #ccc;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.3rem;
-  font-weight: bold;
-  color: #123250;
-  transition: all 0.2s;
-}
-
-.cmd-active {
-  background: #36C291;
-  color: white;
-  border-color: #123250;
-  transform: scale(1.25);
-}
-
-/* ── Meldungen ── */
-.game-msg {
-  width: 100%;
-  max-width: 420px;
-  padding: 14px;
-  border-radius: 14px;
-  font-size: 1.3rem;
-  font-weight: bold;
-  text-align: center;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-}
-
+/* Meldungen */
+.game-msg { width: 100%; max-width: clamp(240px, 30vw, 380px); padding: clamp(6px, 1vh, 12px); border-radius: clamp(6px, 1vh, 12px); font-size: clamp(0.85rem, 1.4vh, 1.15rem); font-weight: bold; text-align: center; display: flex; align-items: center; justify-content: center; gap: clamp(6px, 0.8vw, 12px); }
 .game-msg-err { background: #ffe0e0; color: #c0392b; }
 .game-msg-win { background: #d5f5e3; color: #1e8449; }
 
-/* ── Grosse Pfeil-Buttons ── */
-.game-buttons {
-  display: flex;
-  gap: 12px;
-  justify-content: center;
-}
-
-.game-big-btn {
-  width: 80px;
-  height: 80px;
-  border: none;
-  border-radius: 18px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: transform 0.1s;
-  box-shadow: 0 4px 0 rgba(0,0,0,0.15);
-}
-
-.game-big-btn:active:not(:disabled) {
-  transform: translateY(3px);
-  box-shadow: 0 1px 0 rgba(0,0,0,0.15);
-}
-
+/* Pfeil-Buttons */
+.game-buttons { display: flex; gap: clamp(6px, 0.8vw, 12px); justify-content: center; }
+.game-big-btn { width: clamp(48px, 7vh, 72px); height: clamp(48px, 7vh, 72px); border: none; border-radius: clamp(8px, 1.2vh, 16px); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform 0.1s; box-shadow: 0 3px 0 rgba(0,0,0,0.15); }
+.game-big-btn:active:not(:disabled) { transform: translateY(2px); box-shadow: 0 1px 0 rgba(0,0,0,0.15); }
 .game-big-btn:disabled { opacity: 0.3; cursor: not-allowed; }
-
-.game-arrow {
-  font-size: 2.4rem;
-  font-weight: 900;
-  color: white;
-  line-height: 1;
-}
-
-.game-btn-blue   { background: #19AAD2; }
+.game-arrow { font-size: clamp(1.2rem, 2.5vh, 2.2rem); font-weight: 900; color: white; line-height: 1; }
+.game-btn-blue { background: #19AAD2; }
 .game-btn-orange { background: #F0825A; }
 .game-btn-purple { background: #c3aad2; }
-.game-btn-green  { background: #36C291; }
+.game-btn-green { background: #36C291; }
 
-/* ── Aktions-Buttons ── */
-.game-actions {
-  display: flex;
-  gap: 10px;
-  width: 100%;
-  max-width: 420px;
-}
-
-.game-action-btn {
-  flex: 1;
-  padding: 14px 0;
-  border: none;
-  border-radius: 14px;
-  font-size: 1.15rem;
-  font-weight: bold;
-  cursor: pointer;
-  color: white;
-  transition: transform 0.1s;
-  box-shadow: 0 3px 0 rgba(0,0,0,0.12);
-}
-
+/* Aktions-Buttons */
+.game-actions { display: flex; gap: clamp(4px, 0.6vw, 10px); width: 100%; max-width: clamp(240px, 30vw, 380px); }
+.game-action-btn { flex: 1; padding: clamp(6px, 1vh, 12px) 0; border: none; border-radius: clamp(6px, 1vh, 12px); font-size: clamp(0.8rem, 1.2vh, 1rem); font-weight: bold; cursor: pointer; color: white; transition: transform 0.1s; box-shadow: 0 2px 0 rgba(0,0,0,0.12); }
 .game-action-btn:active:not(:disabled) { transform: translateY(2px); box-shadow: none; }
 .game-action-btn:disabled { opacity: 0.3; cursor: not-allowed; }
-
-.action-run   { background: #36C291; }
-.action-undo  { background: #FFD719; color: #123250; }
+.action-run { background: #36C291; }
+.action-undo { background: #FFD719; color: #123250; }
 .action-reset { background: #F0825A; }
 
-/* ── Level Dots ── */
-.game-level {
-  display: flex;
-  gap: 10px;
-  justify-content: center;
-}
-
-.game-level-dot {
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background: #ddd;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.dot-now  { background: #123250; transform: scale(1.3); }
+/* Level Dots */
+.game-level { display: flex; gap: clamp(4px, 0.6vw, 10px); justify-content: center; }
+.game-level-dot { width: clamp(10px, 1.5vh, 16px); height: clamp(10px, 1.5vh, 16px); border-radius: 50%; background: #ddd; cursor: pointer; transition: all 0.2s; }
+.dot-now { background: #123250; transform: scale(1.3); }
 .dot-done { background: #36C291; }

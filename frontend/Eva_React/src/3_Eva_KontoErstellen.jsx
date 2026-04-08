@@ -16,7 +16,7 @@ export default function Eva_KontoErstellen() {
   const [nachname, setNachname] = useState('')
   const [fehler, setFehler] = useState('')
 
-  function fertig() {
+  async function fertig() {
     const id = kontonummer.trim().toUpperCase()
     const vn = vorname.trim()
     const nn = nachname.trim()
@@ -27,17 +27,36 @@ export default function Eva_KontoErstellen() {
       return
     }
 
-    // === HIER SPAETER: Kundendaten an Backend senden ===
-    // Temporaerer String mit den Erstellungsdaten
-    const erstellungsDaten = JSON.stringify({
-      kontonummer: id,
-      vorname: vn,
-      nachname: nn,
-    })
-    console.log('[KontoErstellen] Neue Kundendaten:', erstellungsDaten)
-    // === ENDE: Spaeter durch API-Call ersetzen ===
+    // === BACKEND: Kunde anlegen ===
+    // API-Call: POST http://192.168.1.10:5000/customer
+    // Body: { stutengarten_id: String, first_name: String, last_name: String }
+    // Response 200: JSON mit Kundendaten bei Erfolg
+    // Response 400: { error: "..." } wenn Pflichtfelder fehlen oder ungueltig
+    // Response 500: { error: "..." } bei anderen Fehlern
+    try {
+      const response = await fetch('http://192.168.1.10:5000/customer', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json; charset=utf-8' },
+        body: JSON.stringify({
+          stutengarten_id: id,    // String - Kontonummer
+          first_name: vn,         // String - Vorname
+          last_name: nn,          // String - Nachname
+        }),
+      })
 
-    navigate('/mainsite')
+      const data = await response.json()
+
+      if (response.ok) {
+        console.log('[KontoErstellen] Kunde angelegt:', data)
+        navigate('/mainsite')
+      } else {
+        setFehler(data.error || 'Fehler beim Anlegen des Kunden.')
+      }
+    } catch (error) {
+      console.error('[KontoErstellen] Fehler:', error)
+      setFehler('Verbindung zum Server fehlgeschlagen.')
+    }
+    // === ENDE BACKEND ===
   }
 
   // Schritt 1: Frage

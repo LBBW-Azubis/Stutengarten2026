@@ -27,25 +27,45 @@ export default function Eva_Konto() {
   const [vorname, setVorname] = useState('')           // String - vom Backend
   const [nachname, setNachname] = useState('')         // String - vom Backend
   const [kontostand, setKontostand] = useState(0)      // int - vom Backend
+  const [rawResponse, setRawResponse] = useState('')   // DEBUG: Rohe JSON-Response
   // === ENDE BACKEND-VARIABLEN ===
 
-  function laden() {
+  async function laden() {
     setFehler('')
+    setKundeGeladen(false)
     if (!kontonummer.trim()) {
       setFehler('Bitte Kontonummer eingeben.')
       return
     }
 
     // === BACKEND: Kunde laden ===
-    // API-Call: GET /kunde?kontonummer=kontonummer.trim().toUpperCase()
-    // Response: { vorname: String, nachname: String, kontostand: int }
-    // Dummy-Daten zum Testen:
-    setVorname('Max')
-    setNachname('Mustermann')
-    setKontostand(150)
-    // === ENDE BACKEND ===
+    // API-Call: GET http://192.168.1.10:5000/customer/<stutengarten_id>
+    // Response 200: { id: int, stutengarten_id: String, first_name: String, last_name: String }
+    // Response 404: { error: String }
+    // Response 500: { error: String, details: String }
+    try {
+      const response = await fetch(`http://192.168.1.10:5000/customer/${kontonummer.trim().toUpperCase()}`)
 
-    setKundeGeladen(true)
+      const data = await response.json()
+      // DEBUG: Rohe Response anzeigen
+      setRawResponse(`Status: ${response.status}\n${JSON.stringify(data, null, 2)}`)
+
+      if (response.ok) {
+        setVorname(data.first_name)       // String - vom Backend
+        setNachname(data.last_name)       // String - vom Backend
+        setKontostand(data.kontostand || 0)  // int - falls vorhanden, sonst 0
+        setKundeGeladen(true)
+      } else if (response.status === 404) {
+        setFehler('Kein Kunde mit dieser Kontonummer gefunden.')
+      } else {
+        setFehler('Serverfehler. Bitte spaeter erneut versuchen.')
+      }
+    } catch (error) {
+      console.error('[Konto] Fehler beim Laden:', error)
+      setRawResponse(`FEHLER: ${error.message}`)
+      setFehler('Verbindung zum Server fehlgeschlagen.')
+    }
+    // === ENDE BACKEND ===
   }
 
   return (
@@ -92,6 +112,16 @@ export default function Eva_Konto() {
           <span className="feld-input anzeige ko-kontostand">{kundeGeladen ? `${kontostand} Stuggis` : ''}</span>
           {/* === ENDE BACKEND === */}
         </div>
+        {/* DEBUG: Rohe Backend-Response - SPAETER ENTFERNEN */}
+        {rawResponse && (
+          <>
+            <div className="ko-trennlinie"></div>
+            <div style={{ background: '#1e1e1e', color: '#4ec9b0', padding: '12px 16px', borderRadius: '8px', fontFamily: 'monospace', fontSize: '0.85rem', whiteSpace: 'pre-wrap', wordBreak: 'break-all' }}>
+              <strong style={{ color: '#dcdcaa' }}>DEBUG - Backend Response:</strong>
+              {'\n'}{rawResponse}
+            </div>
+          </>
+        )}
       </div>
     </div>
   )
