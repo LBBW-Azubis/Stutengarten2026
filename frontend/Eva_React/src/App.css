@@ -389,7 +389,7 @@ main#app {
 .tschuess-logo-text { font-size: clamp(1rem, 2vh, 1.5rem); font-weight: bold; color: #123250; }
 
 /* -- FEHLER / HINWEIS -- */
-.fehler-text { color: #d32f2f; font-size: clamp(0.7rem, 1vh, 0.88rem); margin-top: 0.5vh; }
+.fehler-text { color: #c0392b; font-size: clamp(1rem, 1.8vh, 1.2rem); font-weight: bold; margin-top: 1vh; background: #fde8e8; padding: clamp(8px, 1vh, 14px) clamp(16px, 2vw, 28px); border-radius: 8px; border: 2px solid #f5c6cb; }
 .ok-text { color: #36C291; font-size: clamp(0.7rem, 1vh, 0.88rem); margin-top: 0.5vh; }
 
 /* -- BETREUER-MENU -- */

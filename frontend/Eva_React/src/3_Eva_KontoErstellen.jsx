@@ -48,6 +48,28 @@ export default function Eva_KontoErstellen() {
 
       if (response.ok) {
         console.log('[KontoErstellen] Kunde angelegt:', data)
+
+        // === BACKEND: Sparbuch/Konto fuer den Kunden anlegen ===
+        // API-Call: POST http://192.168.1.10:5000/customer/<stutengarten_id>/savingsbook
+        // Kein Body noetig
+        // Response 201: { customer_id: ..., balance: 0 }
+        // Response 500: { error: "..." }
+        try {
+          const sbResponse = await fetch(`http://192.168.1.10:5000/customer/${id}/savingsbook`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json; charset=utf-8' },
+          })
+          const sbData = await sbResponse.json()
+          if (sbResponse.ok) {
+            console.log('[KontoErstellen] Sparbuch angelegt:', sbData)
+          } else {
+            console.error('[KontoErstellen] Sparbuch Fehler:', sbData)
+          }
+        } catch (sbError) {
+          console.error('[KontoErstellen] Sparbuch Verbindungsfehler:', sbError)
+        }
+        // === ENDE BACKEND: Sparbuch ===
+
         navigate('/mainsite')
       } else {
         setFehler(data.error || 'Fehler beim Anlegen des Kunden.')

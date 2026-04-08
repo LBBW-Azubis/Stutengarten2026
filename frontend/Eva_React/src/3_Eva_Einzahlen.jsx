@@ -35,28 +35,52 @@ export default function Eva_Einzahlen() {
   const [kontostandNeu, setKontostandNeu] = useState('') // int - vom Backend nach Einzahlung
   // === ENDE BACKEND-VARIABLEN ===
 
-  function laden() {
+  async function laden() {
     setFehler('')
+    setKundeGeladen(false)
     if (!kontonummer.trim()) {
       setFehler('Bitte Kontonummer eingeben.')
       return
     }
 
-    // === BACKEND: Kunde laden ===
-    // API-Call: GET /kunde?kontonummer=kontonummer.trim().toUpperCase()
-    // Response: { vorname: String, nachname: String, kontostand: int }
-    // Dummy-Daten zum Testen:
-    setVorname('Max')
-    setNachname('Mustermann')
-    setKontostand(150)
-    setKontostandNeu('')
-    // === ENDE BACKEND ===
+    // === BACKEND: Kunde + Sparbuch laden ===
+    // 1) GET http://192.168.1.10:5000/customer/<stutengarten_id> - Kundendaten
+    // 2) GET http://192.168.1.10:5000/customer/<stutengarten_id>/savingsbook/balance - Kontostand
+    try {
+      const id = kontonummer.trim()
 
-    setKundeGeladen(true)
-    setBetrag('')
+      // Kunde laden
+      const response = await fetch(`http://192.168.1.10:5000/customer/${id}`)
+      const data = await response.json()
+      if (!response.ok) {
+        setFehler(data.error || 'Kunde nicht gefunden.')
+        return
+      }
+      setVorname(data.first_name)
+      setNachname(data.last_name)
+
+      // Sparbuch/Kontostand laden
+      // GET http://192.168.1.10:5000/customer/<stutengarten_id>/savingsbook
+      // Response 200: [{ stutengarten_id: "...", balance: ... }]
+      const sbResponse = await fetch(`http://192.168.1.10:5000/customer/${id}/savingsbook`)
+      const sbData = await sbResponse.json()
+      if (sbResponse.ok && Array.isArray(sbData) && sbData.length > 0) {
+        setKontostand(sbData[0].balance || 0)
+      } else {
+        setKontostand(0)
+      }
+
+      setKontostandNeu('')
+      setKundeGeladen(true)
+      setBetrag('')
+    } catch (error) {
+      console.error('[Einzahlen] Fehler beim Laden:', error)
+      setFehler('Verbindung zum Server fehlgeschlagen.')
+    }
+    // === ENDE BACKEND ===
   }
 
-  function einzahlen() {
+  async function einzahlen() {
     setFehler('')
     const b = parseInt(betrag) || 0
     if (b <= 0) {
@@ -65,16 +89,37 @@ export default function Eva_Einzahlen() {
     }
 
     // === BACKEND: Einzahlung senden ===
-    // API-Call: POST /einzahlen
-    // Body: { kontonummer: kontonummer.trim().toUpperCase() (String), betrag: parseInt(betrag) (int) }
-    // Response: { kontostandNeu: int }
-    // Dummy-Daten zum Testen:
+    // API-Call: PATCH http://192.168.1.10:5000/customer/<stutengarten_id>/savingsbook/balance
+    // Body: { balance: String(aktuellerKontostand + betrag) }
+    // Response 200: { customer_id, first_name, last_name, balance, ... }
+    // Response 400: { error: "No new balance provided" }
+    // Response 500: { error: "..." }
     const neuerStand = kontostand + b
-    console.log('[Einzahlen] Einzahlung:', {
-      kontonummer: kontonummer.trim().toUpperCase(),  // String
-      betrag: b,                                       // int (bereits parseInt)
-    })
-    setKontostandNeu(neuerStand)
+    const url = `http://192.168.1.10:5000/customer/${kontonummer.trim()}/savingsbook/balance`
+    const body = { balance: String(neuerStand) }  // Backend erwartet den neuen Gesamtkontostand
+    console.log('[Einzahlen] PATCH URL:', url)
+    console.log('[Einzahlen] PATCH Body:', JSON.stringify(body))
+    try {
+      const response = await fetch(url, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json; charset=utf-8' },
+        body: JSON.stringify(body),
+      })
+
+      const data = await response.json()
+      console.log('[Einzahlen] Response Status:', response.status)
+      console.log('[Einzahlen] Response Data:', data)
+
+      if (response.ok) {
+        setKontostandNeu(data.balance || neuerStand)
+        setKontostand(data.balance || neuerStand)
+      } else {
+        setFehler(data.error || 'Fehler beim Einzahlen.')
+      }
+    } catch (error) {
+      console.error('[Einzahlen] Fehler:', error)
+      setFehler('Verbindung zum Server fehlgeschlagen.')
+    }
     // === ENDE BACKEND ===
   }
 

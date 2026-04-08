@@ -48,43 +48,69 @@ export default function Eva_Ueberweisung() {
   const [betrag, setBetrag] = useState('')               // String (nur Ziffern) - User-Eingabe
   const [fehler, setFehler] = useState('')
 
-  function ladenVon() {
+  async function ladenVon() {
     setFehler('')
+    setVonGeladen(false)
     if (!kontoVon.trim()) { setFehler('Bitte Absender-Kontonummer eingeben.'); return }
 
     // === BACKEND: Absender laden ===
-    // API-Call: GET /kunde?kontonummer=kontoVon.trim().toUpperCase()
-    // Response: { vorname: String, nachname: String, kontostand: int }
-    setVonVorname('Max')
-    setVonNachname('Mustermann')
-    setVonKontostand(150)
-    setVonKontostandNeu('')
-    // === ENDE BACKEND ===
+    try {
+      const id = kontoVon.trim()
+      const response = await fetch(`http://192.168.1.10:5000/customer/${id}`)
+      const data = await response.json()
+      if (!response.ok) { setFehler(data.error || 'Absender nicht gefunden.'); return }
+      setVonVorname(data.first_name)
+      setVonNachname(data.last_name)
 
-    setVonGeladen(true)
+      const sbResponse = await fetch(`http://192.168.1.10:5000/customer/${id}/savingsbook`)
+      const sbData = await sbResponse.json()
+      if (sbResponse.ok && Array.isArray(sbData) && sbData.length > 0) {
+        setVonKontostand(sbData[0].balance || 0)
+      } else { setVonKontostand(0) }
+
+      setVonKontostandNeu('')
+      setVonGeladen(true)
+    } catch (error) {
+      console.error('[Ueberweisung] Fehler Absender:', error)
+      setFehler('Verbindung zum Server fehlgeschlagen.')
+    }
+    // === ENDE BACKEND ===
   }
 
-  function ladenAn() {
+  async function ladenAn() {
     setFehler('')
+    setAnGeladen(false)
     if (!kontoAn.trim()) { setFehler('Bitte Empfaenger-Kontonummer eingeben.'); return }
-    if (kontoAn.trim().toUpperCase() === kontoVon.trim().toUpperCase()) {
+    if (kontoAn.trim() === kontoVon.trim()) {
       setFehler('Absender und Empfaenger duerfen nicht gleich sein.')
       return
     }
 
     // === BACKEND: Empfaenger laden ===
-    // API-Call: GET /kunde?kontonummer=kontoAn.trim().toUpperCase()
-    // Response: { vorname: String, nachname: String, kontostand: int }
-    setAnVorname('Lisa')
-    setAnNachname('Mueller')
-    setAnKontostand(80)
-    setAnKontostandNeu('')
-    // === ENDE BACKEND ===
+    try {
+      const id = kontoAn.trim()
+      const response = await fetch(`http://192.168.1.10:5000/customer/${id}`)
+      const data = await response.json()
+      if (!response.ok) { setFehler(data.error || 'Empfaenger nicht gefunden.'); return }
+      setAnVorname(data.first_name)
+      setAnNachname(data.last_name)
 
-    setAnGeladen(true)
+      const sbResponse = await fetch(`http://192.168.1.10:5000/customer/${id}/savingsbook`)
+      const sbData = await sbResponse.json()
+      if (sbResponse.ok && Array.isArray(sbData) && sbData.length > 0) {
+        setAnKontostand(sbData[0].balance || 0)
+      } else { setAnKontostand(0) }
+
+      setAnKontostandNeu('')
+      setAnGeladen(true)
+    } catch (error) {
+      console.error('[Ueberweisung] Fehler Empfaenger:', error)
+      setFehler('Verbindung zum Server fehlgeschlagen.')
+    }
+    // === ENDE BACKEND ===
   }
 
-  function ueberweisen() {
+  async function ueberweisen() {
     setFehler('')
     const b = parseInt(betrag) || 0
     if (b <= 0) { setFehler('Bitte einen gueltigen Betrag eingeben.'); return }
@@ -93,20 +119,34 @@ export default function Eva_Ueberweisung() {
     if (b > vonKontostand) { setFehler('Nicht genug Guthaben!'); return }
 
     // === BACKEND: Ueberweisung senden ===
-    // API-Call: POST /ueberweisung
-    // Body: {
-    //   kontoVon: kontoVon.trim().toUpperCase() (String),
-    //   kontoAn:  kontoAn.trim().toUpperCase()  (String),
-    //   betrag:   parseInt(betrag)               (int)
-    // }
-    // Response: { vonKontostandNeu: int, anKontostandNeu: int }
-    console.log('[Ueberweisung]:', {
-      kontoVon: kontoVon.trim().toUpperCase(),  // String
-      kontoAn: kontoAn.trim().toUpperCase(),    // String
-      betrag: b,                                 // int
-    })
-    setVonKontostandNeu(vonKontostand - b)
-    setAnKontostandNeu(anKontostand + b)
+    // API-Call: POST http://192.168.1.10:5000/customer/transfer
+    // Body: { from: String, to: String, ammount: int, purpose: String }
+    // Response 201: OK
+    // Response 400: Bad Request
+    // Response 500: Internal Error
+    const requestBody = {
+      from: kontoVon.trim(),
+      to: kontoAn.trim(),
+      amount: b,
+      purpose: 'Ueberweisung',
+    }
+    try {
+      const response = await fetch('http://192.168.1.10:5000/customer/transfer', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json; charset=utf-8' },
+        body: JSON.stringify(requestBody),
+      })
+
+      if (response.ok) {
+        setVonKontostandNeu(vonKontostand - b)
+        setAnKontostandNeu(anKontostand + b)
+      } else {
+        setFehler(data?.error || 'Fehler bei der Ueberweisung.')
+      }
+    } catch (error) {
+      console.error('[Ueberweisung] Fehler:', error)
+      setFehler('Verbindung zum Server fehlgeschlagen.')
+    }
     // === ENDE BACKEND ===
   }
 
@@ -235,6 +275,7 @@ export default function Eva_Ueberweisung() {
         </div>
 
         {fehler && <span className="fehler-text" style={{ display: 'block', textAlign: 'center' }}>{fehler}</span>}
+
       </div>
     </div>
   )

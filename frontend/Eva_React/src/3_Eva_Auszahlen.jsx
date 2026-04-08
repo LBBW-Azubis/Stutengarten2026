@@ -33,28 +33,52 @@ export default function Eva_Auszahlen() {
   const [kontostandNeu, setKontostandNeu] = useState('') // int - vom Backend nach Auszahlung
   // === ENDE BACKEND-VARIABLEN ===
 
-  function laden() {
+  async function laden() {
     setFehler('')
+    setKundeGeladen(false)
     if (!kontonummer.trim()) {
       setFehler('Bitte Kontonummer eingeben.')
       return
     }
 
-    // === BACKEND: Kunde laden ===
-    // API-Call: GET /kunde?kontonummer=kontonummer.trim().toUpperCase()
-    // Response: { vorname: String, nachname: String, kontostand: int }
-    // Dummy-Daten zum Testen:
-    setVorname('Max')
-    setNachname('Mustermann')
-    setKontostand(150)
-    setKontostandNeu('')
-    // === ENDE BACKEND ===
+    // === BACKEND: Kunde + Sparbuch laden ===
+    // 1) GET http://192.168.1.10:5000/customer/<stutengarten_id> - Kundendaten
+    // 2) GET http://192.168.1.10:5000/customer/<stutengarten_id>/savingsbook/balance - Kontostand
+    try {
+      const id = kontonummer.trim()
 
-    setKundeGeladen(true)
-    setBetrag('')
+      // Kunde laden
+      const response = await fetch(`http://192.168.1.10:5000/customer/${id}`)
+      const data = await response.json()
+      if (!response.ok) {
+        setFehler(data.error || 'Kunde nicht gefunden.')
+        return
+      }
+      setVorname(data.first_name)
+      setNachname(data.last_name)
+
+      // Sparbuch/Kontostand laden
+      // GET http://192.168.1.10:5000/customer/<stutengarten_id>/savingsbook
+      // Response 200: [{ stutengarten_id: "...", balance: ... }]
+      const sbResponse = await fetch(`http://192.168.1.10:5000/customer/${id}/savingsbook`)
+      const sbData = await sbResponse.json()
+      if (sbResponse.ok && Array.isArray(sbData) && sbData.length > 0) {
+        setKontostand(sbData[0].balance || 0)
+      } else {
+        setKontostand(0)
+      }
+
+      setKontostandNeu('')
+      setKundeGeladen(true)
+      setBetrag('')
+    } catch (error) {
+      console.error('[Auszahlen] Fehler beim Laden:', error)
+      setFehler('Verbindung zum Server fehlgeschlagen.')
+    }
+    // === ENDE BACKEND ===
   }
 
-  function auszahlen() {
+  async function auszahlen() {
     setFehler('')
     const b = parseInt(betrag) || 0
     if (b <= 0) {
@@ -67,16 +91,30 @@ export default function Eva_Auszahlen() {
     }
 
     // === BACKEND: Auszahlung senden ===
-    // API-Call: POST /auszahlen
-    // Body: { kontonummer: kontonummer.trim().toUpperCase() (String), betrag: parseInt(betrag) (int) }
-    // Response: { kontostandNeu: int }
-    // Dummy-Daten zum Testen:
+    // API-Call: PATCH http://192.168.1.10:5000/customer/<stutengarten_id>/savingsbook/balance
+    // Body: { balance: "-4" } - Backend erwartet Minus-Vorzeichen fuer Auszahlung
     const neuerStand = kontostand - b
-    console.log('[Auszahlen] Auszahlung:', {
-      kontonummer: kontonummer.trim().toUpperCase(),  // String
-      betrag: b,                                       // int (bereits parseInt)
-    })
-    setKontostandNeu(neuerStand)
+    try {
+      const response = await fetch(`http://192.168.1.10:5000/customer/${kontonummer.trim()}/savingsbook/balance`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json; charset=utf-8' },
+        body: JSON.stringify({
+          balance: String(neuerStand),  // Backend erwartet den neuen Gesamtkontostand
+        }),
+      })
+
+      const data = await response.json()
+
+      if (response.ok) {
+        setKontostandNeu(data.balance || neuerStand)
+        setKontostand(data.balance || neuerStand)
+      } else {
+        setFehler(data.error || 'Fehler beim Auszahlen.')
+      }
+    } catch (error) {
+      console.error('[Auszahlen] Fehler:', error)
+      setFehler('Verbindung zum Server fehlgeschlagen.')
+    }
     // === ENDE BACKEND ===
   }
 

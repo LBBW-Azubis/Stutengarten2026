@@ -27,6 +27,8 @@ export default function Eva_AktienKaufen() {
   const [kundeGeladen, setKundeGeladen] = useState(false)
 
   // === BACKEND: Diese Werte kommen spaeter vom Backend ===
+  const [vorname, setVorname] = useState('')              // String - vom Backend
+  const [nachname, setNachname] = useState('')            // String - vom Backend
   const [kontostand, setKontostand] = useState(0)        // int - vom Backend
   const [besitzAktien, setBesitzAktien] = useState(0)    // int - vom Backend
   // === ENDE BACKEND-VARIABLEN ===
@@ -42,12 +44,28 @@ export default function Eva_AktienKaufen() {
       return
     }
 
-    // === BACKEND: Kunde laden ===
-    // API-Call: GET http://192.168.1.10:5000/customer/<stutengarten_id>
-    // Response 200: { id: int, stutengarten_id: String, first_name: String, last_name: String, kontostand: int, aktien: int }
-    // Dummy-Daten zum Testen:
-    setKontostand(150)
-    setBesitzAktien(1)
+    // === BACKEND: Kunde + Sparbuch laden ===
+    try {
+      const id = kontonummer.trim()
+      const response = await fetch(`http://192.168.1.10:5000/customer/${id}`)
+      const data = await response.json()
+      if (!response.ok) { setFehler(data.error || 'Kunde nicht gefunden.'); return }
+      setVorname(data.first_name)
+      setNachname(data.last_name)
+
+      const sbResponse = await fetch(`http://192.168.1.10:5000/customer/${id}/savingsbook`)
+      const sbData = await sbResponse.json()
+      if (sbResponse.ok && Array.isArray(sbData) && sbData.length > 0) {
+        setKontostand(sbData[0].balance || 0)
+      } else { setKontostand(0) }
+
+      // TODO: Aktien-Besitz vom Backend laden
+      setBesitzAktien(0)
+    } catch (error) {
+      console.error('[Aktien] Fehler beim Laden:', error)
+      setFehler('Verbindung zum Server fehlgeschlagen.')
+      return
+    }
     // === ENDE BACKEND ===
 
     setKundeGeladen(true)
@@ -122,6 +140,14 @@ export default function Eva_AktienKaufen() {
         <div className="ak-trennlinie"></div>
 
         {/* Kundendaten */}
+        <div className="ak-feld">
+          <label>Vorname:</label>
+          <span className="feld-input anzeige">{kundeGeladen ? vorname : ''}</span>
+        </div>
+        <div className="ak-feld">
+          <label>Nachname:</label>
+          <span className="feld-input anzeige">{kundeGeladen ? nachname : ''}</span>
+        </div>
         <div className="ak-feld">
           <label>Kontostand:</label>
           <span className="feld-input anzeige">{kundeGeladen ? `${kontostand} Stuggis` : ''}</span>
