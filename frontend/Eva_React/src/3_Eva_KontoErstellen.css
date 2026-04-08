@@ -1,57 +1,50 @@
 /* KontoErstellen Styles */
 
-/* Seite: oben zentriert, nicht vertikal-mitte (kein verschwendeter Platz oben) */
 .ke-seite {
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  padding-top: 30px;
+  padding-top: 0;
   width: 100%;
 }
 
-/* Karte fuer beide Schritte */
 .ke-card {
   display: flex;
   flex-direction: column;
   align-items: center;
   background: white;
-  padding: 40px 80px;
-  gap: 30px;
-  min-width: 550px;
+  padding: clamp(24px, 3vw, 40px) clamp(30px, 5vw, 80px);
+  gap: clamp(16px, 2vw, 30px);
+  width: 100%;
+  max-width: 700px;
 }
 
 .ke-card-formular {
-  min-width: 800px;
-  padding: 30px 80px;
-  gap: 28px;
+  max-width: 800px;
 }
 
-/* Icon */
 .ke-icon {
-  width: 180px;
-  height: 180px;
+  width: clamp(80px, 10vw, 150px);
+  height: clamp(80px, 10vw, 150px);
   object-fit: contain;
 }
 
-/* Frage-Text (Schritt 1) */
 .ke-frage-text {
   background: #36C291;
   color: white;
-  font-size: 1.6rem;
+  font-size: clamp(1.2rem, 1.4vw, 1.6rem);
   font-weight: bold;
-  padding: 18px 44px;
+  padding: clamp(12px, 1.5vw, 18px) clamp(24px, 3vw, 44px);
   border-radius: 10px;
   text-align: center;
 }
 
-/* Titel (Schritt 2) */
 .ke-titel {
   color: #123250;
-  font-size: 1.8rem;
+  font-size: clamp(1.4rem, 1.6vw, 1.8rem);
   margin: 0;
 }
 
-/* Buttons - rechtsbuendig auf Hoehe der Eingabefelder */
 .ke-buttons {
   display: flex;
   gap: 20px;
@@ -59,31 +52,30 @@
 }
 
 .ke-btn {
-  min-width: 160px;
-  padding: 14px 0;
-  font-size: 1.2rem;
+  min-width: clamp(120px, 12vw, 160px);
+  padding: clamp(10px, 1.2vw, 14px) 0;
+  font-size: clamp(1rem, 1.1vw, 1.2rem);
   text-align: center;
 }
 
-/* Formular (Schritt 2) */
 .ke-formular {
   display: flex;
   flex-direction: column;
-  gap: 22px;
+  gap: clamp(14px, 1.5vw, 22px);
   width: 100%;
 }
 
 .ke-feld {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: clamp(12px, 1.5vw, 20px);
 }
 
 .ke-feld label {
-  font-size: 1.3rem;
+  font-size: clamp(1rem, 1.1vw, 1.3rem);
   font-weight: bold;
   color: #123250;
-  min-width: 200px;
+  min-width: clamp(130px, 14vw, 200px);
   text-align: right;
   white-space: nowrap;
 }
@@ -91,30 +83,12 @@
 .ke-feld .feld-input {
   flex: 1;
   min-width: 0;
-  padding: 12px 18px;
-  font-size: 1.15rem;
+  padding: clamp(8px, 1vw, 12px) clamp(12px, 1.2vw, 18px);
+  font-size: clamp(1rem, 1vw, 1.15rem);
 }
 
-/* Responsive */
 @media (max-width: 600px) {
-  .ke-card {
-    min-width: auto;
-    padding: 30px 24px;
-    margin: 0 16px;
-  }
-
-  .ke-card-formular {
-    min-width: auto;
-  }
-
-  .ke-feld {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 6px;
-  }
-
-  .ke-feld label {
-    min-width: auto;
-    text-align: left;
-  }
+  .ke-card { padding: 20px 16px; }
+  .ke-feld { flex-direction: column; align-items: flex-start; gap: 6px; }
+  .ke-feld label { min-width: auto; text-align: left; }
 }

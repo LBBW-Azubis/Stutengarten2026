@@ -149,16 +149,17 @@
 /* -- MAIN -- */
 main#app {
   min-height: calc(100vh - 90px - 70px);
-  padding: 36px 60px 70px;
+  padding: clamp(16px, 2vw, 36px) clamp(20px, 4vw, 60px) 80px;
   background: #fff;
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
 main#app.hat-zurueck {
-  padding-top: 80px;
+  padding-top: clamp(56px, 6vw, 80px);
 }
 
 /* -- SEITEN-WRAPPER -- */
@@ -373,8 +374,8 @@ main#app.hat-zurueck {
 }
 
 .kachel-bild {
-  width: 130px;
-  height: 130px;
+  width: clamp(80px, 10vw, 140px);
+  height: clamp(80px, 10vw, 140px);
   border-radius: 16px;
   overflow: hidden;
   display: flex;
@@ -400,25 +401,25 @@ main#app.hat-zurueck {
 
 /* Groessere Kacheln auf der Haupt-Menueseite */
 .seite-menu .menu-grid {
-  column-gap: 50px;
-  row-gap: 30px;
-  margin: 20px auto 44px;
+  column-gap: clamp(20px, 3vw, 50px);
+  row-gap: clamp(14px, 2vw, 30px);
+  margin: 10px auto 30px;
   max-width: 1100px;
 }
 
 .seite-menu .kachel {
-  gap: 16px;
-  padding: 20px 10px;
-  min-height: 220px;
+  gap: clamp(8px, 1vw, 16px);
+  padding: 10px 8px;
+  min-height: auto;
 }
 
 .seite-menu .kachel-bild {
-  width: 150px;
-  height: 150px;
+  width: clamp(90px, 11vw, 150px);
+  height: clamp(90px, 11vw, 150px);
 }
 
 .seite-menu .kachel-label {
-  font-size: 1.4rem;
+  font-size: clamp(1rem, 1.2vw, 1.4rem);
 }
 
 @media (max-width: 900px) {
@@ -430,9 +431,9 @@ main#app.hat-zurueck {
 
 @media (min-width: 1400px) {
   .seite-menu .menu-grid { column-gap: 60px; row-gap: 36px; margin: 30px auto 56px; max-width: 1200px; }
-  .seite-menu .kachel { gap: 20px; padding: 24px 12px; min-height: 280px; }
-  .seite-menu .kachel-label { font-size: 1.5rem; }
-  .seite-menu .kachel-bild { width: 170px; height: 170px; }
+  .seite-menu .kachel { gap: 18px; padding: 16px 10px; }
+  .seite-menu .kachel-label { font-size: 1.4rem; }
+  .seite-menu .kachel-bild { width: 160px; height: 160px; }
 }
 
 /* -- LOGIN-SEITE -- */
