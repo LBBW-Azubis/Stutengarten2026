@@ -119,14 +119,3 @@ CREATE TABLE wirtschaftsbeihilfe (
 );
 -- PERFORMANCE OPTIMIERUNG: Index für Fremdschlüssel
 CREATE INDEX idx_wirtschaftsbeihilfe_unternehmen_fk ON wirtschaftsbeihilfe(unternehmen_fk);
-
-
-INSERT INTO aktien (name, symbol, beschreibung) VALUES
-('Apfel AG', 'APF', 'Technologie-Unternehmen'),
-('Mercedos AG', 'MRC', 'Auto-Hersteller'),
-('Bananen Bank', 'BNB', 'Bank'),
-('Prinzen Sport', 'PSP', 'Schokoladen-Produzent'),
-('Lufthannah', 'LHH', 'Flugzeuge'),
-('Porche', 'POR', 'Auto-Hersteller'),
-('H&N', 'HuN', 'Kleidungs-Produzent'),
-('Fohrtnait', 'FRNT', 'Computerspiele');
