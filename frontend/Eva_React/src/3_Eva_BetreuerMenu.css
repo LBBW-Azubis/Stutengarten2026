@@ -1,61 +1,107 @@
 /* BetreuerMenu Styles */
 
-/* Haupt-Layout: Einstellungen links, Kachel rechts */
-.betreuer-layout {
-  display: flex;
-  align-items: flex-start;
-  gap: 40px;
-  padding-top: 10px;
-  justify-content: flex-start;
+/* Page volle Breite */
+.betreuer-page {
+  width: 100% !important;
+  max-width: 100% !important;
+  align-self: stretch !important;
 }
 
-/* Einstellungen links - mehrere Boxen untereinander */
+/* Haupt-Layout: Einstellungen links | Linie | Aktionen rechts */
+.betreuer-layout {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  padding-top: 0;
+  min-height: calc(100vh - 90px - 70px - 80px);
+  width: 100%;
+}
+
+/* Vertikale Trennlinie */
+.betreuer-trenner {
+  width: 3px;
+  background: #dde5ee;
+  margin: 20px 30px;
+  flex-shrink: 0;
+  align-self: stretch;
+}
+
+/* Einstellungen links */
 .betreuer-settings {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 28px;
+  flex: 1;
+  align-items: stretch;
 }
 
-/* Berufe-Kachel rechts */
+.betreuer-settings-titel {
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: #123250;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #dde5ee;
+  text-align: center;
+}
+
+/* Aktionen rechts - gleiche Breite wie links */
 .betreuer-kacheln {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 20px;
-  flex-shrink: 0;
-  padding-top: 20px;
+  gap: 24px;
+  flex: 1;
+  padding-top: 0;
+}
+
+.betreuer-kacheln-titel {
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: #123250;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #dde5ee;
+  width: 100%;
+  text-align: center;
 }
 
 .betreuer-kacheln .kachel { padding: 20px; }
-.betreuer-kacheln .kachel-bild { width: 150px; height: 150px; }
-.betreuer-kacheln .kachel-label { font-size: 1.4rem; }
+.betreuer-kacheln .kachel-bild {
+  width: clamp(110px, 12vw, 150px);
+  height: clamp(110px, 12vw, 150px);
+}
+.betreuer-kacheln .kachel-label { font-size: clamp(1.1rem, 1.3vw, 1.4rem); }
+
+.betreuer-kachel-emoji {
+  font-size: clamp(3rem, 5vw, 4.5rem);
+  line-height: 1;
+}
 
 /* Generische Settings-Box (fuer Hacker, Spiele, etc.) */
 .settings-box {
   background: #f5f8fa;
   border: 2px solid #dde5ee;
   border-radius: 14px;
-  padding: 24px 28px;
-  max-width: 620px;
+  padding: 28px 34px;
+  width: 100%;
 }
 
 .settings-box-header {
   display: flex;
   align-items: center;
-  gap: 14px;
-  margin-bottom: 20px;
-  padding-bottom: 12px;
+  gap: 16px;
+  margin-bottom: 24px;
+  padding-bottom: 14px;
   border-bottom: 2px solid #dde5ee;
 }
 
 .settings-box-icon {
-  width: 44px;
-  height: 44px;
+  width: 48px;
+  height: 48px;
   object-fit: contain;
 }
 
 .settings-box-header h2 {
-  font-size: 1.3rem;
+  font-size: 1.4rem;
   color: #123250;
   margin: 0;
 }
@@ -63,18 +109,18 @@
 .settings-box-body {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 20px;
 }
 
 .setting-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
+  gap: 24px;
 }
 
 .setting-label {
-  font-size: 1.05rem;
+  font-size: 1.15rem;
   font-weight: bold;
   color: #123250;
   white-space: nowrap;

@@ -21,9 +21,10 @@ import Eva_AktienVerkaufen from './3_Eva_AktienVerkaufen'
 import Eva_Hacker from './3_Eva_Hacker'
 import Eva_Ranking from './3_Eva_Ranking'
 import Eva_Spiel from './3_Eva_Spiel'
-import Eva_Berufe from './3_Eva_Berufe'
-import Eva_BerufEinzahlen from './3_Eva_BerufEinzahlen'
 import Eva_Tschuess from './3_Eva_Tschuess'
+import Eva_Unternehmen from './3_Eva_Unternehmen'
+import Eva_UnternehmenEinzahlen from './3_Eva_UnternehmenEinzahlen'
+import Eva_UnternehmenAuszahlen from './3_Eva_UnternehmenAuszahlen'
 
 // Bilder importieren
 import bwBankLogo from './images/BwBank_Logo.png'
@@ -69,8 +70,6 @@ function DevNavigator() {
         <option value="/mainsite/hacker">Hacker</option>
         <option value="/mainsite/ranking">Ranking</option>
         <option value="/mainsite/spiel">Spiel</option>
-        <option value="/mainsite/berufe">Berufe</option>
-        <option value="/mainsite/berufeinzahlen">Beruf Einzahlen</option>
         <option value="/mainsite/tschuess">Tschuess</option>
       </select>
     </div>
@@ -167,38 +166,25 @@ function ZurueckBar() {
 // Nur auf Login und BetreuerMenu wird er pausiert (nicht gestoppt!).
 function HackerTimerManager() {
   const navigate = useNavigate()
-  const location = useLocation()
-  const { hackerAktiv, hackerIntervall, eingeloggt } = useAppContext()
+  const { hackerAktiv, hackerIntervall } = useAppContext()
 
-  // 1) Event-Listener: wenn Timer feuert, navigiere zur Hacker-Seite
+  // Timer starten/stoppen - nur von hackerAktiv und hackerIntervall abhaengig
+  useEffect(() => {
+    if (hackerAktiv) {
+      hackerTimer.start(hackerIntervall)
+    } else {
+      hackerTimer.stop()
+    }
+  }, [hackerAktiv, hackerIntervall])
+
+  // Event-Listener: wenn Timer feuert, navigiere zur Hacker-Seite
   useEffect(() => {
     function onAngriff() {
-      console.log('[HackerTimerManager] Event empfangen, navigiere!')
       navigate('/mainsite/hacker')
     }
     window.addEventListener('hacker-angriff', onAngriff)
     return () => window.removeEventListener('hacker-angriff', onAngriff)
   }, [navigate])
-
-  // 2) Timer starten/stoppen - NUR wenn sich Einstellungen aendern
-  useEffect(() => {
-    if (eingeloggt && hackerAktiv) {
-      hackerTimer.start(hackerIntervall)
-    } else {
-      hackerTimer.stop()
-    }
-  }, [hackerAktiv, hackerIntervall, eingeloggt])
-
-  // 3) Pause/Resume - direkt im Render, kein useEffect noetig
-  // Pausiert auf: Login, BetreuerMenu, und waehrend eines Hacker-Angriffs
-  const aufPausierterSeite = location.pathname === '/'
-    || location.pathname === '/mainsite/betreuer'
-    || location.pathname === '/mainsite/hacker'
-  if (aufPausierterSeite) {
-    hackerTimer.pause()
-  } else {
-    hackerTimer.resume()
-  }
 
   return null
 }
@@ -233,8 +219,9 @@ function AppLayout() {
           <Route path="/mainsite/hacker" element={<Eva_Hacker />} />
           <Route path="/mainsite/ranking" element={<Eva_Ranking />} />
           <Route path="/mainsite/spiel" element={<Eva_Spiel />} />
-          <Route path="/mainsite/berufe" element={<Eva_Berufe />} />
-          <Route path="/mainsite/berufeinzahlen" element={<Eva_BerufEinzahlen />} />
+          <Route path="/mainsite/unternehmen" element={<Eva_Unternehmen />} />
+          <Route path="/mainsite/unternehmen-einzahlen" element={<Eva_UnternehmenEinzahlen />} />
+          <Route path="/mainsite/unternehmen-auszahlen" element={<Eva_UnternehmenAuszahlen />} />
           <Route path="/mainsite/tschuess" element={<Eva_Tschuess />} />
           <Route path="*" element={<NoMatch />} />
         </Routes>

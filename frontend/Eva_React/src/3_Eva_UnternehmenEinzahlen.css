@@ -1,0 +1,56 @@
+/* Unternehmen Einzahlen Styles - gleich wie Einzahlen */
+
+.ue-seite {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 0;
+  width: 100%;
+}
+
+.ue-icon { font-size: clamp(3rem, 6vw, 4.5rem); line-height: 1; }
+.ue-titel { font-size: clamp(1.6rem, 2vw, 2.2rem); color: #123250; margin: 8px 0 24px 0; }
+
+.ue-inhalt {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  max-width: 900px;
+}
+
+.ue-feld {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.ue-feld label {
+  font-size: clamp(1.1rem, 1.2vw, 1.35rem);
+  font-weight: bold;
+  color: #123250;
+  min-width: clamp(170px, 16vw, 220px);
+  text-align: right;
+  white-space: nowrap;
+}
+
+.ue-feld .feld-input {
+  flex: 1;
+  min-width: 0;
+  padding: clamp(10px, 1vw, 14px) clamp(14px, 1.2vw, 20px);
+  font-size: clamp(1rem, 1vw, 1.2rem);
+}
+
+.ue-action-btn {
+  padding: clamp(10px, 1vw, 14px) clamp(24px, 2.5vw, 36px);
+  font-size: clamp(1rem, 1vw, 1.15rem);
+  white-space: nowrap;
+}
+
+.ue-trennlinie { width: 100%; height: 3px; background: #dde5ee; margin: 10px 0; }
+.ue-kontostand-neu { background: #123250 !important; color: white; font-weight: bold; }
+
+@media (max-width: 700px) {
+  .ue-feld { flex-wrap: wrap; }
+  .ue-feld label { min-width: auto; text-align: left; }
+}

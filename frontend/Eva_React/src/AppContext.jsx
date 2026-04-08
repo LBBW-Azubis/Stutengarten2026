@@ -22,7 +22,7 @@ export function AppProvider({ children }) {
     () => localStorage.getItem(LS_HACKER_AKTIV) === 'true'
   )
   const [hackerIntervall, setHackerIntervallState] = useState(
-    () => parseInt(localStorage.getItem(LS_HACKER_INTERVALL)) || 3
+    () => parseFloat(localStorage.getItem(LS_HACKER_INTERVALL)) || 3
   )
   const [hackerAutoStart, setHackerAutoStartState] = useState(
     () => localStorage.getItem(LS_HACKER_AUTO_START) === 'true'

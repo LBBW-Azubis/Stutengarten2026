@@ -3,7 +3,6 @@ import { useAppContext } from './AppContext'
 
 import './3_Eva_BetreuerMenu.css'  //Wichtig immer CSS importieren
 
-import berufeIcon from './images/Berufe_Kachel.png'
 import hackerIcon from './images/Hacker_Bidl.png'
 import spieleIcon from './images/Spiel_menü.png'
 
@@ -25,6 +24,7 @@ export default function Eva_BetreuerMenu() {
 
         {/* Links: Einstellungen */}
         <div className="betreuer-settings">
+          <div className="betreuer-settings-titel">Einstellungen</div>
 
           {/* Hacker-Einstellungen */}
           <div className="settings-box">
@@ -106,13 +106,29 @@ export default function Eva_BetreuerMenu() {
 
         </div>
 
-        {/* Rechts: Berufe Kachel */}
+        {/* Trennlinie */}
+        <div className="betreuer-trenner"></div>
+
+        {/* Rechts: Aktionen */}
         <div className="betreuer-kacheln">
-          <div className="kachel" onClick={() => navigate('/mainsite/berufe')}>
+          <div className="betreuer-kacheln-titel">Aktionen</div>
+          <div className="kachel" onClick={() => navigate('/mainsite/unternehmen')}>
             <div className="kachel-bild">
-              <img src={berufeIcon} alt="Berufe" />
+              <span className="betreuer-kachel-emoji">🏢</span>
             </div>
-            <div className="kachel-label">Berufe</div>
+            <div className="kachel-label">Unternehmen erstellen</div>
+          </div>
+          <div className="kachel" onClick={() => navigate('/mainsite/unternehmen-einzahlen')}>
+            <div className="kachel-bild">
+              <span className="betreuer-kachel-emoji">📥</span>
+            </div>
+            <div className="kachel-label">Unternehmen einzahlen</div>
+          </div>
+          <div className="kachel" onClick={() => navigate('/mainsite/unternehmen-auszahlen')}>
+            <div className="kachel-bild">
+              <span className="betreuer-kachel-emoji">📤</span>
+            </div>
+            <div className="kachel-label">Unternehmen auszahlen</div>
           </div>
         </div>
 

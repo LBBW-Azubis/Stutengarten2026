@@ -1,0 +1,102 @@
+/* Unternehmen erstellen Styles */
+
+.un-seite {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  padding-top: 0;
+}
+
+.un-icon {
+  font-size: clamp(4rem, 8vw, 6rem);
+  line-height: 1;
+}
+
+.un-titel {
+  font-size: clamp(1.6rem, 2vw, 2.2rem);
+  color: #123250;
+  margin: 8px 0 24px 0;
+}
+
+.un-inhalt {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  max-width: 900px;
+}
+
+.un-feld {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.un-feld label {
+  font-size: clamp(1.1rem, 1.2vw, 1.35rem);
+  font-weight: bold;
+  color: #123250;
+  min-width: clamp(170px, 16vw, 220px);
+  text-align: right;
+  white-space: nowrap;
+}
+
+.un-feld .feld-input {
+  flex: 1;
+  min-width: 0;
+  padding: clamp(10px, 1vw, 14px) clamp(14px, 1.2vw, 20px);
+  font-size: clamp(1rem, 1vw, 1.2rem);
+}
+
+.un-kontostand {
+  background: #123250 !important;
+  color: white;
+  font-weight: bold;
+}
+
+.un-trennlinie {
+  width: 100%;
+  height: 3px;
+  background: #dde5ee;
+  margin: 10px 0;
+}
+
+/* Meldungen */
+.un-msg {
+  padding: 12px 20px;
+  border-radius: 10px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  text-align: center;
+}
+
+.un-msg-err {
+  background: #ffe0e0;
+  color: #c0392b;
+}
+
+.un-msg-ok {
+  background: #d5f5e3;
+  color: #1e8449;
+}
+
+/* Buttons */
+.un-buttons {
+  display: flex;
+  gap: 20px;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+.un-btn {
+  min-width: 160px;
+  padding: 14px 0;
+  font-size: 1.15rem;
+  text-align: center;
+}
+
+@media (max-width: 600px) {
+  .un-feld { flex-direction: column; align-items: flex-start; gap: 6px; }
+  .un-feld label { min-width: auto; text-align: left; }
+}
