@@ -17,3 +17,4 @@ Benötigte Downloads:
 - MySQL
 - Node.JS (inkl. npm install im direkten Unterordner)
 - Pyinstaller
+- Openpyxl
