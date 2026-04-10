@@ -82,8 +82,13 @@ class CustomerSavingsBook:
     def set_balance(db: DbConnector, stutengarten_id, balance):
         """
         Updates the balance for a customer's savings book.
-        Returns: dict {"customer_id": ..., "balance": ...}
+        Returns: dict {"customer_id": ..., "first_name": ..., "last_name": ..., "balance": ...}
         """
+        try:
+            balance = int(balance)
+        except ValueError as exc:
+            raise CustomException("Der Betrag muss eine Zahl sein.") from exc
+
         conn = db.get_connection()
         cursor = conn.cursor()
         try:
@@ -101,7 +106,15 @@ class CustomerSavingsBook:
                         f"Customer with stutengarten_id {stutengarten_id} does not exist.") from exc
 
             conn.commit()
-            return {"stutengarten_id": stutengarten_id, "balance": balance}
+
+            # Get customer data to return with the balance
+            customer = Customer.get_by_stutengarten_id(db, stutengarten_id)
+            return {
+                "stutengarten_id": stutengarten_id, 
+                "first_name": customer.first_name,
+                "last_name": customer.last_name,
+                "balance": balance,
+            }
         except Exception as e:
             conn.rollback()
             raise CustomException(f"Error updating balance: {e}") from e

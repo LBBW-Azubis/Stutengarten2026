@@ -159,6 +159,8 @@ def update_balance_for_customer(stutengarten_id):
     try:
         updated = CustomerSavingsBook.set_balance(connector, stutengarten_id, data["balance"])
         return jsonify(updated), 200
+    except (CustomException, ValueError) as e:
+        return jsonify({"error": str(e)}), 400
     except Exception as e:  # pylint: disable=broad-except
         return jsonify({"error": str(e)}), 500
 

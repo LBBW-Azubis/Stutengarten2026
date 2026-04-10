@@ -8,6 +8,16 @@ class XlsxFileReader:
         """
         reads xlsx files and returns a list of dictionarys
         """
-        df = pd.read_excel(file)
+        stream = getattr(file, "stream", file)
+        if hasattr(stream, "seek"):
+            stream.seek(0)
+
+        try:
+            df = pd.read_excel(stream, engine="openpyxl")
+        except ValueError:
+            if hasattr(stream, "seek"):
+                stream.seek(0)
+            df = pd.read_excel(stream)
+
         return df.to_dict(orient="records")
 # End of file
