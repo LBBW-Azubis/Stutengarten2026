@@ -11,6 +11,19 @@ log = logging.getLogger(__name__)
 # wert in Millisekunden ab dem eine Warnung geloggt wird
 WARN_WAIT_MS = 200
 
+TRUNCATE_TABLES = [
+    "kundenumsaetze",
+    "kundensparbuecher",
+    "kundenaktien",
+    "unternehmensumsaetze",
+    "unternehmenssparbuecher",
+    "wirtschaftsbeihilfe",
+    "kundenstatistik",
+    "unternehmensstatistik",
+    "kunden",
+    "unternehmen",
+]
+
 def _run_select_1(conn):
     cur = conn.cursor()
     try:
@@ -123,3 +136,46 @@ def health_pool():
     })
     resp.headers["Cache-Control"] = "no-store"
     return resp, code
+
+
+@health_bp.route("/clear-database", methods=["POST"])
+def clear_database():
+    """
+    Leert alle fachlichen Tabellen und setzt Auto-Increment-Zaehler zurueck.
+    """
+    connector = current_app.config["DB_CONNECTOR"]
+    conn = None
+    cursor = None
+    try:
+        conn = connector.get_connection()
+        cursor = conn.cursor()
+
+        cursor.execute("SET FOREIGN_KEY_CHECKS = 0")
+        for table_name in TRUNCATE_TABLES:
+            cursor.execute(f"TRUNCATE TABLE {table_name}")
+        cursor.execute("SET FOREIGN_KEY_CHECKS = 1")
+
+        conn.commit()
+        return jsonify({
+            "status": "success",
+            "message": "Database tables truncated successfully.",
+            "tables": TRUNCATE_TABLES,
+        }), 200
+    except Exception as exc: # pylint: disable=broad-except
+        if conn:
+            conn.rollback()
+        return jsonify({
+            "status": "error",
+            "message": "Failed to clear database tables.",
+            "details": str(exc),
+        }), 500
+    finally:
+        if cursor:
+            try:
+                cursor.execute("SET FOREIGN_KEY_CHECKS = 1")
+            except Exception:  # pylint: disable=broad-except
+                pass
+            cursor.close()
+        if conn:
+            conn.close()
+#End-of-file

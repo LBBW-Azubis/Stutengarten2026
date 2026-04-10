@@ -11,7 +11,7 @@ from company_import import CompanyImport
 
 imports_bp = Blueprint("imports", __name__)
 
-@imports_bp.route("/import_customers", methods=["POST"])
+@imports_bp.route("/customer/import", methods=["POST"])
 def import_customers():
     """
     Import customer data from XLSX file directly into the database
@@ -38,7 +38,7 @@ def import_customers():
         return jsonify({"status": "error", "message": str(exc)}), 500
 
 
-@imports_bp.route("/import_companies", methods=["POST"])
+@imports_bp.route("/company/import", methods=["POST"])
 def import_companies():
     """
     Import company data from XLSX file directly into the database
