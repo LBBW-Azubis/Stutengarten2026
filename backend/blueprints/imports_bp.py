@@ -19,7 +19,7 @@ def import_customers():
     Expects a multipart/form-data POST with the field name "customers".
     """
     try:
-        customer_file = request.files.get("customers")
+        customer_file = request.files.get("customers") or request.files.get("file")
         if not customer_file:
             return jsonify({"error": "No file uploaded"}), 400
         if not customer_file.filename.lower().endswith(".xlsx"):
@@ -29,10 +29,9 @@ def import_customers():
         customer_importer = CustomerImport(connector)
         result = customer_importer.import_customers(customer_file)
 
-        if result["status"] == "success":
+        if result.get("status") == "success":
             return jsonify(result), 200
-        else:
-            return jsonify(result), 500
+        return jsonify(result), 400
 
     except Exception as exc:  # pylint: disable=broad-except
         return jsonify({"status": "error", "message": str(exc)}), 500
@@ -46,7 +45,7 @@ def import_companies():
     Expects a multipart/form-data POST with the field name "companies".
     """
     try:
-        company_file = request.files.get("companies")
+        company_file = request.files.get("companies") or request.files.get("file")
         if not company_file:
             return jsonify({"error": "No file uploaded"}), 400
         if not company_file.filename.lower().endswith(".xlsx"):
@@ -56,10 +55,9 @@ def import_companies():
         company_importer = CompanyImport(connector)
         result = company_importer.import_company(company_file)
 
-        if result["status"] == "success":
+        if result.get("status") == "success":
             return jsonify(result), 200
-        else:
-            return jsonify(result), 500
+        return jsonify(result), 400
 
     except Exception as exc:  # pylint: disable=broad-except
         return jsonify({"status": "error", "message": str(exc)}), 500
