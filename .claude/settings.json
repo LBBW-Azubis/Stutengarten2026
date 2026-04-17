@@ -1,7 +1,14 @@
 {
   "permissions": {
     "allow": [
-      "Bash(bash /tmp/analyze_css.sh)"
+      "Bash(bash /tmp/analyze_css.sh)",
+      "Bash(cp -r \"c:/Users/sebas/Documents/GitHub/Stutengarten2026/frontend/Eva_React/\"* \"c:/Users/sebas/Documents/GitHub/Stutengarten2026/frontend/\")",
+      "Bash(cp -r \"c:/Users/sebas/Documents/GitHub/Stutengarten2026/frontend/Eva_React/\".* \"c:/Users/sebas/Documents/GitHub/Stutengarten2026/frontend/\")",
+      "Bash(rm -rf \"c:/Users/sebas/Documents/GitHub/Stutengarten2026/frontend/Eva_React\")",
+      "Bash(rm -rf \"c:/Users/sebas/Documents/GitHub/Stutengarten2026/frontend/Frontend_Stutengarten\")"
+    ],
+    "additionalDirectories": [
+      "c:\\Users\\sebas\\Documents\\GitHub\\Stutengarten2026\\frontend\\Frontend_Stutengarten"
     ]
   }
 }
