@@ -169,13 +169,13 @@ class CustomerShares:
             conn.close()
 
     @staticmethod
-    def update_share_value(db: DbConnector, share_id, new_value, stutengarten_id):
+    def update_share_value(db: DbConnector, aktie_fk, new_value, stutengarten_id):
         """
         MANUAL: Updates share value after physical wheel of fortune
         
         Args:
             db: Database connector
-            share_id: ID of share to update
+            aktie_fk: ID of the Aktien-Symbol (from aktien table)
             new_value: New value based on wheel result
             stutengarten_id: Stutengarten ID for validation
         
@@ -186,28 +186,41 @@ class CustomerShares:
         cursor = conn.cursor(dictionary=True)
 
         try:
-            # Get share
+            # Get total old value
             cursor.execute(
-                """SELECT * FROM kundenaktien
-                   WHERE id = %s AND besitzer_fk = %s""",
-                (share_id, stutengarten_id)
+                """SELECT SUM(aktueller_wert) as total_val, COUNT(id) as count_shares 
+                   FROM kundenaktien
+                   WHERE aktie_fk = %s AND besitzer_fk = %s""",
+                (aktie_fk, stutengarten_id)
             )
             share = cursor.fetchone()
 
-            if not share:
+            if not share or share['total_val'] is None:
                 raise CustomerException("Share not found for this customer")
 
-            old_value = float(share['aktueller_wert'])
+            old_value = float(share['total_val'])
 
             # Minimum value: 0 Euro (total loss possible)
             if new_value < 0:
                 new_value = 0
 
-            # Update
-            cursor.execute(
-                "UPDATE kundenaktien SET aktueller_wert = %s WHERE id = %s",
-                (new_value, share_id)
-            )
+            # Update: proportionally update total
+            if old_value > 0:
+                factor = new_value / old_value
+                cursor.execute(
+                    """UPDATE kundenaktien 
+                       SET aktueller_wert = aktueller_wert * %s 
+                       WHERE aktie_fk = %s AND besitzer_fk = %s""",
+                    (factor, aktie_fk, stutengarten_id)
+                )
+            else:
+                count = share['count_shares']
+                cursor.execute(
+                    """UPDATE kundenaktien 
+                       SET aktueller_wert = %s 
+                       WHERE aktie_fk = %s AND besitzer_fk = %s""",
+                    (new_value / count, aktie_fk, stutengarten_id)
+                )
 
             if cursor.rowcount == 0:
                 raise CustomerException("Could not update share")
@@ -219,7 +232,6 @@ class CustomerShares:
 
             return {
                 "status": "success",
-                "share_id": share_id,
                 "old_value": old_value,
                 "new_value": new_value,
                 "change": round(change, 2),
