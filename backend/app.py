@@ -21,8 +21,11 @@ logger = logging.getLogger('waitress')
 app = Flask(__name__)
 CORS(app)
 
+import os
+
 config = configparser.ConfigParser()
-config.read("server.config")
+config_file_path = os.path.join(os.path.dirname(__file__), "server.config")
+config.read(config_file_path)
 
 #Fallback if config file is missing or incomplete
 server_config = config["server"] if "server" in config else {}
