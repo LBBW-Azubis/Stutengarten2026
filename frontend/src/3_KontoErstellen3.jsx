@@ -2,11 +2,11 @@ import { useNavigate } from 'react-router-dom'
 import { useState, useMemo } from 'react'
 import { useAppContext } from './AppContext'
 
-import './3_Eva_KontoErstellen3.css'  //Wichtig immer CSS importieren
+import './3_KontoErstellen3.css'  //Wichtig immer CSS importieren
 
 import loginIcon from './images/Login.png'
 
-export default function Eva_KontoErstellen3() {
+export default function KontoErstellen3() {
   const navigate = useNavigate()
   const { genId, nutzer, setNutzer, setAktuellerNutzer } = useAppContext()
 

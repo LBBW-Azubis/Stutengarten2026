@@ -2,11 +2,11 @@ import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import { useAppContext } from './AppContext'
 
-import './3_Eva_BerufEinzahlen.css'  //Wichtig immer CSS importieren
+import './3_BerufEinzahlen.css'  //Wichtig immer CSS importieren
 
 import loginIcon from './images/Login.png'
 
-export default function Eva_BerufEinzahlen() {
+export default function BerufEinzahlen() {
   const navigate = useNavigate()
   const { aktuellerNutzer, addTranAktion } = useAppContext()
   const [, forceUpdate] = useState(0)

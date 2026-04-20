@@ -2,11 +2,11 @@ import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import { useAppContext } from './AppContext'
 
-import './3_Eva_AktienZaehler.css'  //Wichtig immer CSS importieren
+import './3_AktienZaehler.css'  //Wichtig immer CSS importieren
 
 import aktienIcon from './images/Bild1.png'
 
-export default function Eva_AktienZaehler() {
+export default function AktienZaehler() {
   const navigate = useNavigate()
   const { aktuellerNutzer, letzteGekaufteAktien } = useAppContext()
   const [, forceUpdate] = useState(0)
@@ -75,7 +75,7 @@ export default function Eva_AktienZaehler() {
           </div>
           <div style={{ marginTop: 8, fontSize: '0.9rem', color: '#123250' }}>
             {kurs !== null
-              ? `Kurs: ${kurs > 0 ? '+' + kurs : kurs} → Aktie jetzt ${neuerWert} Stuggis wert`
+              ? `Kurs: ${kurs > 0 ? '+' + kurs : kurs} → Aktie jetzt ${neuerWert} wert`
               : 'Rad-Ergebnis auswaehlen:'}
           </div>
           {fehler && <span className="fehler-text" style={{ display: 'block' }}>{fehler}</span>}

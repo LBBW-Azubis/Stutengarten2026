@@ -1,11 +1,11 @@
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 
-import './3_Eva_Hacker.css'  //Wichtig immer CSS importieren
+import './3_Hacker.css'  //Wichtig immer CSS importieren
 
 import hackerIcon from './images/Hacker_Bidl.png'
 
-export default function Eva_Hacker() {
+export default function Hacker() {
   const navigate = useNavigate()
   const [spielGestartet, setSpielGestartet] = useState(false)
   const [gefunden, setGefunden] = useState(0)

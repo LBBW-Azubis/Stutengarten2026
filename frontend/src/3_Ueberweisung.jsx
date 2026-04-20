@@ -1,9 +1,9 @@
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 
-import './3_Eva_Ueberweisung.css'  //Wichtig immer CSS importieren
+import './3_Ueberweisung.css'  //Wichtig immer CSS importieren
 
-export default function Eva_Ueberweisung() {
+export default function Ueberweisung() {
   const navigate = useNavigate()
 
   // ============================================================
@@ -196,7 +196,7 @@ export default function Eva_Ueberweisung() {
           </div>
           <div className="uw-feld">
             <label>Kontostand:</label>
-            <span className="feld-input anzeige">{vonGeladen ? `${vonKontostand} Stuggis` : ''}</span>
+            <span className="feld-input anzeige">{vonGeladen ? `${vonKontostand}` : ''}</span>
           </div>
 
           {vonKontostandNeu !== '' && (
@@ -204,7 +204,7 @@ export default function Eva_Ueberweisung() {
               <div className="uw-trennlinie"></div>
               <div className="uw-feld">
                 <label>Kontostand Neu:</label>
-                <span className="feld-input anzeige uw-kontostand-neu">{vonKontostandNeu} Stuggis</span>
+                <span className="feld-input anzeige uw-kontostand-neu">{vonKontostandNeu}</span>
               </div>
             </>
           )}
@@ -241,7 +241,7 @@ export default function Eva_Ueberweisung() {
           </div>
           <div className="uw-feld">
             <label>Kontostand:</label>
-            <span className="feld-input anzeige">{anGeladen ? `${anKontostand} Stuggis` : ''}</span>
+            <span className="feld-input anzeige">{anGeladen ? `${anKontostand}` : ''}</span>
           </div>
 
           {anKontostandNeu !== '' && (
@@ -249,7 +249,7 @@ export default function Eva_Ueberweisung() {
               <div className="uw-trennlinie"></div>
               <div className="uw-feld">
                 <label>Kontostand Neu:</label>
-                <span className="feld-input anzeige uw-kontostand-neu">{anKontostandNeu} Stuggis</span>
+                <span className="feld-input anzeige uw-kontostand-neu">{anKontostandNeu}</span>
               </div>
             </>
           )}

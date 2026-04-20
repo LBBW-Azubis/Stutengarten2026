@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 
-import './3_Eva_Spiel.css'
+import './3_Spiel.css'
 
 const LEVELS = [
   { rows: 4, cols: 4, start: [0, 0], ziel: [3, 3], walls: [], max: 6 },
@@ -17,7 +17,7 @@ const DIR = {
   right: { dr: 0,  dc: 1, symbol: '\u2192' },
 }
 
-export default function Eva_Spiel() {
+export default function Spiel() {
   const [lvl, setLvl] = useState(0)
   const [cmds, setCmds] = useState([])
   const [pos, setPos] = useState(null)

@@ -1,10 +1,10 @@
 import { useNavigate } from 'react-router-dom'
 
-import './3_Eva_KontoErstellen2.css'  //Wichtig immer CSS importieren
+import './3_KontoErstellen2.css'  //Wichtig immer CSS importieren
 
 import loginIcon from './images/Login.png'
 
-export default function Eva_KontoErstellen2() {
+export default function KontoErstellen2() {
   const navigate = useNavigate()
 
   return (

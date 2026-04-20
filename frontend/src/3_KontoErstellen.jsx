@@ -1,11 +1,11 @@
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 
-import './3_Eva_KontoErstellen.css'  //Wichtig immer CSS importieren
+import './3_KontoErstellen.css'  //Wichtig immer CSS importieren
 
 import loginIcon from './images/Login.png'
 
-export default function Eva_KontoErstellen() {
+export default function KontoErstellen() {
   const navigate = useNavigate()
 
   // Schritt 1: Frage "Neuen Kunden erstellen?" / Schritt 2: Daten eingeben

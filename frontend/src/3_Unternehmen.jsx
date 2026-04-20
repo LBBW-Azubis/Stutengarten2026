@@ -1,9 +1,9 @@
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 
-import './3_Eva_Unternehmen.css'  //Wichtig immer CSS importieren
+import './3_Unternehmen.css'  //Wichtig immer CSS importieren
 
-export default function Eva_Unternehmen() {
+export default function Unternehmen() {
   const navigate = useNavigate()
 
   // ============================================================
@@ -64,7 +64,7 @@ export default function Eva_Unternehmen() {
 
         <div className="un-feld">
           <label>Kontostand:</label>
-          <span className="feld-input anzeige un-kontostand">0 Stuggis</span>
+          <span className="feld-input anzeige un-kontostand">0</span>
         </div>
 
         {fehler && <div className="un-msg un-msg-err">{fehler}</div>}

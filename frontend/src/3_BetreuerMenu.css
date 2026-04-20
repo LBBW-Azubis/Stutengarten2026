@@ -18,6 +18,12 @@
 .betreuer-kacheln .kachel-label { font-size: clamp(0.85rem, 1.3vh, 1.2rem); }
 .betreuer-kachel-emoji { font-size: clamp(2rem, 4vw, 4rem); line-height: 1; }
 
+/* Import-Kacheln nebeneinander mit Trennstrich */
+.import-reihe { display: flex; align-items: center; gap: clamp(10px, 1.5vw, 24px); }
+.import-trenner { width: 2px; background: #dde5ee; align-self: stretch; margin: clamp(6px, 0.8vh, 12px) 0; }
+.import-bild { position: relative; }
+.import-badge { position: absolute; bottom: clamp(2px, 0.4vh, 6px); right: clamp(2px, 0.4vw, 6px); width: clamp(22px, 3vw, 38px); height: clamp(22px, 3vw, 38px); background: white; border-radius: 6px; padding: clamp(1px, 0.2vh, 3px); box-shadow: 0 1px 3px rgba(0,0,0,0.15); object-fit: contain; }
+
 /* Settings-Box */
 .settings-box { background: #f5f8fa; border: 2px solid #dde5ee; border-radius: 10px; padding: clamp(10px, 1.2vh, 22px) clamp(12px, 1.5vw, 28px); width: 100%; }
 .settings-box-header { display: flex; align-items: center; gap: clamp(8px, 1vw, 14px); margin-bottom: clamp(8px, 1vh, 18px); padding-bottom: clamp(6px, 0.7vh, 12px); border-bottom: 2px solid #dde5ee; }

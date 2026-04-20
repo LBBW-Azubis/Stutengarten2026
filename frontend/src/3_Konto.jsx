@@ -1,11 +1,11 @@
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 
-import './3_Eva_Konto.css'  //Wichtig immer CSS importieren
+import './3_Konto.css'  //Wichtig immer CSS importieren
 
 import kontoIcon from './images/Login.png'
 
-export default function Eva_Konto() {
+export default function Konto() {
   const navigate = useNavigate()
 
   // ============================================================
@@ -117,7 +117,7 @@ export default function Eva_Konto() {
         <div className="ko-feld">
           <label>Kontostand:</label>
           {/* === BACKEND: Kontostand vom Backend === */}
-          <span className="feld-input anzeige ko-kontostand">{kundeGeladen ? `${kontostand} Stuggis` : ''}</span>
+          <span className="feld-input anzeige ko-kontostand">{kundeGeladen ? `${kontostand}` : ''}</span>
           {/* === ENDE BACKEND === */}
         </div>
       </div>

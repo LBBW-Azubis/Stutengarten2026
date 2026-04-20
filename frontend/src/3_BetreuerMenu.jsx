@@ -1,13 +1,77 @@
 import { useNavigate } from 'react-router-dom'
+import { useRef } from 'react'
 import { useAppContext } from './AppContext'
 
-import './3_Eva_BetreuerMenu.css'  //Wichtig immer CSS importieren
+import './3_BetreuerMenu.css'  //Wichtig immer CSS importieren
 
 import hackerIcon from './images/Hacker_Bidl.png'
 import spieleIcon from './images/Spiel_menü.png'
+import excelIcon from './images/Excel_Icon.svg'
 
-export default function Eva_BetreuerMenu() {
+export default function BetreuerMenu() {
   const navigate = useNavigate()
+  const kundenInputRef = useRef(null)
+  const unternehmenInputRef = useRef(null)
+
+  async function handleKundenImport(e) {
+    const datei = e.target.files?.[0]
+    if (!datei) return
+
+    // === BACKEND: Kunden-Excel importieren ===
+    // POST http://192.168.1.10:5000/import_customers - Excel als multipart/form-data
+    try {
+      const formData = new FormData()
+      formData.append('file', datei)
+
+      const response = await fetch('http://192.168.1.10:5000/import_customers', {
+        method: 'POST',
+        body: formData,
+      })
+      const data = await response.json()
+
+      if (!response.ok) {
+        alert(data.error || 'Import fehlgeschlagen.')
+      } else {
+        alert('Kunden erfolgreich importiert!')
+      }
+    } catch (error) {
+      console.error('[Import Kunden] Fehler:', error)
+      alert('Verbindung zum Server fehlgeschlagen.')
+    }
+    // === ENDE BACKEND ===
+
+    e.target.value = ''
+  }
+
+  async function handleUnternehmenImport(e) {
+    const datei = e.target.files?.[0]
+    if (!datei) return
+
+    // === BACKEND: Unternehmen-Excel importieren ===
+    // POST http://192.168.1.10:5000/import_companies - Excel als multipart/form-data
+    try {
+      const formData = new FormData()
+      formData.append('file', datei)
+
+      const response = await fetch('http://192.168.1.10:5000/import_companies', {
+        method: 'POST',
+        body: formData,
+      })
+      const data = await response.json()
+
+      if (!response.ok) {
+        alert(data.error || 'Import fehlgeschlagen.')
+      } else {
+        alert('Unternehmen erfolgreich importiert!')
+      }
+    } catch (error) {
+      console.error('[Import Unternehmen] Fehler:', error)
+      alert('Verbindung zum Server fehlgeschlagen.')
+    }
+    // === ENDE BACKEND ===
+
+    e.target.value = ''
+  }
   const {
     hackerAktiv, setHackerAktiv,
     hackerIntervall, setHackerIntervall,
@@ -130,6 +194,37 @@ export default function Eva_BetreuerMenu() {
             </div>
             <div className="kachel-label">Unternehmen auszahlen</div>
           </div>
+          <div className="import-reihe">
+            <div className="kachel" onClick={() => kundenInputRef.current?.click()}>
+              <div className="kachel-bild import-bild">
+                <span className="betreuer-kachel-emoji">👤</span>
+                <img src={excelIcon} alt="Excel" className="import-badge" />
+              </div>
+              <div className="kachel-label">Import Kunden</div>
+            </div>
+            <div className="import-trenner"></div>
+            <div className="kachel" onClick={() => unternehmenInputRef.current?.click()}>
+              <div className="kachel-bild import-bild">
+                <span className="betreuer-kachel-emoji">🏢</span>
+                <img src={excelIcon} alt="Excel" className="import-badge" />
+              </div>
+              <div className="kachel-label">Import Unternehmen</div>
+            </div>
+          </div>
+          <input
+            ref={kundenInputRef}
+            type="file"
+            accept=".xlsx,.xls,.csv"
+            style={{ display: 'none' }}
+            onChange={handleKundenImport}
+          />
+          <input
+            ref={unternehmenInputRef}
+            type="file"
+            accept=".xlsx,.xls,.csv"
+            style={{ display: 'none' }}
+            onChange={handleUnternehmenImport}
+          />
         </div>
 
       </div>

@@ -1,8 +1,8 @@
-import './3_Eva_Tschuess.css'  //Wichtig immer CSS importieren
+import './3_Tschuess.css'  //Wichtig immer CSS importieren
 
 import bwBankLogo from './images/BwBank_Logo.png'
 
-export default function Eva_Tschuess() {
+export default function Tschuess() {
   function handleTschuess() {
     window.location.reload()
   }

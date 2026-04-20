@@ -1,9 +1,9 @@
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 
-import './3_Eva_AktienKaufen.css'  //Wichtig immer CSS importieren
+import './3_AktienKaufen.css'  //Wichtig immer CSS importieren
 
-export default function Eva_AktienKaufen() {
+export default function AktienKaufen() {
   const navigate = useNavigate()
 
   // ============================================================
@@ -150,7 +150,7 @@ export default function Eva_AktienKaufen() {
         </div>
         <div className="ak-feld">
           <label>Kontostand:</label>
-          <span className="feld-input anzeige">{kundeGeladen ? `${kontostand} Stuggis` : ''}</span>
+          <span className="feld-input anzeige">{kundeGeladen ? `${kontostand}` : ''}</span>
         </div>
         <div className="ak-feld">
           <label>Besitz von Aktien:</label>
@@ -177,7 +177,7 @@ export default function Eva_AktienKaufen() {
         {/* Kosten-Vorschau */}
         {kundeGeladen && anzahl > 0 && (
           <div className="ak-vorschau">
-            {anzahl} Aktie{anzahl > 1 ? 'n' : ''} x {PREIS_PRO_AKTIE} Stuggis = <strong>{kosten} Stuggis</strong>
+            {anzahl} Aktie{anzahl > 1 ? 'n' : ''} x {PREIS_PRO_AKTIE} = <strong>{kosten}</strong>
           </div>
         )}
 

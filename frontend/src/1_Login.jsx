@@ -2,12 +2,12 @@ import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import { useAppContext } from './AppContext'
 
-import './1_Eva_Login.css'  //Wichtig immer CSS importieren
+import './1_Login.css'  //Wichtig immer CSS importieren
 
 import loginIcon from './images/Login.png'
 import suchenIcon from './images/Suchen.png'
 
-export default function Eva_Login() {
+export default function Login() {
   const navigate = useNavigate()
   const {
     setAktuellerNutzer, setMitarbeiter, setBetreuerEingeloggt,

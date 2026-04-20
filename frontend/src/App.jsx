@@ -6,25 +6,25 @@ import * as hackerTimer from './hackerTimer'
 import './App.css'  //Wichtig immer CSS importieren
 
 // Alle Seiten importieren
-import Eva_Login from './1_Eva_Login'
-import Eva_Menu from './2_Eva_Menu'
-import Eva_BetreuerMenu from './3_Eva_BetreuerMenu'
-import Eva_Info from './3_Eva_Info'
-import Eva_Konto from './3_Eva_Konto'
-import Eva_KontoErstellen from './3_Eva_KontoErstellen'
-import Eva_Einzahlen from './3_Eva_Einzahlen'
-import Eva_Auszahlen from './3_Eva_Auszahlen'
-import Eva_Ueberweisung from './3_Eva_Ueberweisung'
-import Eva_AktienKaufen from './3_Eva_AktienKaufen'
-import Eva_AktienZaehler from './3_Eva_AktienZaehler'
-import Eva_AktienVerkaufen from './3_Eva_AktienVerkaufen'
-import Eva_Hacker from './3_Eva_Hacker'
-import Eva_Ranking from './3_Eva_Ranking'
-import Eva_Spiel from './3_Eva_Spiel'
-import Eva_Tschuess from './3_Eva_Tschuess'
-import Eva_Unternehmen from './3_Eva_Unternehmen'
-import Eva_UnternehmenEinzahlen from './3_Eva_UnternehmenEinzahlen'
-import Eva_UnternehmenAuszahlen from './3_Eva_UnternehmenAuszahlen'
+import Login from './1_Login'
+import Menu from './2_Menu'
+import BetreuerMenu from './3_BetreuerMenu'
+import Info from './3_Info'
+import Konto from './3_Konto'
+import KontoErstellen from './3_KontoErstellen'
+import Einzahlen from './3_Einzahlen'
+import Auszahlen from './3_Auszahlen'
+import Ueberweisung from './3_Ueberweisung'
+import AktienKaufen from './3_AktienKaufen'
+import AktienZaehler from './3_AktienZaehler'
+import AktienVerkaufen from './3_AktienVerkaufen'
+import Hacker from './3_Hacker'
+import Ranking from './3_Ranking'
+import Spiel from './3_Spiel'
+import Tschuess from './3_Tschuess'
+import Unternehmen from './3_Unternehmen'
+import UnternehmenEinzahlen from './3_UnternehmenEinzahlen'
+import UnternehmenAuszahlen from './3_UnternehmenAuszahlen'
 
 // Bilder importieren
 import bwBankLogo from './images/BwBank_Logo.png'
@@ -143,12 +143,15 @@ function ZurueckBar() {
   const navigate = useNavigate()
   const location = useLocation()
   const istLogin = location.pathname === '/'
+  const istStartseite = location.pathname === '/mainsite'
 
   if (istLogin) return null
 
   return (
     <div className="zurueck-bar">
-      <button className="zurueck-btn" onClick={() => navigate('/mainsite')}>zur Startseite</button>
+      {!istStartseite ? (
+        <button className="zurueck-btn" onClick={() => navigate('/mainsite')}>zur Startseite</button>
+      ) : <div />}
       <button className="logout-btn" onClick={() => navigate('/')}>Abmelden</button>
     </div>
   )
@@ -198,25 +201,25 @@ function AppLayout() {
 
       <main id="app">
         <Routes>
-          <Route path="/" element={<Eva_Login />} />
-          <Route path="/mainsite" element={<Eva_Menu />} />
-          <Route path="/mainsite/betreuer" element={<Eva_BetreuerMenu />} />
-          <Route path="/mainsite/info" element={<Eva_Info />} />
-          <Route path="/mainsite/konto" element={<Eva_Konto />} />
-          <Route path="/mainsite/kontoerstellen" element={<Eva_KontoErstellen />} />
-          <Route path="/mainsite/einzahlen" element={<Eva_Einzahlen />} />
-          <Route path="/mainsite/auszahlen" element={<Eva_Auszahlen />} />
-          <Route path="/mainsite/ueberweisung" element={<Eva_Ueberweisung />} />
-          <Route path="/mainsite/aktien" element={<Eva_AktienKaufen />} />
-          <Route path="/mainsite/aktien/zaehler" element={<Eva_AktienZaehler />} />
-          <Route path="/mainsite/aktien/verkaufen" element={<Eva_AktienVerkaufen />} />
-          <Route path="/mainsite/hacker" element={<Eva_Hacker />} />
-          <Route path="/mainsite/ranking" element={<Eva_Ranking />} />
-          <Route path="/mainsite/spiel" element={<Eva_Spiel />} />
-          <Route path="/mainsite/unternehmen" element={<Eva_Unternehmen />} />
-          <Route path="/mainsite/unternehmen-einzahlen" element={<Eva_UnternehmenEinzahlen />} />
-          <Route path="/mainsite/unternehmen-auszahlen" element={<Eva_UnternehmenAuszahlen />} />
-          <Route path="/mainsite/tschuess" element={<Eva_Tschuess />} />
+          <Route path="/" element={<Login />} />
+          <Route path="/mainsite" element={<Menu />} />
+          <Route path="/mainsite/betreuer" element={<BetreuerMenu />} />
+          <Route path="/mainsite/info" element={<Info />} />
+          <Route path="/mainsite/konto" element={<Konto />} />
+          <Route path="/mainsite/kontoerstellen" element={<KontoErstellen />} />
+          <Route path="/mainsite/einzahlen" element={<Einzahlen />} />
+          <Route path="/mainsite/auszahlen" element={<Auszahlen />} />
+          <Route path="/mainsite/ueberweisung" element={<Ueberweisung />} />
+          <Route path="/mainsite/aktien" element={<AktienKaufen />} />
+          <Route path="/mainsite/aktien/zaehler" element={<AktienZaehler />} />
+          <Route path="/mainsite/aktien/verkaufen" element={<AktienVerkaufen />} />
+          <Route path="/mainsite/hacker" element={<Hacker />} />
+          <Route path="/mainsite/ranking" element={<Ranking />} />
+          <Route path="/mainsite/spiel" element={<Spiel />} />
+          <Route path="/mainsite/unternehmen" element={<Unternehmen />} />
+          <Route path="/mainsite/unternehmen-einzahlen" element={<UnternehmenEinzahlen />} />
+          <Route path="/mainsite/unternehmen-auszahlen" element={<UnternehmenAuszahlen />} />
+          <Route path="/mainsite/tschuess" element={<Tschuess />} />
           <Route path="*" element={<NoMatch />} />
         </Routes>
       </main>

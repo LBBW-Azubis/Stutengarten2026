@@ -1,9 +1,9 @@
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 
-import './3_Eva_UnternehmenAuszahlen.css'  //Wichtig immer CSS importieren
+import './3_UnternehmenEinzahlen.css'  //Wichtig immer CSS importieren
 
-export default function Eva_UnternehmenAuszahlen() {
+export default function UnternehmenEinzahlen() {
   const navigate = useNavigate()
 
   // ============================================================
@@ -16,8 +16,8 @@ export default function Eva_UnternehmenAuszahlen() {
   // VOM BACKEND GELADEN (nach "Laden" Button):
   //   kontostand       (int) - z.B. 500
   //
-  // VOM BACKEND GELADEN (nach "Auszahlen" Button):
-  //   kontostandNeu    (int) - neuer Kontostand nach Auszahlung
+  // VOM BACKEND GELADEN (nach "Einzahlen" Button):
+  //   kontostandNeu    (int) - neuer Kontostand nach Einzahlung
   // ============================================================
   const [unternehmenName, setUnternehmenName] = useState('')   // String - User-Eingabe
   const [betrag, setBetrag] = useState('')                     // String (nur Ziffern) - User-Eingabe
@@ -26,7 +26,7 @@ export default function Eva_UnternehmenAuszahlen() {
 
   // === BACKEND: Diese Werte kommen spaeter vom Backend ===
   const [kontostand, setKontostand] = useState(0)              // int - vom Backend
-  const [kontostandNeu, setKontostandNeu] = useState('')       // int - vom Backend nach Auszahlung
+  const [kontostandNeu, setKontostandNeu] = useState('')       // int - vom Backend nach Einzahlung
   // === ENDE BACKEND-VARIABLEN ===
 
   function laden() {
@@ -47,24 +47,20 @@ export default function Eva_UnternehmenAuszahlen() {
     setBetrag('')
   }
 
-  function auszahlen() {
+  function einzahlen() {
     setFehler('')
     const b = parseInt(betrag) || 0
     if (b <= 0) {
       setFehler('Bitte einen gueltigen Betrag eingeben.')
       return
     }
-    if (b > kontostand) {
-      setFehler('Nicht genug Guthaben!')
-      return
-    }
 
-    // === BACKEND: Auszahlung vom Unternehmen senden ===
-    // API-Call: POST /unternehmen/auszahlen
+    // === BACKEND: Einzahlung an Unternehmen senden ===
+    // API-Call: POST /unternehmen/einzahlen
     // Body: { name: unternehmenName.trim() (String), betrag: parseInt(betrag) (int) }
     // Response: { kontostandNeu: int }
-    const neuerStand = kontostand - b
-    console.log('[Unternehmen Auszahlen]:', {
+    const neuerStand = kontostand + b
+    console.log('[Unternehmen Einzahlen]:', {
       name: unternehmenName.trim(),   // String
       betrag: b,                       // int
     })
@@ -81,12 +77,12 @@ export default function Eva_UnternehmenAuszahlen() {
   }
 
   return (
-    <div className="ua-seite">
-      <div className="ua-icon">📤</div>
-      <h2 className="ua-titel">Unternehmen auszahlen</h2>
+    <div className="ue-seite">
+      <div className="ue-icon">📥</div>
+      <h2 className="ue-titel">Unternehmen einzahlen</h2>
 
-      <div className="ua-inhalt">
-        <div className="ua-feld">
+      <div className="ue-inhalt">
+        <div className="ue-feld">
           <label>Unternehmen:</label>
           <input
             type="text"
@@ -96,19 +92,19 @@ export default function Eva_UnternehmenAuszahlen() {
             onChange={e => { setUnternehmenName(e.target.value); setGeladen(false); setKontostandNeu('') }}
             onKeyDown={e => { if (e.key === 'Enter') laden() }}
           />
-          <button className="btn btn-dunkel ua-action-btn" onClick={laden}>Laden</button>
+          <button className="btn btn-dunkel ue-action-btn" onClick={laden}>Laden</button>
         </div>
 
-        <div className="ua-trennlinie"></div>
+        <div className="ue-trennlinie"></div>
 
-        <div className="ua-feld">
+        <div className="ue-feld">
           <label>Kontostand:</label>
-          <span className="feld-input anzeige">{geladen ? `${kontostand} Stuggis` : ''}</span>
+          <span className="feld-input anzeige">{geladen ? `${kontostand}` : ''}</span>
         </div>
 
-        <div className="ua-trennlinie"></div>
+        <div className="ue-trennlinie"></div>
 
-        <div className="ua-feld">
+        <div className="ue-feld">
           <label>Betrag:</label>
           <input
             type="text"
@@ -117,19 +113,19 @@ export default function Eva_UnternehmenAuszahlen() {
             placeholder="Betrag eingeben"
             value={betrag}
             onChange={handleBetragChange}
-            onKeyDown={e => { if (e.key === 'Enter') auszahlen() }}
+            onKeyDown={e => { if (e.key === 'Enter') einzahlen() }}
           />
-          <button className="btn btn-dunkel ua-action-btn" onClick={auszahlen}>Auszahlen</button>
+          <button className="btn btn-dunkel ue-action-btn" onClick={einzahlen}>Einzahlen</button>
         </div>
 
         {fehler && <span className="fehler-text" style={{ display: 'block', textAlign: 'center' }}>{fehler}</span>}
 
-        <div className="ua-trennlinie"></div>
+        <div className="ue-trennlinie"></div>
 
-        <div className="ua-feld">
+        <div className="ue-feld">
           <label>Kontostand Neu:</label>
           {/* === BACKEND: Neuen Kontostand vom Backend laden === */}
-          <span className="feld-input anzeige ua-kontostand-neu">{kontostandNeu !== '' ? `${kontostandNeu} Stuggis` : ''}</span>
+          <span className="feld-input anzeige ue-kontostand-neu">{kontostandNeu !== '' ? `${kontostandNeu}` : ''}</span>
           {/* === ENDE BACKEND === */}
         </div>
       </div>

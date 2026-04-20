@@ -2,12 +2,12 @@ import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import { useAppContext } from './AppContext'
 
-import './3_Eva_Berufe.css'  //Wichtig immer CSS importieren
+import './3_Berufe.css'  //Wichtig immer CSS importieren
 
 import berufeIcon from './images/Berufe_Kachel.png'
 import suchenIcon from './images/Suchen.png'
 
-export default function Eva_Berufe() {
+export default function Berufe() {
   const navigate = useNavigate()
   const { aktuellerNutzer } = useAppContext()
   const [, forceUpdate] = useState(0)

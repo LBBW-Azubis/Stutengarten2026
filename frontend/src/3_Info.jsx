@@ -1,8 +1,8 @@
-import './3_Eva_Info.css'  //Wichtig immer CSS importieren
+import './3_Info.css'  //Wichtig immer CSS importieren
 
 import infoIcon from './images/Info_menü.png'
 
-export default function Eva_Info() {
+export default function Info() {
   return (
     <div className="page">
       <div className="seite-layout">

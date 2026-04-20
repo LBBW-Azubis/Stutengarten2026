@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import { useAppContext } from './AppContext'
 
-import './2_Eva_Menu.css'  //Wichtig immer CSS importieren
+import './2_Menu.css'  //Wichtig immer CSS importieren
 
 // Bilder importieren
 import kontoErstellenIcon from './images/Konto_erstellen.png'
@@ -13,7 +13,7 @@ import kontoIcon from './images/Konto_menü.png'
 import spieleIcon from './images/Spiel_menü.png'
 import rankingIcon from './images/Info_menü.png'
 
-export default function Eva_Menu() {
+export default function Menu() {
   const navigate = useNavigate()
   const { spieleAktiv } = useAppContext()
 

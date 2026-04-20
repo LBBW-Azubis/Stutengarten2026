@@ -2,11 +2,11 @@ import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import { useAppContext } from './AppContext'
 
-import './3_Eva_AktienVerkaufen.css'  //Wichtig immer CSS importieren
+import './3_AktienVerkaufen.css'  //Wichtig immer CSS importieren
 
 import aktienIcon from './images/Bild1.png'
 
-export default function Eva_AktienVerkaufen() {
+export default function AktienVerkaufen() {
   const navigate = useNavigate()
   const { aktuellerNutzer, addTranAktion } = useAppContext()
 

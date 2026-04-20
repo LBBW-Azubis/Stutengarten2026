@@ -1,6 +1,6 @@
-import './3_Eva_Ranking.css'  //Wichtig immer CSS importieren
+import './3_Ranking.css'  //Wichtig immer CSS importieren
 
-export default function Eva_Ranking() {
+export default function Ranking() {
   // ============================================================
   // BACKEND-VARIABLEN
   //
