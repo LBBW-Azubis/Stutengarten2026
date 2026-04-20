@@ -101,7 +101,7 @@
 
 /* -- ZURUECK-BAR -- */
 .zurueck-bar {
-  height: clamp(30px, 4.5vh, 50px);
+  height: clamp(42px, 6vh, 68px);
   background: #fff;
   padding: 0 1.5vw;
   display: flex;
@@ -115,20 +115,27 @@
   background: #36C291;
   color: white;
   border: none;
-  padding: clamp(4px, 0.6vh, 8px) clamp(12px, 1.5vw, 24px);
-  font-size: clamp(0.75rem, 1.2vh, 1rem);
+  padding: clamp(8px, 1.2vh, 14px) clamp(18px, 2.2vw, 36px);
+  font-size: clamp(1rem, 1.8vh, 1.3rem);
   font-weight: bold;
-  border-radius: 4px;
+  border-radius: 6px;
   cursor: pointer;
 }
 
 .zurueck-btn:hover { background: #2aab7e; }
 
-.zurueck-pfeil {
-  height: clamp(24px, 3.5vh, 42px);
-  object-fit: contain;
+.logout-btn {
+  background: #D9534F;
+  color: white;
+  border: none;
+  padding: clamp(8px, 1.2vh, 14px) clamp(18px, 2.2vw, 36px);
+  font-size: clamp(1rem, 1.8vh, 1.3rem);
+  font-weight: bold;
+  border-radius: 6px;
   cursor: pointer;
 }
+
+.logout-btn:hover { background: #B8413D; }
 
 /* -- MAIN -- */
 main#app {
@@ -303,10 +310,11 @@ main#app {
 }
 
 /* Haupt-Menu */
-.seite-menu .menu-grid { column-gap: clamp(12px, 2.5vw, 50px); row-gap: clamp(8px, 1.5vh, 24px); }
-.seite-menu .kachel { gap: clamp(4px, 0.8vh, 12px); padding: clamp(4px, 0.5vh, 10px) 0.5vw; }
-.seite-menu .kachel-bild { width: clamp(70px, 9vw, 140px); height: clamp(70px, 9vw, 140px); }
-.seite-menu .kachel-label { font-size: clamp(0.85rem, 1.2vw, 1.3rem); }
+.seite-menu { display: flex; flex-direction: column; justify-content: center; }
+.seite-menu .menu-grid { column-gap: clamp(16px, 3vw, 60px); row-gap: clamp(16px, 3vh, 40px); margin: auto; }
+.seite-menu .kachel { gap: clamp(6px, 1vh, 16px); padding: clamp(6px, 0.8vh, 14px) 0.5vw; }
+.seite-menu .kachel-bild { width: clamp(90px, 11vw, 180px); height: clamp(90px, 11vw, 180px); }
+.seite-menu .kachel-label { font-size: clamp(1rem, 1.4vw, 1.5rem); }
 
 @media (max-width: 900px) {
   .menu-grid { grid-template-columns: repeat(2, 1fr); }

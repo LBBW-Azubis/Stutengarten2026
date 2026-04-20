@@ -29,7 +29,6 @@ import Eva_UnternehmenAuszahlen from './3_Eva_UnternehmenAuszahlen'
 // Bilder importieren
 import bwBankLogo from './images/BwBank_Logo.png'
 import suchenIcon from './images/Suchen.png'
-import zurueckPfeil from './images/Zurueck_Pfeil.png'
 
 
 function NoMatch() {
@@ -150,12 +149,7 @@ function ZurueckBar() {
   return (
     <div className="zurueck-bar">
       <button className="zurueck-btn" onClick={() => navigate('/mainsite')}>zur Startseite</button>
-      <img
-        src={zurueckPfeil}
-        alt="Zurueck"
-        className="zurueck-pfeil"
-        onClick={() => navigate(-1)}
-      />
+      <button className="logout-btn" onClick={() => navigate('/')}>Abmelden</button>
     </div>
   )
 }
