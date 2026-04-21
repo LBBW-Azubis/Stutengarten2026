@@ -1,7 +1,7 @@
 /* Unternehmen Auszahlen - viewport-relativ */
 
 .ua-seite { display: flex; flex-direction: column; align-items: center; width: 100%; flex: 1; }
-.ua-icon { font-size: clamp(3rem, 7vh, 4.5rem); line-height: 1; }
+.ua-icon { font-size: clamp(3rem, 7vh, 4.5rem); line-height: 1; width: clamp(110px, 16vh, 180px); height: clamp(110px, 16vh, 180px); background: linear-gradient(135deg, #f0f5fa 0%, #dfe9f2 100%); border: 5px solid #cdd7e3; border-radius: clamp(16px, 1.8vw, 26px); box-shadow: 0 4px 14px rgba(18,50,80,0.15); display: flex; align-items: center; justify-content: center; box-sizing: border-box; }
 .ua-titel { font-size: clamp(1.5rem, 3vh, 2.2rem); color: #123250; margin: clamp(6px, 0.8vh, 10px) 0 clamp(10px, 1.8vh, 22px) 0; }
 .ua-inhalt { display: flex; flex-direction: column; gap: clamp(10px, 1.5vh, 16px); width: 100%; max-width: clamp(550px, 60vw, 900px); }
 .ua-feld { display: flex; align-items: center; gap: clamp(10px, 1.2vw, 18px); }

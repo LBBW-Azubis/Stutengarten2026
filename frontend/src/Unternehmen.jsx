@@ -10,36 +10,56 @@ export default function Unternehmen() {
   // BACKEND-VARIABLEN
   //
   // EINGABEN (User tippt ein):
-  //   unternehmenName  (String) - z.B. "Baeckerei Mueller"
+  //   unternehmenName    (String) - z.B. "Baeckerei Mueller"
+  //   folderHandedOver   (String) - "0" (Nein) oder "1" (Ja)
   //
-  // AUTOMATISCH GESETZT:
-  //   kontostand       (int) - immer 0 beim Erstellen
-  //
-  // VOM BACKEND (nach "Erstellen" Button):
-  //   Unternehmen wird angelegt
+  // NACH "Erstellen":
+  //   POST http://192.168.1.10:5000/company
+  //   Body: { name: String, folder_handed_over: "0" | "1" }
+  //   (Company-ID wird vom Backend automatisch vergeben)
   // ============================================================
-  const [unternehmenName, setUnternehmenName] = useState('')   // String - User-Eingabe
+  const [unternehmenName, setUnternehmenName] = useState('')
+  const [folderHandedOver, setFolderHandedOver] = useState(null)  // null = noch nicht gewaehlt
   const [fehler, setFehler] = useState('')
   const [erstellt, setErstellt] = useState(false)
 
-  function erstellen() {
+  async function erstellen() {
     setFehler('')
     if (!unternehmenName.trim()) {
       setFehler('Bitte Unternehmenname eingeben.')
       return
     }
+    if (folderHandedOver === null) {
+      setFehler('Bitte Ordner-Uebergabe auswaehlen (Ja oder Nein).')
+      return
+    }
 
     // === BACKEND: Unternehmen erstellen ===
-    // API-Call: POST /unternehmen
-    // Body: { name: unternehmenName.trim() (String), kontostand: 0 (int) }
-    // Response: { success: boolean }
-    console.log('[Unternehmen] Erstellt:', {
-      name: unternehmenName.trim(),   // String
-      kontostand: 0,                   // int - immer 0
-    })
-    // === ENDE BACKEND ===
+    // POST http://192.168.1.10:5000/company
+    // Body: { name: String, folder_handed_over: "0" | "1" }
+    // (Savingsbook wird automatisch vom Backend angelegt)
+    const url = 'http://192.168.1.10:5000/company'
+    const body = { name: unternehmenName.trim(), folder_handed_over: folderHandedOver }
+    console.log('[Unternehmen] POST URL:', url)
+    console.log('[Unternehmen] POST Body:', JSON.stringify(body))
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json; charset=utf-8' },
+        body: JSON.stringify(body),
+      })
+      console.log('[Unternehmen] Response Status:', response.status)
 
-    setErstellt(true)
+      if (response.ok) {
+        setErstellt(true)
+      } else {
+        setFehler('Fehler beim Erstellen des Unternehmens.')
+      }
+    } catch (error) {
+      console.error('[Unternehmen] Fehler:', error)
+      setFehler('Verbindung zum Server fehlgeschlagen.')
+    }
+    // === ENDE BACKEND ===
   }
 
   return (
@@ -58,6 +78,28 @@ export default function Unternehmen() {
             onChange={e => { setUnternehmenName(e.target.value); setErstellt(false) }}
             onKeyDown={e => { if (e.key === 'Enter') erstellen() }}
           />
+        </div>
+
+        <div className="un-trennlinie"></div>
+
+        <div className="un-feld">
+          <label>Ordner uebergeben:</label>
+          <div className="un-toggle">
+            <button
+              type="button"
+              className={`un-toggle-btn un-toggle-ja${folderHandedOver === '1' ? ' un-toggle-aktiv' : ''}`}
+              onClick={() => { setFolderHandedOver('1'); setErstellt(false) }}
+            >
+              Ja
+            </button>
+            <button
+              type="button"
+              className={`un-toggle-btn un-toggle-nein${folderHandedOver === '0' ? ' un-toggle-aktiv' : ''}`}
+              onClick={() => { setFolderHandedOver('0'); setErstellt(false) }}
+            >
+              Nein
+            </button>
+          </div>
         </div>
 
         <div className="un-trennlinie"></div>

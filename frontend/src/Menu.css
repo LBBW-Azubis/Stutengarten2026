@@ -1,2 +1,61 @@
-/* Menu-Seite Styles – spezifisch fuer Menu */
-/* Hauptstyles sind in App.css (menu-grid, kachel, seite-menu, etc.) */
+/* Menu-Seite Styles - grosse Karten wie Aktien-Hub */
+
+.menu-v2-seite {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  flex: 1;
+}
+
+.menu-v2-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: clamp(14px, 2vw, 32px);
+  width: 100%;
+  max-width: clamp(800px, 92vw, 1600px);
+  margin: auto;
+}
+
+.menu-v2-karte {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(10px, 1.5vh, 20px);
+  padding: clamp(20px, 3vh, 44px) clamp(14px, 1.8vw, 28px);
+  min-height: clamp(160px, 22vh, 280px);
+  border: 5px solid #cdd7e3;
+  border-radius: 22px;
+  background: linear-gradient(135deg, #f0f5fa 0%, #dfe9f2 100%);
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+  box-shadow: 0 4px 14px rgba(18,50,80,0.12);
+  font-family: inherit;
+}
+
+.menu-v2-karte:hover {
+  transform: translateY(-5px);
+  border-color: #36C291;
+  background: linear-gradient(135deg, #eaf7ef 0%, #cfeedc 100%);
+  box-shadow: 0 12px 28px rgba(54,194,145,0.35);
+}
+
+.menu-v2-karte:active { transform: translateY(-2px) scale(0.98); }
+
+.menu-v2-emoji {
+  font-size: clamp(3rem, 7vh, 5.5rem);
+  line-height: 1;
+}
+
+.menu-v2-label {
+  font-size: clamp(1.1rem, 2.2vh, 1.65rem);
+  font-weight: bold;
+  color: #123250;
+  text-align: center;
+}
+
+@media (max-width: 900px) {
+  .menu-v2-grid { grid-template-columns: repeat(2, 1fr); }
+}

@@ -15,9 +15,11 @@ import KontoErstellen from './KontoErstellen'
 import Einzahlen from './Einzahlen'
 import Auszahlen from './Auszahlen'
 import Ueberweisung from './Ueberweisung'
+import Aktien from './Aktien'
 import AktienKaufen from './AktienKaufen'
 import AktienZaehler from './AktienZaehler'
 import AktienVerkaufen from './AktienVerkaufen'
+import AktienSammlung from './AktienSammlung'
 import Hacker from './Hacker'
 import Ranking from './Ranking'
 import Spiel from './Spiel'
@@ -63,9 +65,11 @@ function DevNavigator() {
         <option value="/mainsite/einzahlen">Einzahlen</option>
         <option value="/mainsite/auszahlen">Auszahlen</option>
         <option value="/mainsite/ueberweisung">Ueberweisung</option>
-        <option value="/mainsite/aktien">Aktien Kaufen</option>
+        <option value="/mainsite/aktien">Aktien Hub</option>
+        <option value="/mainsite/aktien/kaufen">Aktien Kaufen</option>
         <option value="/mainsite/aktien/zaehler">Aktien Zaehler</option>
         <option value="/mainsite/aktien/verkaufen">Aktien Verkaufen</option>
+        <option value="/mainsite/aktien/sammlung">Aktien Sammlung</option>
         <option value="/mainsite/hacker">Hacker</option>
         <option value="/mainsite/ranking">Ranking</option>
         <option value="/mainsite/spiel">Spiel</option>
@@ -210,9 +214,11 @@ function AppLayout() {
           <Route path="/mainsite/einzahlen" element={<Einzahlen />} />
           <Route path="/mainsite/auszahlen" element={<Auszahlen />} />
           <Route path="/mainsite/ueberweisung" element={<Ueberweisung />} />
-          <Route path="/mainsite/aktien" element={<AktienKaufen />} />
+          <Route path="/mainsite/aktien" element={<Aktien />} />
+          <Route path="/mainsite/aktien/kaufen" element={<AktienKaufen />} />
           <Route path="/mainsite/aktien/zaehler" element={<AktienZaehler />} />
           <Route path="/mainsite/aktien/verkaufen" element={<AktienVerkaufen />} />
+          <Route path="/mainsite/aktien/sammlung" element={<AktienSammlung />} />
           <Route path="/mainsite/hacker" element={<Hacker />} />
           <Route path="/mainsite/ranking" element={<Ranking />} />
           <Route path="/mainsite/spiel" element={<Spiel />} />

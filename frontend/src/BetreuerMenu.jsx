@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom'
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { useAppContext } from './AppContext'
 
 import './BetreuerMenu.css'  //Wichtig immer CSS importieren
@@ -12,31 +12,46 @@ export default function BetreuerMenu() {
   const navigate = useNavigate()
   const kundenInputRef = useRef(null)
   const unternehmenInputRef = useRef(null)
+  const [importStatus, setImportStatus] = useState(null)  // { typ: 'ok'|'err', text: string }
+
+  function zeigeImportMeldung(typ, text) {
+    setImportStatus({ typ, text })
+    setTimeout(() => setImportStatus(null), 5000)
+  }
 
   async function handleKundenImport(e) {
     const datei = e.target.files?.[0]
     if (!datei) return
 
     // === BACKEND: Kunden-Excel importieren ===
-    // POST http://192.168.1.10:5000/import_customers - Excel als multipart/form-data
+    // POST http://192.168.1.10:5000/customer/import - Excel als multipart/form-data
     try {
       const formData = new FormData()
       formData.append('file', datei)
 
-      const response = await fetch('http://192.168.1.10:5000/import_customers', {
+      const response = await fetch('http://192.168.1.10:5000/customer/import', {
         method: 'POST',
         body: formData,
       })
-      const data = await response.json()
+      const text = await response.text()
+      let data = null
+      try { data = JSON.parse(text) } catch { /* keine JSON */ }
+      console.log('[Import Kunden] Status:', response.status, 'Body:', data ?? text)
 
-      if (!response.ok) {
-        alert(data.error || 'Import fehlgeschlagen.')
+      if (response.ok) {
+        // Anzahl aus count-Feld oder aus Message-String extrahieren
+        const rawMsg = data?.message || text || ''
+        const match = rawMsg.match(/(\d+)/)
+        const anzahl = data?.count ?? (match ? match[1] : null)
+        zeigeImportMeldung('ok', anzahl !== null
+          ? `Excel erfolgreich hochgeladen mit ${anzahl} Kunden`
+          : 'Excel erfolgreich hochgeladen')
       } else {
-        alert('Kunden erfolgreich importiert!')
+        zeigeImportMeldung('err', 'Import fehlgeschlagen')
       }
     } catch (error) {
       console.error('[Import Kunden] Fehler:', error)
-      alert('Verbindung zum Server fehlgeschlagen.')
+      zeigeImportMeldung('err', 'Verbindung zum Server fehlgeschlagen')
     }
     // === ENDE BACKEND ===
 
@@ -48,25 +63,33 @@ export default function BetreuerMenu() {
     if (!datei) return
 
     // === BACKEND: Unternehmen-Excel importieren ===
-    // POST http://192.168.1.10:5000/import_companies - Excel als multipart/form-data
+    // POST http://192.168.1.10:5000/company/import - Excel als multipart/form-data
     try {
       const formData = new FormData()
       formData.append('file', datei)
 
-      const response = await fetch('http://192.168.1.10:5000/import_companies', {
+      const response = await fetch('http://192.168.1.10:5000/company/import', {
         method: 'POST',
         body: formData,
       })
-      const data = await response.json()
+      const text = await response.text()
+      let data = null
+      try { data = JSON.parse(text) } catch { /* keine JSON */ }
+      console.log('[Import Unternehmen] Status:', response.status, 'Body:', data ?? text)
 
-      if (!response.ok) {
-        alert(data.error || 'Import fehlgeschlagen.')
+      if (response.ok) {
+        const rawMsg = data?.message || text || ''
+        const match = rawMsg.match(/(\d+)/)
+        const anzahl = data?.count ?? (match ? match[1] : null)
+        zeigeImportMeldung('ok', anzahl !== null
+          ? `Excel erfolgreich hochgeladen mit ${anzahl} Unternehmen`
+          : 'Excel erfolgreich hochgeladen')
       } else {
-        alert('Unternehmen erfolgreich importiert!')
+        zeigeImportMeldung('err', 'Import fehlgeschlagen')
       }
     } catch (error) {
       console.error('[Import Unternehmen] Fehler:', error)
-      alert('Verbindung zum Server fehlgeschlagen.')
+      zeigeImportMeldung('err', 'Verbindung zum Server fehlgeschlagen')
     }
     // === ENDE BACKEND ===
 
@@ -80,7 +103,7 @@ export default function BetreuerMenu() {
     spieleAutoStart, setSpieleAutoStart,
   } = useAppContext()
 
-  const intervallOptionen = [0.166, 1, 2, 3, 5, 10, 15]
+  const intervallOptionen = [0.166, 30, 60, 90, 120, 180, 240]  // in Minuten: 10 Sek, 0,5 H, 1 H, 1,5 H, 2 H, 3 H, 4 H
 
   return (
     <div className="page betreuer-page">
@@ -119,7 +142,7 @@ export default function BetreuerMenu() {
                         className={`intervall-btn ${hackerIntervall === min ? 'ausgewaehlt' : ''}`}
                         onClick={() => setHackerIntervall(min)}
                       >
-                        {min < 1 ? '10 Sek' : `${min} Min`}
+                        {min < 1 ? '10 Sek' : `${(min / 60).toString().replace('.', ',')} H`}
                       </button>
                     ))}
                   </div>
@@ -176,25 +199,35 @@ export default function BetreuerMenu() {
         {/* Rechts: Aktionen */}
         <div className="betreuer-kacheln">
           <div className="betreuer-kacheln-titel">Aktionen</div>
-          <div className="kachel" onClick={() => navigate('/mainsite/unternehmen')}>
-            <div className="kachel-bild">
-              <span className="betreuer-kachel-emoji">🏢</span>
+
+          {importStatus && (
+            <div className={`import-status import-status-${importStatus.typ}`}>
+              {importStatus.text}
             </div>
-            <div className="kachel-label">Unternehmen erstellen</div>
-          </div>
-          <div className="kachel" onClick={() => navigate('/mainsite/unternehmen-einzahlen')}>
-            <div className="kachel-bild">
-              <span className="betreuer-kachel-emoji">📥</span>
+          )}
+
+          <div className="aktionen-grid">
+            <div className="kachel" onClick={() => navigate('/mainsite/unternehmen')}>
+              <div className="kachel-bild">
+                <span className="betreuer-kachel-emoji">🏢</span>
+              </div>
+              <div className="kachel-label">Unternehmen erstellen</div>
             </div>
-            <div className="kachel-label">Unternehmen einzahlen</div>
-          </div>
-          <div className="kachel" onClick={() => navigate('/mainsite/unternehmen-auszahlen')}>
-            <div className="kachel-bild">
-              <span className="betreuer-kachel-emoji">📤</span>
+
+            <div className="kachel" onClick={() => navigate('/mainsite/unternehmen-einzahlen')}>
+              <div className="kachel-bild">
+                <span className="betreuer-kachel-emoji">📥</span>
+              </div>
+              <div className="kachel-label">Unternehmen einzahlen</div>
             </div>
-            <div className="kachel-label">Unternehmen auszahlen</div>
-          </div>
-          <div className="import-reihe">
+
+            <div className="kachel" onClick={() => navigate('/mainsite/unternehmen-auszahlen')}>
+              <div className="kachel-bild">
+                <span className="betreuer-kachel-emoji">📤</span>
+              </div>
+              <div className="kachel-label">Unternehmen auszahlen</div>
+            </div>
+
             <div className="kachel" onClick={() => kundenInputRef.current?.click()}>
               <div className="kachel-bild import-bild">
                 <span className="betreuer-kachel-emoji">👤</span>
@@ -202,7 +235,7 @@ export default function BetreuerMenu() {
               </div>
               <div className="kachel-label">Import Kunden</div>
             </div>
-            <div className="import-trenner"></div>
+
             <div className="kachel" onClick={() => unternehmenInputRef.current?.click()}>
               <div className="kachel-bild import-bild">
                 <span className="betreuer-kachel-emoji">🏢</span>
@@ -210,7 +243,15 @@ export default function BetreuerMenu() {
               </div>
               <div className="kachel-label">Import Unternehmen</div>
             </div>
+
+            <div className="kachel" onClick={() => { /* TODO: Datenbank loeschen */ }}>
+              <div className="kachel-bild">
+                <span className="betreuer-kachel-emoji">🗑️</span>
+              </div>
+              <div className="kachel-label kachel-label-danger">Datenbank Loeschen</div>
+            </div>
           </div>
+
           <input
             ref={kundenInputRef}
             type="file"

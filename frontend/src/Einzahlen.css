@@ -10,4 +10,9 @@
 .ez-trennlinie { width: 100%; height: 2px; background: #dde5ee; margin: clamp(6px, 0.8vh, 10px) 0; }
 .ez-kontostand { background: #123250 !important; color: white; font-weight: bold; }
 
+/* Debug-Fenster */
+.ez-debug { margin-top: clamp(12px, 1.5vh, 20px); border: 2px solid #f0ad4e; border-radius: 8px; overflow: hidden; background: #fff8e1; }
+.ez-debug-titel { background: #f0ad4e; color: white; font-weight: bold; padding: clamp(8px, 1vh, 12px) clamp(12px, 1.5vw, 20px); font-size: clamp(0.9rem, 1.5vh, 1.1rem); font-family: monospace; }
+.ez-debug-pre { margin: 0; padding: clamp(10px, 1.4vh, 16px) clamp(12px, 1.5vw, 20px); font-family: 'Consolas', 'Monaco', monospace; font-size: clamp(0.8rem, 1.3vh, 1rem); color: #123250; white-space: pre-wrap; word-break: break-all; max-height: 400px; overflow-y: auto; }
+
 @media (max-width: 700px) { .ez-feld { flex-wrap: wrap; } .ez-feld label { min-width: auto; text-align: left; } }

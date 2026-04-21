@@ -3,8 +3,6 @@ import { useState } from 'react'
 
 import './KontoErstellen.css'  //Wichtig immer CSS importieren
 
-import loginIcon from './images/Login.png'
-
 export default function KontoErstellen() {
   const navigate = useNavigate()
 
@@ -72,7 +70,7 @@ export default function KontoErstellen() {
 
         navigate('/mainsite')
       } else {
-        setFehler(data.error || 'Fehler beim Anlegen des Kunden.')
+        setFehler('Fehler beim Anlegen des Kunden.')
       }
     } catch (error) {
       console.error('[KontoErstellen] Fehler:', error)
@@ -86,7 +84,7 @@ export default function KontoErstellen() {
     return (
       <div className="ke-seite">
         <div className="ke-card">
-          <img src={loginIcon} alt="Person" className="ke-icon" />
+          <div className="ke-icon">📝</div>
           <div className="ke-frage-text">Neuen Kunden erstellen?</div>
           <div className="ke-buttons">
             <button className="btn btn-gruen ke-btn" onClick={() => setSchritt(2)}>
@@ -105,7 +103,7 @@ export default function KontoErstellen() {
   return (
     <div className="ke-seite">
       <div className="ke-card ke-card-formular">
-        <img src={loginIcon} alt="Person" className="ke-icon" />
+        <div className="ke-icon">📝</div>
         <h2 className="ke-titel">Neuen Kunden anlegen</h2>
 
         <div className="ke-formular">

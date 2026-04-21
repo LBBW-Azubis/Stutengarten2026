@@ -58,7 +58,7 @@ export default function Ueberweisung() {
       const id = kontoVon.trim()
       const response = await fetch(`http://192.168.1.10:5000/customer/${id}`)
       const data = await response.json()
-      if (!response.ok) { setFehler(data.error || 'Absender nicht gefunden.'); return }
+      if (!response.ok) { setFehler('Absender nicht gefunden.'); return }
       setVonVorname(data.first_name)
       setVonNachname(data.last_name)
 
@@ -91,7 +91,7 @@ export default function Ueberweisung() {
       const id = kontoAn.trim()
       const response = await fetch(`http://192.168.1.10:5000/customer/${id}`)
       const data = await response.json()
-      if (!response.ok) { setFehler(data.error || 'Empfaenger nicht gefunden.'); return }
+      if (!response.ok) { setFehler('Empfaenger nicht gefunden.'); return }
       setAnVorname(data.first_name)
       setAnNachname(data.last_name)
 
@@ -141,7 +141,7 @@ export default function Ueberweisung() {
         setVonKontostandNeu(vonKontostand - b)
         setAnKontostandNeu(anKontostand + b)
       } else {
-        setFehler(data?.error || 'Fehler bei der Ueberweisung.')
+        setFehler('Fehler bei der Ueberweisung.')
       }
     } catch (error) {
       console.error('[Ueberweisung] Fehler:', error)

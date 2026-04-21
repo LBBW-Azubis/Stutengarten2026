@@ -51,7 +51,7 @@ export default function Auszahlen() {
       const response = await fetch(`http://192.168.1.10:5000/customer/${id}`)
       const data = await response.json()
       if (!response.ok) {
-        setFehler(data.error || 'Kunde nicht gefunden.')
+        setFehler('Kunde nicht gefunden.')
         return
       }
       setVorname(data.first_name)
@@ -109,7 +109,7 @@ export default function Auszahlen() {
         setKontostandNeu(data.balance || neuerStand)
         setKontostand(data.balance || neuerStand)
       } else {
-        setFehler(data.error || 'Fehler beim Auszahlen.')
+        setFehler('Fehler beim Auszahlen.')
       }
     } catch (error) {
       console.error('[Auszahlen] Fehler:', error)

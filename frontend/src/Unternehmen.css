@@ -1,7 +1,7 @@
 /* Unternehmen erstellen - viewport-relativ */
 
 .un-seite { display: flex; flex-direction: column; align-items: center; width: 100%; flex: 1; }
-.un-icon { font-size: clamp(3rem, 7vh, 5.5rem); line-height: 1; }
+.un-icon { font-size: clamp(3rem, 7vh, 5.5rem); line-height: 1; width: clamp(110px, 16vh, 180px); height: clamp(110px, 16vh, 180px); background: linear-gradient(135deg, #f0f5fa 0%, #dfe9f2 100%); border: 5px solid #cdd7e3; border-radius: clamp(16px, 1.8vw, 26px); box-shadow: 0 4px 14px rgba(18,50,80,0.15); display: flex; align-items: center; justify-content: center; box-sizing: border-box; }
 .un-titel { font-size: clamp(1.5rem, 3vh, 2.2rem); color: #123250; margin: clamp(6px, 0.8vh, 10px) 0 clamp(10px, 1.8vh, 22px) 0; }
 .un-inhalt { display: flex; flex-direction: column; gap: clamp(10px, 1.5vh, 16px); width: 100%; max-width: clamp(550px, 60vw, 900px); }
 .un-feld { display: flex; align-items: center; gap: clamp(10px, 1.2vw, 18px); }
@@ -14,5 +14,11 @@
 .un-msg-ok { background: #d5f5e3; color: #1e8449; }
 .un-buttons { display: flex; gap: clamp(12px, 1.8vw, 22px); justify-content: flex-end; margin-top: clamp(6px, 0.8vh, 10px); }
 .un-btn { min-width: clamp(130px, 14vw, 170px); padding: clamp(10px, 1.3vh, 16px) 0; font-size: clamp(1.05rem, 1.7vh, 1.2rem); text-align: center; }
+
+.un-toggle { display: flex; gap: 0; border-radius: 8px; overflow: hidden; border: 2px solid #123250; flex: 1; max-width: clamp(200px, 24vw, 340px); }
+.un-toggle-btn { flex: 1; padding: clamp(10px, 1.4vh, 16px) clamp(14px, 1.8vw, 24px); font-size: clamp(1rem, 1.7vh, 1.2rem); font-weight: bold; border: none; cursor: pointer; background: #e8e8f0; color: #123250; transition: background 0.15s ease, color 0.15s ease; }
+.un-toggle-ja.un-toggle-aktiv { background: #36C291; color: white; }
+.un-toggle-nein.un-toggle-aktiv { background: #d32f2f; color: white; }
+.un-toggle-btn:hover:not(.un-toggle-aktiv) { background: #d5dae4; }
 
 @media (max-width: 600px) { .un-feld { flex-direction: column; align-items: flex-start; gap: 4px; } .un-feld label { min-width: auto; text-align: left; } }

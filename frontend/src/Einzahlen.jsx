@@ -33,48 +33,63 @@ export default function Einzahlen() {
   const [nachname, setNachname] = useState('')         // String - vom Backend
   const [kontostand, setKontostand] = useState(0)      // int - vom Backend
   const [kontostandNeu, setKontostandNeu] = useState('') // int - vom Backend nach Einzahlung
+  const [debugInfo, setDebugInfo] = useState(null)     // Roh-Response zum Testen
   // === ENDE BACKEND-VARIABLEN ===
 
   async function laden() {
     setFehler('')
     setKundeGeladen(false)
+    setDebugInfo(null)
     if (!kontonummer.trim()) {
       setFehler('Bitte Kontonummer eingeben.')
       return
     }
 
     // === BACKEND: Kunde + Sparbuch laden ===
-    // 1) GET http://192.168.1.10:5000/customer/<stutengarten_id> - Kundendaten
-    // 2) GET http://192.168.1.10:5000/customer/<stutengarten_id>/savingsbook/balance - Kontostand
+    const id = kontonummer.trim()
+    const url1 = `http://192.168.1.10:5000/customer/${id}`
+    const url2 = `http://192.168.1.10:5000/customer/${id}/savingsbook`
+    const debug = { aktion: 'laden', schritt_1_url: url1 }
     try {
-      const id = kontonummer.trim()
+      // 1) Kunde laden
+      const response = await fetch(url1)
+      debug.schritt_1_status = response.status
+      const text1 = await response.text()
+      try { debug.schritt_1_data = JSON.parse(text1) }
+      catch { debug.schritt_1_data_raw = text1 }
 
-      // Kunde laden
-      const response = await fetch(`http://192.168.1.10:5000/customer/${id}`)
-      const data = await response.json()
       if (!response.ok) {
-        setFehler(data.error || 'Kunde nicht gefunden.')
+        setDebugInfo(debug)
+        setFehler('Kunde nicht gefunden.')
         return
       }
+      const data = debug.schritt_1_data
       setVorname(data.first_name)
       setNachname(data.last_name)
 
-      // Sparbuch/Kontostand laden
-      // GET http://192.168.1.10:5000/customer/<stutengarten_id>/savingsbook
-      // Response 200: [{ stutengarten_id: "...", balance: ... }]
-      const sbResponse = await fetch(`http://192.168.1.10:5000/customer/${id}/savingsbook`)
-      const sbData = await sbResponse.json()
+      // 2) Sparbuch/Kontostand laden
+      debug.schritt_2_url = url2
+      const sbResponse = await fetch(url2)
+      debug.schritt_2_status = sbResponse.status
+      const text2 = await sbResponse.text()
+      try { debug.schritt_2_data = JSON.parse(text2) }
+      catch { debug.schritt_2_data_raw = text2 }
+
+      const sbData = debug.schritt_2_data
       if (sbResponse.ok && Array.isArray(sbData) && sbData.length > 0) {
         setKontostand(sbData[0].balance || 0)
       } else {
         setKontostand(0)
       }
 
+      setDebugInfo(debug)
       setKontostandNeu('')
       setKundeGeladen(true)
       setBetrag('')
     } catch (error) {
       console.error('[Einzahlen] Fehler beim Laden:', error)
+      debug.error = String(error)
+      setDebugInfo(debug)
       setFehler('Verbindung zum Server fehlgeschlagen.')
     }
     // === ENDE BACKEND ===
@@ -89,35 +104,33 @@ export default function Einzahlen() {
     }
 
     // === BACKEND: Einzahlung senden ===
-    // API-Call: PATCH http://192.168.1.10:5000/customer/<stutengarten_id>/savingsbook/balance
-    // Body: { balance: String(aktuellerKontostand + betrag) }
-    // Response 200: { customer_id, first_name, last_name, balance, ... }
-    // Response 400: { error: "No new balance provided" }
-    // Response 500: { error: "..." }
     const neuerStand = kontostand + b
     const url = `http://192.168.1.10:5000/customer/${kontonummer.trim()}/savingsbook/balance`
-    const body = { balance: String(neuerStand) }  // Backend erwartet den neuen Gesamtkontostand
-    console.log('[Einzahlen] PATCH URL:', url)
-    console.log('[Einzahlen] PATCH Body:', JSON.stringify(body))
+    const body = { balance: String(neuerStand) }
+    const debug = { aktion: 'einzahlen', patch_url: url, patch_body: body }
     try {
       const response = await fetch(url, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json; charset=utf-8' },
         body: JSON.stringify(body),
       })
+      debug.patch_status = response.status
+      const text = await response.text()
+      try { debug.patch_data = JSON.parse(text) }
+      catch { debug.patch_data_raw = text }
 
-      const data = await response.json()
-      console.log('[Einzahlen] Response Status:', response.status)
-      console.log('[Einzahlen] Response Data:', data)
-
+      setDebugInfo(debug)
       if (response.ok) {
+        const data = debug.patch_data || {}
         setKontostandNeu(data.balance || neuerStand)
         setKontostand(data.balance || neuerStand)
       } else {
-        setFehler(data.error || 'Fehler beim Einzahlen.')
+        setFehler('Fehler beim Einzahlen.')
       }
     } catch (error) {
       console.error('[Einzahlen] Fehler:', error)
+      debug.error = String(error)
+      setDebugInfo(debug)
       setFehler('Verbindung zum Server fehlgeschlagen.')
     }
     // === ENDE BACKEND ===
@@ -197,6 +210,14 @@ export default function Einzahlen() {
           <span className="feld-input anzeige ez-kontostand-neu">{kontostandNeu !== '' ? `${kontostandNeu}` : ''}</span>
           {/* === ENDE === */}
         </div>
+
+        {/* DEBUG: Roh-Response vom Backend */}
+        {debugInfo && (
+          <div className="ez-debug">
+            <div className="ez-debug-titel">Debug — Roh-Response vom Backend</div>
+            <pre className="ez-debug-pre">{JSON.stringify(debugInfo, null, 2)}</pre>
+          </div>
+        )}
       </div>
     </div>
   )

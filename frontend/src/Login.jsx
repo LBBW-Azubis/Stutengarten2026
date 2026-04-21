@@ -4,9 +4,6 @@ import { useAppContext } from './AppContext'
 
 import './Login.css'  //Wichtig immer CSS importieren
 
-import loginIcon from './images/Login.png'
-import suchenIcon from './images/Suchen.png'
-
 export default function Login() {
   const navigate = useNavigate()
   const {
@@ -19,54 +16,39 @@ export default function Login() {
   const [passwort, setPasswort] = useState('')
   const [fehler, setFehler] = useState('')
 
-  function suchen() {
+  function anmelden() {
     setFehler('')
     if (!ausweis.trim() || !passwort) {
       setFehler('Bitte Ausweis-Nummer und Passwort eingeben.')
       return
     }
 
-    // Mitarbeiter setzen (fuer die Demo akzeptieren wir jede ID mit korrektem Passwort)
     setMitarbeiter({ id: ausweis.trim().toUpperCase() })
-
-    // Betreuer-Flag setzen wenn Passwort stimmt
     if (passwort === '1234') setBetreuerEingeloggt(true)
-
-    // Kein Kunde geladen - Mitarbeiter muss Kunden pro Transaktion laden
     setAktuellerNutzer(null)
-
-    // Hacker-Timer: Wenn autoStart aktiv, automatisch einschalten
-    if (hackerAutoStart) {
-      setHackerAktiv(true)
-    }
-
-    // Spiele: Wenn autoStart aktiv, automatisch einschalten
-    if (spieleAutoStart) {
-      setSpieleAktiv(true)
-    }
-
-    // Eingeloggt-Flag setzen (startet den Hacker-Timer im AppLayout)
+    if (hackerAutoStart) setHackerAktiv(true)
+    if (spieleAutoStart) setSpieleAktiv(true)
     setEingeloggt(true)
     navigate('/mainsite')
   }
 
   function handleKeyDown(e) {
-    if (e.key === 'Enter') suchen()
+    if (e.key === 'Enter') anmelden()
   }
 
   return (
-    <div className="page login-seite">
-      <div className="login-icon">
-        <img src={loginIcon} alt="Person" />
-      </div>
+    <div className="login-seite">
+      <div className="login-karte">
+        <div className="login-emoji">👤</div>
+        <h1 className="login-titel">Anmelden</h1>
 
-      <div className="login-felder">
-        <div className="feld-zeile">
-          <label>Ausweis Nummer:</label>
+        <div className="login-feld">
+          <label htmlFor="login-ausweis">Ausweis-Nummer</label>
           <input
+            id="login-ausweis"
             type="text"
-            className="feld-input"
-            placeholder="…."
+            className="login-input"
+            placeholder="z.B. AB12"
             maxLength="6"
             style={{ textTransform: 'uppercase' }}
             value={ausweis}
@@ -74,22 +56,23 @@ export default function Login() {
             onKeyDown={handleKeyDown}
           />
         </div>
-        <div className="feld-zeile">
-          <label>Passwort:</label>
+
+        <div className="login-feld">
+          <label htmlFor="login-passwort">Passwort</label>
           <input
+            id="login-passwort"
             type="password"
-            className="feld-input"
-            placeholder="…."
+            className="login-input"
+            placeholder="Passwort"
             value={passwort}
             onChange={e => setPasswort(e.target.value)}
             onKeyDown={handleKeyDown}
           />
-          <button className="such-btn" onClick={suchen}>
-            <img src={suchenIcon} alt="Suchen" style={{ width: 44, height: 44 }} />
-          </button>
         </div>
 
-        {fehler && <span className="fehler-text" style={{ display: 'block' }}>{fehler}</span>}
+        {fehler && <div className="login-fehler">{fehler}</div>}
+
+        <button className="login-btn" onClick={anmelden}>Anmelden</button>
       </div>
     </div>
   )

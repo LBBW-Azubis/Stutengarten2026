@@ -42,7 +42,7 @@ export default function AktienKaufen() {
       const id = kontonummer.trim()
       const response = await fetch(`http://192.168.1.10:5000/customer/${id}`)
       const data = await response.json()
-      if (!response.ok) { setFehler(data.error || 'Kunde nicht gefunden.'); return }
+      if (!response.ok) { setFehler('Kunde nicht gefunden.'); return }
       setVorname(data.first_name)
       setNachname(data.last_name)
 
@@ -63,7 +63,7 @@ export default function AktienKaufen() {
     setBetrag('')
   }
 
-  function kaufen() {
+  async function kaufen() {
     setFehler('')
     if (!aktienname.trim()) {
       setFehler('Bitte Aktienname eingeben.')
@@ -80,15 +80,33 @@ export default function AktienKaufen() {
     }
 
     // === BACKEND: Aktien kaufen ===
-    // TODO: API-Call einbauen
-    console.log('[Aktien] Kauf:', {
-      kontonummer: kontonummer.trim().toUpperCase(),  // String
-      aktienname: aktienname.trim(),                   // String
-      betrag: b,                                        // int
-    })
-    // === ENDE BACKEND ===
+    // API-Call: POST http://192.168.1.10:5000/customer/<stutengarten_id>/shares/buy
+    // Body: { share_name: String, amount: int }
+    const url = `http://192.168.1.10:5000/customer/${kontonummer.trim()}/shares/buy`
+    const body = { share_name: aktienname.trim(), amount: b }
+    console.log('[Aktien] POST URL:', url)
+    console.log('[Aktien] POST Body:', JSON.stringify(body))
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json; charset=utf-8' },
+        body: JSON.stringify(body),
+      })
 
-    navigate('/mainsite')
+      const data = await response.json()
+      console.log('[Aktien] Response Status:', response.status)
+      console.log('[Aktien] Response Data:', data)
+
+      if (response.ok) {
+        navigate('/mainsite')
+      } else {
+        setFehler('Fehler beim Aktienkauf.')
+      }
+    } catch (error) {
+      console.error('[Aktien] Fehler:', error)
+      setFehler('Verbindung zum Server fehlgeschlagen.')
+    }
+    // === ENDE BACKEND ===
   }
 
   function handleBetragChange(e) {

@@ -1,1 +1,4 @@
-/* AktienVerkaufen Styles */
+/* AktienVerkaufen Styles - viewport-relativ */
+
+.av-seite { display: flex; flex-direction: column; align-items: center; width: 100%; flex: 1; }
+.av-titel { font-size: clamp(1.8rem, 4vh, 2.8rem); color: #123250; margin: 0 0 clamp(16px, 2.5vh, 32px) 0; font-weight: bold; }

@@ -1,7 +1,7 @@
 /* Unternehmen Einzahlen - viewport-relativ */
 
 .ue-seite { display: flex; flex-direction: column; align-items: center; width: 100%; flex: 1; }
-.ue-icon { font-size: clamp(3rem, 7vh, 4.5rem); line-height: 1; }
+.ue-icon { font-size: clamp(3rem, 7vh, 4.5rem); line-height: 1; width: clamp(110px, 16vh, 180px); height: clamp(110px, 16vh, 180px); background: linear-gradient(135deg, #f0f5fa 0%, #dfe9f2 100%); border: 5px solid #cdd7e3; border-radius: clamp(16px, 1.8vw, 26px); box-shadow: 0 4px 14px rgba(18,50,80,0.15); display: flex; align-items: center; justify-content: center; box-sizing: border-box; }
 .ue-titel { font-size: clamp(1.5rem, 3vh, 2.2rem); color: #123250; margin: clamp(6px, 0.8vh, 10px) 0 clamp(10px, 1.8vh, 22px) 0; }
 .ue-inhalt { display: flex; flex-direction: column; gap: clamp(10px, 1.5vh, 16px); width: 100%; max-width: clamp(550px, 60vw, 900px); }
 .ue-feld { display: flex; align-items: center; gap: clamp(10px, 1.2vw, 18px); }
@@ -10,5 +10,10 @@
 .ue-action-btn { padding: clamp(8px, 1.2vh, 14px) clamp(20px, 2.4vw, 34px); font-size: clamp(1rem, 1.6vh, 1.15rem); white-space: nowrap; }
 .ue-trennlinie { width: 100%; height: 2px; background: #dde5ee; margin: clamp(6px, 0.8vh, 10px) 0; }
 .ue-kontostand-neu { background: #123250 !important; color: white; font-weight: bold; }
+
+/* Debug-Fenster */
+.ue-debug { margin-top: clamp(12px, 1.5vh, 20px); border: 2px solid #f0ad4e; border-radius: 8px; overflow: hidden; background: #fff8e1; }
+.ue-debug-titel { background: #f0ad4e; color: white; font-weight: bold; padding: clamp(8px, 1vh, 12px) clamp(12px, 1.5vw, 20px); font-size: clamp(0.9rem, 1.5vh, 1.1rem); font-family: monospace; }
+.ue-debug-pre { margin: 0; padding: clamp(10px, 1.4vh, 16px) clamp(12px, 1.5vw, 20px); font-family: 'Consolas', 'Monaco', monospace; font-size: clamp(0.8rem, 1.3vh, 1rem); color: #123250; white-space: pre-wrap; word-break: break-all; max-height: 400px; overflow-y: auto; }
 
 @media (max-width: 700px) { .ue-feld { flex-wrap: wrap; } .ue-feld label { min-width: auto; text-align: left; } }
