@@ -102,6 +102,15 @@ class CompanyImport:
             cursor.executemany(insert_share_query, shares_to_insert)
             shares_inserted = cursor.rowcount
 
+            # 4. Spabücher für diese Unternehmen erstellen (oder sicherstellen, dass sie existieren)
+            company_names = [row[0] for row in companies_to_insert]
+            if company_names:
+                format_strings = ','.join(['%s'] * len(company_names))
+                cursor.execute(f"SELECT id FROM unternehmen WHERE bezeichnung IN ({format_strings})", tuple(company_names))
+                company_ids = [(row[0],) for row in cursor.fetchall()]
+                if company_ids:
+                    cursor.executemany("INSERT IGNORE INTO unternehmenssparbuecher (unternehmen_fk, saldo) VALUES (%s, 0)", company_ids)
+
             conn.commit()
             print(f"Inserted {inserted_count} companies and {shares_inserted} shares.")
             return inserted_count

@@ -1,3 +1,105 @@
+# =================================================================
+# AI / Editor Tools (darf nicht ins Repo)
+# =================================================================
+.claude/
+.cursor/
+.aider*
+.continue/
+.github/copilot/
+
+
+# =================================================================
+# Node / Frontend
+# =================================================================
+node_modules/
+frontend/node_modules/
+frontend/dist/
+frontend/build/
+frontend/.vite/
+frontend/*.local
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+
+# =================================================================
+# Python / Backend
+# =================================================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg
+*.egg-info/
+dist/
+build/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.whl
+.installed.cfg
+MANIFEST
+
+
+# Virtual Environment
+venv/
+env/
+ENV/
+.venv/
+
+
+# Flask
+instance/
+.webassets-cache
+.env
+.env.*
+!.env.example
+.flaskenv
+
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+
+# =================================================================
+# IDE / Editor
+# =================================================================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+
+# =================================================================
+# Logs / Testing
+# =================================================================
+*.log
+logs/
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+
+# =================================================================
+# OS / Backups
+# =================================================================
+Thumbs.db
+.Trash-*
+*.bak
+*.backup
+
 # Python
 __pycache__/
 *.py[cod]

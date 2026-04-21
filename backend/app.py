@@ -12,6 +12,7 @@ from blueprints.health_bp import health_bp  # pylint: disable=import-error
 from blueprints.imports_bp import imports_bp  # pylint: disable=import-error
 from blueprints.customers_bp import customers_bp  # pylint: disable=import-error
 from blueprints.companies_bp import companies_bp  # pylint: disable=import-error
+from blueprints.settings_bp import settings_bp  # pylint: disable=import-error
 from db_connector import DbConnector
 
 # Prod Server
@@ -21,8 +22,11 @@ logger = logging.getLogger('waitress')
 app = Flask(__name__)
 CORS(app)
 
+import os
+
 config = configparser.ConfigParser()
-config.read("server.config")
+config_file_path = os.path.join(os.path.dirname(__file__), "server.config")
+config.read(config_file_path)
 
 #Fallback if config file is missing or incomplete
 server_config = config["server"] if "server" in config else {}
@@ -43,6 +47,7 @@ app.register_blueprint(health_bp)
 app.register_blueprint(imports_bp)
 app.register_blueprint(customers_bp)
 app.register_blueprint(companies_bp)
+app.register_blueprint(settings_bp)
 
 # Development server (debug=True) - nicht für Produktion geeignet
 #if __name__ == "__main__":

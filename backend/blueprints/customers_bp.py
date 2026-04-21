@@ -132,19 +132,6 @@ def get_savings_book_for_customer(stutengarten_id):
         return jsonify({"error": str(e)}), 404
 
 
-@customers_bp.route("/customer/<string:stutengarten_id>/savingsbook", methods=["POST"])
-def create_savings_book_for_customer(stutengarten_id):
-    """
-    Create a new savings book for a customer.
-    """
-    connector = current_app.config["DB_CONNECTOR"]
-    try:
-        new_book = CustomerSavingsBook.create_new(connector, stutengarten_id)
-        return jsonify(new_book), 201
-    except Exception as e:  # pylint: disable=broad-except
-        return jsonify({"error": str(e)}), 500
-
-
 @customers_bp.route("/customer/<string:stutengarten_id>/savingsbook/balance", methods=["PATCH"])
 def update_balance_for_customer(stutengarten_id):
     """
@@ -314,14 +301,14 @@ def get_share_by_name(share_name):
 @customers_bp.route("/customer/<string:stutengarten_id>/shares/buy", methods=["POST"])
 def buy_customer_share_new(stutengarten_id):
     """
-    Buy shares for a customer with FREE investment amount
+    Buy shares for a customer with FREE investment amount (using share_name)
     """
     connector = current_app.config["DB_CONNECTOR"]
     data = request.json
-    if not data or "share_id" not in data or "amount" not in data:
-        return jsonify({"error": "share_id and amount are required"}), 400
+    if not data or "share_name" not in data or "amount" not in data:
+        return jsonify({"error": "share_name and amount are required"}), 400
 
-    share_id, amount = data.get("share_id"), data.get("amount")
+    share_name, amount = data.get("share_name"), data.get("amount")
     try:
         amount = float(amount)
         if amount <= 0:
@@ -333,14 +320,15 @@ def buy_customer_share_new(stutengarten_id):
         customer = Customer.get_by_stutengarten_id(connector, stutengarten_id)
         customer_savings_book = customer.get_savings_book()
 
+        share = Share.get_by_name(connector, share_name)
+
         purchase = CustomerShares(
             db=connector,
-            share_id=share_id,
+            share_id=share.id,
             customer_stutengarten_id=stutengarten_id,
             invested_amount=amount,
             customer_savings_book=customer_savings_book
         )
-        share = Share.get_by_id(connector, share_id)
         return jsonify({
             "status": "success", "message": f"{amount} Stuggis invested in {share.name}!",
             "purchase_id": purchase.id, "share_name": share.name, "symbol": share.symbol,
@@ -369,8 +357,8 @@ def get_customer_shares_new(stutengarten_id):
         return jsonify({"error": f"Error: {str(e)}"}), 500
 
 
-@customers_bp.route("/customer/<string:stutengarten_id>/shares/<int:share_id>", methods=["PATCH"])
-def update_share_value_new(stutengarten_id, share_id):
+@customers_bp.route("/customer/<string:stutengarten_id>/shares/<string:share_name>", methods=["PATCH"])
+def update_share_value_new(stutengarten_id, share_name):
     """
     MANUAL: Updates share value after physical wheel of fortune
     """
@@ -381,9 +369,10 @@ def update_share_value_new(stutengarten_id, share_id):
 
     try:
         new_value = float(data["new_value"])
-        result = CustomerShares.update_share_value(connector, share_id, new_value, stutengarten_id)
+        share = Share.get_by_name(connector, share_name)
+        result = CustomerShares.update_share_value(connector, share.id, new_value, stutengarten_id)
         return jsonify({"status": "success", "message": "Share value updated", **result}), 200
-    except (CustomException, CustomerException) as e:
+    except (CustomException, CustomerException, ShareException) as e:
         return jsonify({"error": str(e)}), 404
     except ValueError:
         return jsonify({"error": "Invalid value"}), 400
@@ -391,10 +380,10 @@ def update_share_value_new(stutengarten_id, share_id):
         return jsonify({"error": f"Error: {str(e)}"}), 500
 
 
-@customers_bp.route("/customer/<string:stutengarten_id>/shares/<int:share_id>", methods=["DELETE"])
-def sell_customer_share_new(stutengarten_id, share_id):
+@customers_bp.route("/customer/<string:stutengarten_id>/shares/<string:share_name>", methods=["DELETE"])
+def sell_customer_share_new(stutengarten_id, share_name):
     """
-    Sells share at current value
+    Sells share at current value by share name
     """
     connector = current_app.config["DB_CONNECTOR"]
     try:
@@ -402,18 +391,29 @@ def sell_customer_share_new(stutengarten_id, share_id):
         customer_savings_book = customer.get_savings_book()
 
         all_shares = CustomerShares.get_all_customer_shares(connector, stutengarten_id)
-        share_to_sell = None
+        shares_to_sell = [s for s in all_shares if s.share_name == share_name]
 
-        for share in all_shares:
-            if share.id == share_id:
-                share_to_sell = share
-                break
-
-        if not share_to_sell:
+        if not shares_to_sell:
             return jsonify({"error": "Share not found"}), 404
 
-        result = share_to_sell.sell(customer_savings_book)
-        return jsonify(result), 200
+        total_invested = 0
+        total_sold = 0
+        total_profit = 0
+
+        for share_to_sell in shares_to_sell:
+            res = share_to_sell.sell(customer_savings_book)
+            total_invested += res["invested_amount"]
+            total_sold += res["sell_value"]
+            total_profit += res["profit"]
+
+        return jsonify({
+            "status": "success",
+            "share_name": share_name,
+            "invested_amount": total_invested,
+            "sell_value": total_sold,
+            "profit": total_profit,
+            "shares_sold": len(shares_to_sell)
+        }), 200
     except (CustomException, CustomerException) as e:
         return jsonify({"error": str(e)}), 404
     except Exception as e: #pylint: disable=broad-except
