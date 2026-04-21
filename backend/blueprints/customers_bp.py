@@ -132,19 +132,6 @@ def get_savings_book_for_customer(stutengarten_id):
         return jsonify({"error": str(e)}), 404
 
 
-@customers_bp.route("/customer/<string:stutengarten_id>/savingsbook", methods=["POST"])
-def create_savings_book_for_customer(stutengarten_id):
-    """
-    Create a new savings book for a customer.
-    """
-    connector = current_app.config["DB_CONNECTOR"]
-    try:
-        new_book = CustomerSavingsBook.create_new(connector, stutengarten_id)
-        return jsonify(new_book), 201
-    except Exception as e:  # pylint: disable=broad-except
-        return jsonify({"error": str(e)}), 500
-
-
 @customers_bp.route("/customer/<string:stutengarten_id>/savingsbook/balance", methods=["PATCH"])
 def update_balance_for_customer(stutengarten_id):
     """

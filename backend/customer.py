@@ -39,6 +39,13 @@ class Customer:
                 self.stutengarten_id = stutengarten_id
                 self.first_name = first_name
                 self.last_name = last_name
+                
+                # Automatically create savings book
+                cursor.execute(
+                    "INSERT INTO kundensparbuecher (kunden_fk, saldo) VALUES (%s, 0)",
+                    (stutengarten_id,)
+                )
+                
                 conn.commit()
             except Exception as err:
                 raise CustomException(f"Error creating customer: {err}") from err

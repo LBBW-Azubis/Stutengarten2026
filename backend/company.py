@@ -38,6 +38,13 @@ class Company:
                 self.id = cursor.lastrowid
                 self.name = name
                 self.folder_handed_over = folder_handed_over
+                
+                # Automatically create company savings book
+                cursor.execute(
+                    "INSERT INTO unternehmenssparbuecher (unternehmen_fk, saldo) VALUES (%s, 0)",
+                    (self.id,)
+                )
+                
                 conn.commit()
             except Exception as err:
                 raise CustomCompanyException(f"Error creating company: {err}") from err

@@ -149,22 +149,6 @@ def get_savings_book_for_company(company_name):
         return jsonify({"error": str(err)}), 500
 
 
-@companies_bp.route("/company/<string:company_name>/savingsbook", methods=["POST"])
-def create_savings_book_for_company(company_name):
-    """
-    Create a new savings book for a company identified by name.
-    """
-    connector = current_app.config["DB_CONNECTOR"]
-    try:
-        company = _load_company(connector, company_name)
-        new_book = CompanySavingsBook.create_new(connector, company.id)
-        return jsonify(new_book), 201
-    except CompanyException as err:
-        return jsonify({"error": str(err)}), 404
-    except Exception as err:  # pylint: disable=broad-except
-        return jsonify({"error": str(err)}), 500
-
-
 @companies_bp.route("/company/<string:company_name>/savingsbook/balance", methods=["PATCH"])
 def update_balance_for_company(company_name):
     """

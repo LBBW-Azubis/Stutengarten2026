@@ -77,6 +77,11 @@ class CustomerImport:
             # 2. Bulk Insert ausführen (Ein einziger Netzwerk-Roundtrip!)
             if data_to_insert:
                 cursor.executemany(insert_query, data_to_insert)
+                
+                # Directly create saving books for the imported customers
+                sparbuecher_data = [(row[0],) for row in data_to_insert]
+                cursor.executemany("INSERT IGNORE INTO kundensparbuecher (kunden_fk, saldo) VALUES (%s, 0)", sparbuecher_data)
+                
                 conn.commit()
                 # rowcount gibt bei executemany die Anzahl der eingefügten Zeilen zurück
                 return cursor.rowcount
