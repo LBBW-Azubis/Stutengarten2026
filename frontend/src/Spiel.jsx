@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 
-import './3_Spiel.css'
+import './Spiel.css'
 
 const LEVELS = [
   { rows: 4, cols: 4, start: [0, 0], ziel: [3, 3], walls: [], max: 6 },

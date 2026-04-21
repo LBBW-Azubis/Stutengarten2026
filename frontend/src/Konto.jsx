@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 
-import './3_Konto.css'  //Wichtig immer CSS importieren
+import './Konto.css'  //Wichtig immer CSS importieren
 
 import kontoIcon from './images/Login.png'
 

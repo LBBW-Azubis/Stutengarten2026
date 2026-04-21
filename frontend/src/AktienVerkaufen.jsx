@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import { useAppContext } from './AppContext'
 
-import './3_AktienVerkaufen.css'  //Wichtig immer CSS importieren
+import './AktienVerkaufen.css'  //Wichtig immer CSS importieren
 
 import aktienIcon from './images/Bild1.png'
 

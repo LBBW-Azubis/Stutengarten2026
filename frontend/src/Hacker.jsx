@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 
-import './3_Hacker.css'  //Wichtig immer CSS importieren
+import './Hacker.css'  //Wichtig immer CSS importieren
 
 import hackerIcon from './images/Hacker_Bidl.png'
 

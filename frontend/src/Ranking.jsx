@@ -1,4 +1,4 @@
-import './3_Ranking.css'  //Wichtig immer CSS importieren
+import './Ranking.css'  //Wichtig immer CSS importieren
 
 export default function Ranking() {
   // ============================================================

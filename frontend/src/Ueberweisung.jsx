@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 
-import './3_Ueberweisung.css'  //Wichtig immer CSS importieren
+import './Ueberweisung.css'  //Wichtig immer CSS importieren
 
 export default function Ueberweisung() {
   const navigate = useNavigate()

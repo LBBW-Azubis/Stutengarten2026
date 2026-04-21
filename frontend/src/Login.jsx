@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import { useAppContext } from './AppContext'
 
-import './1_Login.css'  //Wichtig immer CSS importieren
+import './Login.css'  //Wichtig immer CSS importieren
 
 import loginIcon from './images/Login.png'
 import suchenIcon from './images/Suchen.png'

@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom'
 import { useRef } from 'react'
 import { useAppContext } from './AppContext'
 
-import './3_BetreuerMenu.css'  //Wichtig immer CSS importieren
+import './BetreuerMenu.css'  //Wichtig immer CSS importieren
 
 import hackerIcon from './images/Hacker_Bidl.png'
 import spieleIcon from './images/Spiel_menü.png'

@@ -1,4 +1,4 @@
-import './3_Tschuess.css'  //Wichtig immer CSS importieren
+import './Tschuess.css'  //Wichtig immer CSS importieren
 
 import bwBankLogo from './images/BwBank_Logo.png'
 

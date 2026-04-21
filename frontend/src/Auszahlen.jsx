@@ -1,11 +1,9 @@
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 
-import './3_Einzahlen.css'  //Wichtig immer CSS importieren
+import './Auszahlen.css'  //Wichtig immer CSS importieren
 
-import einzahlenIcon from './images/einzahlen.png'
-
-export default function Einzahlen() {
+export default function Auszahlen() {
   const navigate = useNavigate()
 
   // ============================================================
@@ -20,8 +18,8 @@ export default function Einzahlen() {
   //   nachname     (String) - z.B. "Mustermann"
   //   kontostand   (int)    - z.B. 150
   //
-  // VOM BACKEND GELADEN (nach "Einzahlen" Button):
-  //   kontostandNeu (int|String) - z.B. 200 - neuer Kontostand nach Einzahlung
+  // VOM BACKEND GELADEN (nach "Auszahlen" Button):
+  //   kontostandNeu (int|String) - z.B. 100 - neuer Kontostand nach Auszahlung
   // ============================================================
   const [kontonummer, setKontonummer] = useState('')   // String - User-Eingabe
   const [betrag, setBetrag] = useState('')             // String (nur Ziffern) - User-Eingabe
@@ -32,7 +30,7 @@ export default function Einzahlen() {
   const [vorname, setVorname] = useState('')           // String - vom Backend
   const [nachname, setNachname] = useState('')         // String - vom Backend
   const [kontostand, setKontostand] = useState(0)      // int - vom Backend
-  const [kontostandNeu, setKontostandNeu] = useState('') // int - vom Backend nach Einzahlung
+  const [kontostandNeu, setKontostandNeu] = useState('') // int - vom Backend nach Auszahlung
   // === ENDE BACKEND-VARIABLEN ===
 
   async function laden() {
@@ -74,50 +72,47 @@ export default function Einzahlen() {
       setKundeGeladen(true)
       setBetrag('')
     } catch (error) {
-      console.error('[Einzahlen] Fehler beim Laden:', error)
+      console.error('[Auszahlen] Fehler beim Laden:', error)
       setFehler('Verbindung zum Server fehlgeschlagen.')
     }
     // === ENDE BACKEND ===
   }
 
-  async function einzahlen() {
+  async function auszahlen() {
     setFehler('')
     const b = parseInt(betrag) || 0
     if (b <= 0) {
       setFehler('Bitte einen gueltigen Betrag eingeben.')
       return
     }
+    if (b > kontostand) {
+      setFehler('Nicht genug Guthaben!')
+      return
+    }
 
-    // === BACKEND: Einzahlung senden ===
+    // === BACKEND: Auszahlung senden ===
     // API-Call: PATCH http://192.168.1.10:5000/customer/<stutengarten_id>/savingsbook/balance
-    // Body: { balance: String(aktuellerKontostand + betrag) }
-    // Response 200: { customer_id, first_name, last_name, balance, ... }
-    // Response 400: { error: "No new balance provided" }
-    // Response 500: { error: "..." }
-    const neuerStand = kontostand + b
-    const url = `http://192.168.1.10:5000/customer/${kontonummer.trim()}/savingsbook/balance`
-    const body = { balance: String(neuerStand) }  // Backend erwartet den neuen Gesamtkontostand
-    console.log('[Einzahlen] PATCH URL:', url)
-    console.log('[Einzahlen] PATCH Body:', JSON.stringify(body))
+    // Body: { balance: "-4" } - Backend erwartet Minus-Vorzeichen fuer Auszahlung
+    const neuerStand = kontostand - b
     try {
-      const response = await fetch(url, {
+      const response = await fetch(`http://192.168.1.10:5000/customer/${kontonummer.trim()}/savingsbook/balance`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json; charset=utf-8' },
-        body: JSON.stringify(body),
+        body: JSON.stringify({
+          balance: String(neuerStand),  // Backend erwartet den neuen Gesamtkontostand
+        }),
       })
 
       const data = await response.json()
-      console.log('[Einzahlen] Response Status:', response.status)
-      console.log('[Einzahlen] Response Data:', data)
 
       if (response.ok) {
         setKontostandNeu(data.balance || neuerStand)
         setKontostand(data.balance || neuerStand)
       } else {
-        setFehler(data.error || 'Fehler beim Einzahlen.')
+        setFehler(data.error || 'Fehler beim Auszahlen.')
       }
     } catch (error) {
-      console.error('[Einzahlen] Fehler:', error)
+      console.error('[Auszahlen] Fehler:', error)
       setFehler('Verbindung zum Server fehlgeschlagen.')
     }
     // === ENDE BACKEND ===
@@ -133,12 +128,12 @@ export default function Einzahlen() {
   }
 
   return (
-    <div className="ez-seite">
-      <h2 className="ez-titel">Einzahlen</h2>
+    <div className="az-seite">
+      <h2 className="az-titel">Auszahlen</h2>
 
-      <div className="ez-inhalt">
+      <div className="az-inhalt">
         {/* Kontonummer */}
-        <div className="ez-feld">
+        <div className="az-feld">
           <label>Kontonummer:</label>
           <input
             type="text"
@@ -150,29 +145,29 @@ export default function Einzahlen() {
             onChange={e => { setKontonummer(e.target.value); setKundeGeladen(false); setKontostandNeu('') }}
             onKeyDown={e => { if (e.key === 'Enter') laden() }}
           />
-          <button className="btn btn-dunkel ez-action-btn" onClick={laden}>Laden</button>
+          <button className="btn btn-dunkel az-action-btn" onClick={laden}>Laden</button>
         </div>
 
-        <div className="ez-trennlinie"></div>
+        <div className="az-trennlinie"></div>
 
         {/* Kundendaten */}
-        <div className="ez-feld">
+        <div className="az-feld">
           <label>Vorname:</label>
           <span className="feld-input anzeige">{kundeGeladen ? vorname : ''}</span>
         </div>
-        <div className="ez-feld">
+        <div className="az-feld">
           <label>Nachname:</label>
           <span className="feld-input anzeige">{kundeGeladen ? nachname : ''}</span>
         </div>
-        <div className="ez-feld">
+        <div className="az-feld">
           <label>Kontostand:</label>
           <span className="feld-input anzeige">{kundeGeladen ? `${kontostand}` : ''}</span>
         </div>
 
-        <div className="ez-trennlinie"></div>
+        <div className="az-trennlinie"></div>
 
-        {/* Betrag + Einzahlen */}
-        <div className="ez-feld">
+        {/* Betrag + Auszahlen */}
+        <div className="az-feld">
           <label>Betrag:</label>
           <input
             type="text"
@@ -181,21 +176,21 @@ export default function Einzahlen() {
             placeholder="Betrag eingeben"
             value={betrag}
             onChange={handleBetragChange}
-            onKeyDown={e => { if (e.key === 'Enter') einzahlen() }}
+            onKeyDown={e => { if (e.key === 'Enter') auszahlen() }}
           />
-          <button className="btn btn-dunkel ez-action-btn" onClick={einzahlen}>Einzahlen</button>
+          <button className="btn btn-dunkel az-action-btn" onClick={auszahlen}>Auszahlen</button>
         </div>
 
         {fehler && <span className="fehler-text" style={{ display: 'block', textAlign: 'center' }}>{fehler}</span>}
 
-        <div className="ez-trennlinie"></div>
+        <div className="az-trennlinie"></div>
 
         {/* Kontostand Neu */}
-        <div className="ez-feld">
+        <div className="az-feld">
           <label>Kontostand Neu:</label>
-          {/* === HIER SPAETER: Neuen Kontostand vom Backend laden === */}
-          <span className="feld-input anzeige ez-kontostand-neu">{kontostandNeu !== '' ? `${kontostandNeu}` : ''}</span>
-          {/* === ENDE === */}
+          {/* === BACKEND: Neuen Kontostand vom Backend laden nach Auszahlung === */}
+          <span className="feld-input anzeige az-kontostand-neu">{kontostandNeu !== '' ? `${kontostandNeu}` : ''}</span>
+          {/* === ENDE BACKEND === */}
         </div>
       </div>
     </div>

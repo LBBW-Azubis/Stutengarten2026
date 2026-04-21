@@ -1,4 +1,4 @@
-import './3_Info.css'  //Wichtig immer CSS importieren
+import './Info.css'  //Wichtig immer CSS importieren
 
 import infoIcon from './images/Info_menü.png'
 

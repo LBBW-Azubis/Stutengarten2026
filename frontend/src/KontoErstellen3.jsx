@@ -1,53 +1,46 @@
 import { useNavigate } from 'react-router-dom'
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { useAppContext } from './AppContext'
 
-import './3_KontoErstellen1.css'  //Wichtig immer CSS importieren
+import './KontoErstellen3.css'  //Wichtig immer CSS importieren
 
 import loginIcon from './images/Login.png'
 
-export default function KontoErstellen1() {
+export default function KontoErstellen3() {
   const navigate = useNavigate()
-  const { setAktuellerNutzer } = useAppContext()
+  const { genId, nutzer, setNutzer, setAktuellerNutzer } = useAppContext()
 
-  const [kontonummer, setKontonummer] = useState('')
+  const neueId = useMemo(() => genId(), [])
   const [vorname, setVorname] = useState('')
   const [nachname, setNachname] = useState('')
   const [fehler, setFehler] = useState('')
 
   function fertig() {
-    const id = kontonummer.trim().toUpperCase()
     const vn = vorname.trim()
     const nn = nachname.trim()
-    setFehler('')
-
-    if (!id || !vn || !nn) {
-      setFehler('Bitte Kontonummer, Vor- und Nachname ausfuellen.')
+    if (!vn || !nn) {
+      setFehler('Bitte Vor- und Nachname eingeben.')
       return
     }
-
-    setAktuellerNutzer({ id, vorname: vn, nachname: nn, kontostand: 0, aktien: [], transaktionen: 0, beruf: null })
+    const neu = {
+      id: neueId, vorname: vn, nachname: nn, kontostand: 0,
+      aktien: [], transaktionen: 0, sparbuch: 0, beruf: null
+    }
+    setNutzer([...nutzer, neu])
+    setAktuellerNutzer(neu)
     navigate('/mainsite/konto')
   }
 
   return (
-    <div className="page konto-erstellen-seite">
+    <div className="page">
       <div className="seite-layout">
         <div className="seite-icon">
           <img src={loginIcon} alt="Person" />
         </div>
         <div className="seite-felder">
           <div className="feld-zeile">
-            <label>Kontonummer:</label>
-            <input
-              type="text"
-              className="feld-input"
-              placeholder="z.B. AB1234"
-              maxLength="16"
-              style={{ textTransform: 'uppercase' }}
-              value={kontonummer}
-              onChange={e => setKontonummer(e.target.value)}
-            />
+            <label>Id:</label>
+            <span className="feld-input anzeige">{neueId}</span>
           </div>
           <div className="feld-zeile">
             <label>Vorname:</label>

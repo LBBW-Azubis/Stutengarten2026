@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import { useAppContext } from './AppContext'
 
-import './3_BerufEinzahlen.css'  //Wichtig immer CSS importieren
+import './BerufEinzahlen.css'  //Wichtig immer CSS importieren
 
 import loginIcon from './images/Login.png'
 

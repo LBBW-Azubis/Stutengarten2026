@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 
-import './3_Unternehmen.css'  //Wichtig immer CSS importieren
+import './Unternehmen.css'  //Wichtig immer CSS importieren
 
 export default function Unternehmen() {
   const navigate = useNavigate()

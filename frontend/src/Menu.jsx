@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import { useAppContext } from './AppContext'
 
-import './2_Menu.css'  //Wichtig immer CSS importieren
+import './Menu.css'  //Wichtig immer CSS importieren
 
 // Bilder importieren
 import kontoErstellenIcon from './images/Konto_erstellen.png'
