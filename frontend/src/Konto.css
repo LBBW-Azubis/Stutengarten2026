@@ -1,0 +1,14 @@
+/* Konto Styles - viewport-relativ */
+
+.ko-seite { display: flex; flex-direction: column; align-items: center; width: 100%; flex: 1; }
+.ko-icon { width: clamp(110px, 16vh, 180px); height: clamp(110px, 16vh, 180px); object-fit: contain; background: linear-gradient(135deg, #f0f5fa 0%, #dfe9f2 100%); border: 5px solid #cdd7e3; border-radius: clamp(16px, 1.8vw, 26px); box-shadow: 0 4px 14px rgba(18,50,80,0.15); padding: clamp(14px, 2vh, 24px); box-sizing: border-box; }
+.ko-titel { font-size: clamp(1.5rem, 3vh, 2.2rem); color: #123250; margin: clamp(6px, 0.8vh, 10px) 0 clamp(10px, 1.8vh, 22px) 0; font-weight: bold; }
+.ko-inhalt { display: flex; flex-direction: column; gap: clamp(10px, 1.5vh, 16px); width: 100%; max-width: clamp(550px, 60vw, 900px); }
+.ko-feld { display: flex; align-items: center; gap: clamp(10px, 1.2vw, 18px); }
+.ko-feld label { font-size: clamp(1rem, 1.8vh, 1.35rem); font-weight: bold; color: #123250; min-width: clamp(150px, 16vw, 220px); text-align: right; white-space: nowrap; }
+.ko-feld .feld-input { flex: 1; min-width: 0; padding: clamp(8px, 1.2vh, 14px) clamp(12px, 1.2vw, 20px); font-size: clamp(1rem, 1.6vh, 1.2rem); }
+.ko-action-btn { padding: clamp(8px, 1.2vh, 14px) clamp(20px, 2.4vw, 34px); font-size: clamp(1rem, 1.6vh, 1.15rem); white-space: nowrap; }
+.ko-trennlinie { width: 100%; height: 2px; background: #dde5ee; margin: clamp(6px, 0.8vh, 10px) 0; }
+.ko-kontostand { background: #123250 !important; color: white; font-weight: bold; }
+
+@media (max-width: 700px) { .ko-feld { flex-wrap: wrap; } .ko-feld label { min-width: auto; text-align: left; } }

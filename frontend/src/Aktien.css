@@ -1,0 +1,55 @@
+/* Aktien-Hub Styles - viewport-relativ */
+
+.aktien-seite { display: flex; flex-direction: column; align-items: center; width: 100%; flex: 1; }
+.aktien-titel { font-size: clamp(1.8rem, 4vh, 2.8rem); color: #123250; margin: 0 0 clamp(20px, 3vh, 40px) 0; font-weight: bold; }
+
+.aktien-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: clamp(20px, 2.5vw, 44px);
+  width: 100%;
+  max-width: clamp(800px, 90vw, 1600px);
+  flex: 1;
+}
+
+.aktien-karte {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(14px, 2vh, 28px);
+  padding: clamp(32px, 5vh, 72px) clamp(20px, 2.5vw, 40px);
+  min-height: clamp(240px, 34vh, 380px);
+  border: 5px solid #cdd7e3;
+  border-radius: 24px;
+  background: linear-gradient(135deg, #f0f5fa 0%, #dfe9f2 100%);
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+  box-shadow: 0 4px 14px rgba(18,50,80,0.12);
+  font-family: inherit;
+}
+
+.aktien-karte:hover {
+  transform: translateY(-6px);
+  border-color: #36C291;
+  background: linear-gradient(135deg, #eaf7ef 0%, #cfeedc 100%);
+  box-shadow: 0 14px 32px rgba(54,194,145,0.35);
+}
+
+.aktien-karte:active { transform: translateY(-2px) scale(0.98); }
+
+.aktien-emoji {
+  font-size: clamp(4.5rem, 10vh, 7.5rem);
+  line-height: 1;
+}
+
+.aktien-label {
+  font-size: clamp(1.4rem, 3vh, 2.2rem);
+  font-weight: bold;
+  color: #123250;
+  text-align: center;
+}
+
+@media (max-width: 700px) {
+  .aktien-grid { grid-template-columns: 1fr; }
+}

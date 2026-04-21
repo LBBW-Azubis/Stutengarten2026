@@ -1,0 +1,18 @@
+/* Einzahlen Styles - viewport-relativ */
+
+.ez-seite { display: flex; flex-direction: column; align-items: center; width: 100%; flex: 1; }
+.ez-titel { font-size: clamp(1.5rem, 3vh, 2.2rem); color: #123250; margin: 0 0 clamp(10px, 1.8vh, 22px) 0; font-weight: bold; }
+.ez-inhalt { display: flex; flex-direction: column; gap: clamp(10px, 1.5vh, 16px); width: 100%; max-width: clamp(550px, 60vw, 900px); }
+.ez-feld { display: flex; align-items: center; gap: clamp(10px, 1.2vw, 18px); }
+.ez-feld label { font-size: clamp(1rem, 1.8vh, 1.35rem); font-weight: bold; color: #123250; min-width: clamp(150px, 16vw, 220px); text-align: right; white-space: nowrap; }
+.ez-feld .feld-input { flex: 1; min-width: 0; padding: clamp(8px, 1.2vh, 14px) clamp(12px, 1.2vw, 20px); font-size: clamp(1rem, 1.6vh, 1.2rem); }
+.ez-action-btn { padding: clamp(8px, 1.2vh, 14px) clamp(20px, 2.4vw, 34px); font-size: clamp(1rem, 1.6vh, 1.15rem); white-space: nowrap; }
+.ez-trennlinie { width: 100%; height: 2px; background: #dde5ee; margin: clamp(6px, 0.8vh, 10px) 0; }
+.ez-kontostand { background: #123250 !important; color: white; font-weight: bold; }
+
+/* Debug-Fenster */
+.ez-debug { margin-top: clamp(12px, 1.5vh, 20px); border: 2px solid #f0ad4e; border-radius: 8px; overflow: hidden; background: #fff8e1; }
+.ez-debug-titel { background: #f0ad4e; color: white; font-weight: bold; padding: clamp(8px, 1vh, 12px) clamp(12px, 1.5vw, 20px); font-size: clamp(0.9rem, 1.5vh, 1.1rem); font-family: monospace; }
+.ez-debug-pre { margin: 0; padding: clamp(10px, 1.4vh, 16px) clamp(12px, 1.5vw, 20px); font-family: 'Consolas', 'Monaco', monospace; font-size: clamp(0.8rem, 1.3vh, 1rem); color: #123250; white-space: pre-wrap; word-break: break-all; max-height: 400px; overflow-y: auto; }
+
+@media (max-width: 700px) { .ez-feld { flex-wrap: wrap; } .ez-feld label { min-width: auto; text-align: left; } }

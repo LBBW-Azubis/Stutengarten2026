@@ -1,0 +1,168 @@
+/* AktienZaehler Styles - viewport-relativ */
+
+.az-seite { display: flex; flex-direction: column; align-items: center; width: 100%; flex: 1; }
+.az-titel { font-size: clamp(1.8rem, 4vh, 2.8rem); color: #123250; margin: 0 0 clamp(16px, 2.5vh, 32px) 0; font-weight: bold; }
+.az-inhalt { display: flex; flex-direction: column; gap: clamp(14px, 2.2vh, 26px); width: 100%; max-width: clamp(700px, 85vw, 1400px); }
+
+.az-feld { display: flex; align-items: center; gap: clamp(14px, 1.6vw, 24px); }
+.az-feld label { font-size: clamp(1.15rem, 2.2vh, 1.6rem); font-weight: bold; color: #123250; min-width: clamp(180px, 18vw, 280px); text-align: right; white-space: nowrap; }
+.az-feld .feld-input { flex: 1; min-width: 0; padding: clamp(12px, 1.8vh, 20px) clamp(16px, 1.6vw, 26px); font-size: clamp(1.1rem, 2vh, 1.5rem); }
+
+.az-trennlinie { width: 100%; height: 2px; background: #dde5ee; margin: clamp(10px, 1.4vh, 18px) 0; }
+
+/* Aktien-Auswahl als grosse Karten */
+.az-aktien-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(clamp(180px, 22vw, 260px), 1fr));
+  gap: clamp(12px, 1.6vw, 22px);
+  width: 100%;
+}
+
+.az-aktien-karte {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(8px, 1.2vh, 16px);
+  padding: clamp(18px, 2.6vh, 34px) clamp(12px, 1.2vw, 20px);
+  min-height: clamp(130px, 18vh, 200px);
+  border: 4px solid #dde5ee;
+  border-radius: 16px;
+  background: #fff;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  font-family: inherit;
+}
+
+.az-aktien-karte:hover {
+  transform: translateY(-3px);
+  border-color: #36C291;
+  box-shadow: 0 6px 18px rgba(54,194,145,0.25);
+}
+
+.az-aktien-karte-aktiv {
+  border-color: #36C291;
+  background: #e8f5e9;
+  transform: translateY(-4px) scale(1.03);
+  box-shadow: 0 8px 22px rgba(54,194,145,0.4);
+}
+
+.az-aktien-check {
+  position: absolute;
+  top: clamp(6px, 0.8vh, 12px);
+  right: clamp(6px, 0.6vw, 12px);
+  width: clamp(28px, 3.2vw, 40px);
+  height: clamp(28px, 3.2vw, 40px);
+  border-radius: 50%;
+  background: #36C291;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(1rem, 2vh, 1.4rem);
+  font-weight: bold;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+.az-aktien-name {
+  font-size: clamp(1.15rem, 2.4vh, 1.7rem);
+  font-weight: bold;
+  color: #123250;
+  text-align: center;
+  word-break: break-word;
+}
+
+.az-aktien-preis-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(2px, 0.3vh, 5px);
+}
+
+.az-aktien-preis-label {
+  font-size: clamp(0.8rem, 1.4vh, 1rem);
+  font-weight: bold;
+  color: #123250;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.az-aktien-wert {
+  font-size: clamp(1.6rem, 3.6vh, 2.6rem);
+  font-weight: bold;
+  color: #fff;
+  background: #36C291;
+  padding: clamp(6px, 0.8vh, 12px) clamp(14px, 1.5vw, 26px);
+  border-radius: 10px;
+  min-width: clamp(60px, 8vw, 100px);
+  text-align: center;
+}
+
+.az-aktien-leer {
+  padding: clamp(20px, 3vh, 40px);
+  text-align: center;
+  color: #888;
+  font-size: clamp(1rem, 1.9vh, 1.3rem);
+  background: #f5f8fa;
+  border: 2px dashed #dde5ee;
+  border-radius: 10px;
+}
+
+.az-label { font-size: clamp(1.1rem, 2vh, 1.4rem); font-weight: bold; color: #123250; text-align: center; }
+
+/* Kurs-Auswahl: 5 grosse farbige Karten nebeneinander */
+.az-kurs-reihe { display: grid; grid-template-columns: repeat(5, 1fr); gap: clamp(10px, 1.5vw, 22px); width: 100%; }
+
+.az-kurs-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(4px, 0.6vh, 10px);
+  padding: clamp(14px, 2vh, 28px) clamp(8px, 1vw, 16px);
+  min-height: clamp(90px, 14vh, 160px);
+  border: 3px solid transparent;
+  border-radius: 12px;
+  cursor: pointer;
+  color: white;
+  font-weight: bold;
+  transition: transform 0.12s ease, box-shadow 0.12s ease, border-color 0.12s ease;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+}
+
+.az-kurs-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.18); }
+
+.az-kurs-zahl { font-size: clamp(1.8rem, 4vh, 3rem); line-height: 1; }
+.az-kurs-text { font-size: clamp(0.75rem, 1.3vh, 1rem); opacity: 0.95; text-align: center; }
+
+.az-kurs-dunkelrot   { background: #b71c1c; }
+.az-kurs-hellrot     { background: #ef5350; }
+.az-kurs-neutral     { background: #757575; }
+.az-kurs-hellgruen   { background: #66bb6a; }
+.az-kurs-dunkelgruen { background: #1b5e20; }
+
+.az-kurs-aktiv {
+  border-color: #123250;
+  transform: translateY(-4px) scale(1.04);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.28);
+}
+
+.az-auswahl {
+  text-align: center;
+  font-size: clamp(1.05rem, 1.9vh, 1.35rem);
+  color: #123250;
+  background: #e8f5e9;
+  padding: clamp(10px, 1.4vh, 18px) clamp(14px, 1.8vw, 26px);
+  border-radius: 8px;
+  border: 2px solid #36C291;
+}
+
+.az-action { display: flex; justify-content: center; }
+.az-eintragen-btn { padding: clamp(14px, 2vh, 22px) clamp(40px, 5vw, 80px); font-size: clamp(1.15rem, 2.2vh, 1.5rem); }
+
+@media (max-width: 800px) {
+  .az-kurs-reihe { grid-template-columns: repeat(3, 1fr); }
+  .az-kurs-text { display: none; }
+}

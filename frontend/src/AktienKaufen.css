@@ -1,0 +1,23 @@
+/* Aktien kaufen Styles - viewport-relativ */
+
+.ak-seite { display: flex; flex-direction: column; align-items: center; width: 100%; flex: 1; }
+.ak-titel { font-size: clamp(1.8rem, 4vh, 2.8rem); color: #123250; margin: 0 0 clamp(16px, 2.5vh, 32px) 0; font-weight: bold; }
+.ak-inhalt { display: flex; flex-direction: column; gap: clamp(14px, 2.2vh, 26px); width: 100%; max-width: clamp(700px, 85vw, 1400px); }
+.ak-feld { display: flex; align-items: center; gap: clamp(14px, 1.6vw, 24px); }
+.ak-feld label { font-size: clamp(1.15rem, 2.2vh, 1.6rem); font-weight: bold; color: #123250; min-width: clamp(180px, 18vw, 280px); text-align: right; white-space: nowrap; }
+.ak-feld .feld-input { flex: 1; min-width: 0; padding: clamp(12px, 1.8vh, 20px) clamp(16px, 1.6vw, 26px); font-size: clamp(1.1rem, 2vh, 1.5rem); }
+.ak-action-btn { padding: clamp(12px, 1.8vh, 20px) clamp(26px, 3vw, 44px); font-size: clamp(1.1rem, 2vh, 1.4rem); white-space: nowrap; }
+.ak-trennlinie { width: 100%; height: 2px; background: #dde5ee; margin: clamp(10px, 1.4vh, 18px) 0; }
+.ak-extra-buttons { display: flex; justify-content: center; gap: clamp(16px, 2vw, 32px); }
+
+.ak-vorschau {
+  text-align: center;
+  font-size: clamp(1rem, 1.6vh, 1.15rem);
+  color: #123250;
+  background: #e8f5e9;
+  padding: clamp(8px, 1vh, 12px) clamp(12px, 1.5vw, 20px);
+  border-radius: 8px;
+  border: 2px solid #36C291;
+}
+
+@media (max-width: 700px) { .ak-feld { flex-wrap: wrap; } .ak-feld label { min-width: auto; text-align: left; } }

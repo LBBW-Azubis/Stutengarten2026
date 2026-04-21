@@ -1,0 +1,22 @@
+/* Ueberweisung Styles - viewport-relativ */
+
+.uw-seite { display: flex; flex-direction: column; align-items: center; width: 100%; flex: 1; }
+.uw-titel { font-size: clamp(1.5rem, 3vh, 2.2rem); color: #123250; margin: 0 0 clamp(10px, 1.8vh, 22px) 0; font-weight: bold; }
+
+.uw-container { display: flex; gap: clamp(16px, 2.5vw, 38px); width: 100%; max-width: clamp(750px, 80vw, 1200px); }
+.uw-konto { flex: 1; display: flex; flex-direction: column; gap: clamp(10px, 1.5vh, 16px); border: 2px solid #dde5ee; border-radius: 10px; padding: clamp(16px, 2vh, 26px) clamp(16px, 2vw, 30px); }
+.uw-konto-titel { font-size: clamp(1.1rem, 1.8vh, 1.5rem); color: #123250; font-weight: bold; text-align: center; margin: 0 0 clamp(4px, 0.5vh, 8px) 0; }
+
+.uw-feld { display: flex; align-items: center; gap: clamp(8px, 1vw, 14px); }
+.uw-feld label { font-size: clamp(0.95rem, 1.6vh, 1.2rem); font-weight: bold; color: #123250; min-width: clamp(100px, 10vw, 150px); text-align: right; white-space: nowrap; }
+.uw-feld .feld-input { flex: 1; min-width: 0; padding: clamp(6px, 0.9vh, 12px) clamp(10px, 1vw, 16px); font-size: clamp(0.95rem, 1.5vh, 1.15rem); }
+.uw-action-btn { padding: clamp(6px, 0.9vh, 12px) clamp(16px, 2vw, 30px); font-size: clamp(0.95rem, 1.5vh, 1.1rem); white-space: nowrap; }
+.uw-trennlinie { width: 100%; height: 2px; background: #dde5ee; margin: clamp(4px, 0.5vh, 6px) 0; }
+.uw-kontostand-neu { background: #123250 !important; color: white; font-weight: bold; }
+
+.uw-betrag-bereich { width: 100%; max-width: clamp(750px, 80vw, 1200px); margin-top: clamp(10px, 1.8vh, 22px); display: flex; flex-direction: column; gap: clamp(10px, 1.5vh, 16px); }
+.uw-betrag-feld { justify-content: center; max-width: clamp(450px, 48vw, 680px); margin: 0 auto; width: 100%; }
+.uw-betrag-feld label { font-size: clamp(1rem, 1.8vh, 1.3rem); }
+.uw-betrag-feld .feld-input { font-size: clamp(1rem, 1.6vh, 1.2rem); padding: clamp(8px, 1.2vh, 14px) clamp(12px, 1.2vw, 18px); }
+
+@media (max-width: 900px) { .uw-container { flex-direction: column; } .uw-feld { flex-wrap: wrap; } .uw-feld label { min-width: auto; text-align: left; } }
