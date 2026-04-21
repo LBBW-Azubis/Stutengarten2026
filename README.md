@@ -18,3 +18,4 @@ Benötigte Downloads:
 - Node.JS (inkl. npm install im direkten Unterordner)
 - Pyinstaller
 - Openpyxl
+- Waitress (als Produktions-Server)
