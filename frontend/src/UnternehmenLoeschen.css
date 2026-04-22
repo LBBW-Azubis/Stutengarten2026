@@ -1,0 +1,44 @@
+/* UnternehmenLoeschen Styles - viewport-relativ */
+
+.ul-seite { display: flex; flex-direction: column; align-items: center; width: 100%; flex: 1; }
+.ul-icon {
+  font-size: clamp(3rem, 7vh, 5.5rem);
+  line-height: 1;
+  width: clamp(110px, 16vh, 180px);
+  height: clamp(110px, 16vh, 180px);
+  background: linear-gradient(135deg, #fde8e8 0%, #f5c6c6 100%);
+  border: 5px solid #e17474;
+  border-radius: clamp(16px, 1.8vw, 26px);
+  box-shadow: 0 4px 14px rgba(192,57,43,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+.ul-titel { font-size: clamp(1.5rem, 3vh, 2.2rem); color: #123250; margin: clamp(10px, 1.5vh, 20px) 0 clamp(16px, 2.5vh, 32px) 0; font-weight: bold; }
+
+.ul-inhalt { display: flex; flex-direction: column; gap: clamp(14px, 2.2vh, 26px); width: 100%; max-width: clamp(700px, 85vw, 1400px); }
+
+.ul-feld { display: flex; align-items: center; gap: clamp(14px, 1.6vw, 24px); }
+.ul-feld label { font-size: clamp(1.15rem, 2.2vh, 1.6rem); font-weight: bold; color: #123250; min-width: clamp(180px, 18vw, 280px); text-align: right; white-space: nowrap; }
+.ul-feld .feld-input { flex: 1; min-width: 0; padding: clamp(12px, 1.8vh, 20px) clamp(16px, 1.6vw, 26px); font-size: clamp(1.1rem, 2vh, 1.5rem); }
+
+.ul-action-btn {
+  padding: clamp(12px, 1.8vh, 20px) clamp(26px, 3vw, 44px);
+  font-size: clamp(1.1rem, 2vh, 1.4rem);
+  font-weight: bold;
+  background: #c0392b;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s ease;
+}
+.ul-action-btn:hover { background: #a0321f; }
+
+.ul-msg { padding: clamp(10px, 1.4vh, 16px) clamp(14px, 1.8vw, 22px); border-radius: 8px; font-size: clamp(1rem, 1.8vh, 1.2rem); font-weight: bold; text-align: center; }
+.ul-msg-err { background: #ffe0e0; color: #c0392b; border: 2px solid #f5b7b1; }
+.ul-msg-ok { background: #d4edda; color: #155724; border: 2px solid #36C291; }
+
+@media (max-width: 700px) { .ul-feld { flex-wrap: wrap; } .ul-feld label { min-width: auto; text-align: left; } }

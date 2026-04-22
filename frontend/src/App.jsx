@@ -29,6 +29,7 @@ import UnternehmenHub from './UnternehmenHub'
 import UnternehmenEinzahlen from './UnternehmenEinzahlen'
 import UnternehmenAuszahlen from './UnternehmenAuszahlen'
 import UnternehmenUmsatz from './UnternehmenUmsatz'
+import UnternehmenLoeschen from './UnternehmenLoeschen'
 
 // Bilder importieren
 import bwBankLogo from './images/BwBank_Logo.png'
@@ -64,6 +65,7 @@ function DevNavigator() {
         <option value="/mainsite/kunde">Kunde (Hub)</option>
         <option value="/mainsite/unternehmen">Unternehmen (Hub)</option>
         <option value="/mainsite/unternehmen-umsatz">Unternehmen Umsatz</option>
+        <option value="/mainsite/unternehmen-loeschen">Unternehmen Loeschen</option>
         <option value="/mainsite/konto">Konto</option>
         <option value="/mainsite/kontoerstellen">Konto Erstellen</option>
         <option value="/mainsite/einzahlen">Einzahlen</option>
@@ -245,6 +247,7 @@ function AppLayout() {
           <Route path="/mainsite/unternehmen-einzahlen" element={<UnternehmenEinzahlen />} />
           <Route path="/mainsite/unternehmen-auszahlen" element={<UnternehmenAuszahlen />} />
           <Route path="/mainsite/unternehmen-umsatz" element={<UnternehmenUmsatz />} />
+          <Route path="/mainsite/unternehmen-loeschen" element={<UnternehmenLoeschen />} />
           <Route path="/mainsite/tschuess" element={<Tschuess />} />
           <Route path="*" element={<NoMatch />} />
         </Routes>

@@ -264,6 +264,13 @@ export default function BetreuerMenu() {
               <div className="kachel-label">Unternehmen erstellen</div>
             </div>
 
+            <div className="kachel" onClick={() => navigate('/mainsite/unternehmen-loeschen')}>
+              <div className="kachel-bild">
+                <span className="betreuer-kachel-emoji">🗑️</span>
+              </div>
+              <div className="kachel-label kachel-label-danger">Unternehmen loeschen</div>
+            </div>
+
             <div className="kachel" onClick={() => kundenInputRef.current?.click()}>
               <div className="kachel-bild import-bild">
                 <span className="betreuer-kachel-emoji">👤</span>
