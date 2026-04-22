@@ -1,13 +1,13 @@
 /* Einzahlen Styles - viewport-relativ */
 
 .ez-seite { display: flex; flex-direction: column; align-items: center; width: 100%; flex: 1; }
-.ez-titel { font-size: clamp(1.5rem, 3vh, 2.2rem); color: #123250; margin: 0 0 clamp(10px, 1.8vh, 22px) 0; font-weight: bold; }
-.ez-inhalt { display: flex; flex-direction: column; gap: clamp(10px, 1.5vh, 16px); width: 100%; max-width: clamp(550px, 60vw, 900px); }
-.ez-feld { display: flex; align-items: center; gap: clamp(10px, 1.2vw, 18px); }
-.ez-feld label { font-size: clamp(1rem, 1.8vh, 1.35rem); font-weight: bold; color: #123250; min-width: clamp(150px, 16vw, 220px); text-align: right; white-space: nowrap; }
-.ez-feld .feld-input { flex: 1; min-width: 0; padding: clamp(8px, 1.2vh, 14px) clamp(12px, 1.2vw, 20px); font-size: clamp(1rem, 1.6vh, 1.2rem); }
-.ez-action-btn { padding: clamp(8px, 1.2vh, 14px) clamp(20px, 2.4vw, 34px); font-size: clamp(1rem, 1.6vh, 1.15rem); white-space: nowrap; }
-.ez-trennlinie { width: 100%; height: 2px; background: #dde5ee; margin: clamp(6px, 0.8vh, 10px) 0; }
+.ez-titel { font-size: clamp(1.8rem, 4vh, 2.8rem); color: #123250; margin: 0 0 clamp(16px, 2.5vh, 32px) 0; font-weight: bold; }
+.ez-inhalt { display: flex; flex-direction: column; gap: clamp(14px, 2.2vh, 26px); width: 100%; max-width: clamp(700px, 85vw, 1400px); }
+.ez-feld { display: flex; align-items: center; gap: clamp(14px, 1.6vw, 24px); }
+.ez-feld label { font-size: clamp(1.15rem, 2.2vh, 1.6rem); font-weight: bold; color: #123250; min-width: clamp(180px, 18vw, 280px); text-align: right; white-space: nowrap; }
+.ez-feld .feld-input { flex: 1; min-width: 0; padding: clamp(12px, 1.8vh, 20px) clamp(16px, 1.6vw, 26px); font-size: clamp(1.1rem, 2vh, 1.5rem); }
+.ez-action-btn { padding: clamp(12px, 1.8vh, 20px) clamp(26px, 3vw, 44px); font-size: clamp(1.1rem, 2vh, 1.4rem); white-space: nowrap; }
+.ez-trennlinie { width: 100%; height: 2px; background: #dde5ee; margin: clamp(10px, 1.4vh, 18px) 0; }
 .ez-kontostand { background: #123250 !important; color: white; font-weight: bold; }
 
 /* Debug-Fenster */

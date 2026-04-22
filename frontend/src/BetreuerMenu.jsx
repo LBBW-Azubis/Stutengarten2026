@@ -13,6 +13,52 @@ export default function BetreuerMenu() {
   const kundenInputRef = useRef(null)
   const unternehmenInputRef = useRef(null)
   const [importStatus, setImportStatus] = useState(null)  // { typ: 'ok'|'err', text: string }
+  const [showLoeschenDialog, setShowLoeschenDialog] = useState(false)
+  const [loeschenInput, setLoeschenInput] = useState('')
+  const [showBeendenDialog, setShowBeendenDialog] = useState(false)
+
+  function oeffneLoeschenDialog() {
+    setLoeschenInput('')
+    setShowLoeschenDialog(true)
+  }
+
+  function schliesseLoeschenDialog() {
+    setShowLoeschenDialog(false)
+    setLoeschenInput('')
+  }
+
+  function beendeAnwendung() {
+    setShowBeendenDialog(false)
+    // Im Chromium-Kiosk-Mode schliesst das das Fenster wie ALT+F4.
+    // In normalen Browser-Tabs blockiert der Browser window.close() aus
+    // Sicherheitsgruenden - dann fallen wir auf about:blank zurueck.
+    try { window.open('', '_self', '')?.close() } catch (e) { /* ignore */ }
+    try { window.close() } catch (e) { /* ignore */ }
+    setTimeout(() => { window.location.href = 'about:blank' }, 200)
+  }
+
+  async function bestaetigeLoeschen() {
+    if (loeschenInput !== 'Loeschen') return
+    schliesseLoeschenDialog()
+
+    // === BACKEND: Datenbank zuruecksetzen ===
+    // POST http://192.168.1.10:5000/clear-database
+    try {
+      const response = await fetch('http://192.168.1.10:5000/clear-database', {
+        method: 'POST',
+      })
+      console.log('[Datenbank] Clear Status:', response.status)
+      if (response.ok) {
+        zeigeImportMeldung('ok', 'Datenbank erfolgreich zurueckgesetzt!')
+      } else {
+        zeigeImportMeldung('err', 'Datenbank zuruecksetzen fehlgeschlagen')
+      }
+    } catch (error) {
+      console.error('[Datenbank] Fehler:', error)
+      zeigeImportMeldung('err', 'Verbindung zum Server fehlgeschlagen')
+    }
+    // === ENDE BACKEND ===
+  }
 
   function zeigeImportMeldung(typ, text) {
     setImportStatus({ typ, text })
@@ -107,6 +153,10 @@ export default function BetreuerMenu() {
 
   return (
     <div className="page betreuer-page">
+      <div className="betreuer-todo">
+        <strong>To-Do:</strong>
+        <div>1. Settings API Call einbauen / testen (Donnerstag - Backend)</div>
+      </div>
       <div className="betreuer-layout">
 
         {/* Links: Einstellungen */}
@@ -207,25 +257,11 @@ export default function BetreuerMenu() {
           )}
 
           <div className="aktionen-grid">
-            <div className="kachel" onClick={() => navigate('/mainsite/unternehmen')}>
+            <div className="kachel" onClick={() => navigate('/mainsite/unternehmen-erstellen')}>
               <div className="kachel-bild">
                 <span className="betreuer-kachel-emoji">🏢</span>
               </div>
               <div className="kachel-label">Unternehmen erstellen</div>
-            </div>
-
-            <div className="kachel" onClick={() => navigate('/mainsite/unternehmen-einzahlen')}>
-              <div className="kachel-bild">
-                <span className="betreuer-kachel-emoji">📥</span>
-              </div>
-              <div className="kachel-label">Unternehmen einzahlen</div>
-            </div>
-
-            <div className="kachel" onClick={() => navigate('/mainsite/unternehmen-auszahlen')}>
-              <div className="kachel-bild">
-                <span className="betreuer-kachel-emoji">📤</span>
-              </div>
-              <div className="kachel-label">Unternehmen auszahlen</div>
             </div>
 
             <div className="kachel" onClick={() => kundenInputRef.current?.click()}>
@@ -244,11 +280,18 @@ export default function BetreuerMenu() {
               <div className="kachel-label">Import Unternehmen</div>
             </div>
 
-            <div className="kachel" onClick={() => { /* TODO: Datenbank loeschen */ }}>
+            <div className="kachel" onClick={oeffneLoeschenDialog}>
               <div className="kachel-bild">
                 <span className="betreuer-kachel-emoji">🗑️</span>
               </div>
               <div className="kachel-label kachel-label-danger">Datenbank Loeschen</div>
+            </div>
+
+            <div className="kachel" onClick={() => setShowBeendenDialog(true)}>
+              <div className="kachel-bild">
+                <span className="betreuer-kachel-emoji">🚪</span>
+              </div>
+              <div className="kachel-label">Anwendung beenden</div>
             </div>
           </div>
 
@@ -269,6 +312,61 @@ export default function BetreuerMenu() {
         </div>
 
       </div>
+
+      {/* Datenbank-Loeschen Bestaetigungs-Dialog */}
+      {showLoeschenDialog && (
+        <div className="loeschen-overlay" onClick={schliesseLoeschenDialog}>
+          <div className="loeschen-dialog" onClick={e => e.stopPropagation()}>
+            <div className="loeschen-titel">⚠️ Datenbank zuruecksetzen</div>
+            <div className="loeschen-text">
+              Willst du wirklich die Datenbank zuruecksetzen?<br />
+              Falls ja, gib <strong>Loeschen</strong> ein.
+            </div>
+            <input
+              type="text"
+              className="loeschen-input"
+              placeholder="Loeschen"
+              value={loeschenInput}
+              onChange={e => setLoeschenInput(e.target.value)}
+              onKeyDown={e => { if (e.key === 'Enter') bestaetigeLoeschen() }}
+              autoFocus
+            />
+            <div className="loeschen-buttons">
+              <button
+                className="loeschen-btn loeschen-btn-cancel"
+                onClick={schliesseLoeschenDialog}
+              >Abbrechen</button>
+              <button
+                className="loeschen-btn loeschen-btn-confirm"
+                onClick={bestaetigeLoeschen}
+                disabled={loeschenInput !== 'Loeschen'}
+              >Loeschen</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Anwendung-Beenden Bestaetigungs-Dialog */}
+      {showBeendenDialog && (
+        <div className="loeschen-overlay" onClick={() => setShowBeendenDialog(false)}>
+          <div className="beenden-dialog" onClick={e => e.stopPropagation()}>
+            <div className="beenden-titel">Anwendung beenden?</div>
+            <div className="beenden-text">
+              Moechtest du die Anwendung wirklich schliessen?
+            </div>
+            <div className="loeschen-buttons">
+              <button
+                className="loeschen-btn loeschen-btn-cancel"
+                onClick={() => setShowBeendenDialog(false)}
+              >Nein</button>
+              <button
+                className="loeschen-btn beenden-btn-ja"
+                onClick={beendeAnwendung}
+              >Ja</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

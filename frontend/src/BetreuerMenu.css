@@ -2,6 +2,18 @@
 
 .betreuer-page { width: 100% !important; max-width: 100% !important; align-self: stretch !important; }
 
+/* Temporaere To-Do-Notiz (kommt spaeter raus) */
+.betreuer-todo {
+  background: #fff8e1;
+  border: 2px dashed #f0ad4e;
+  border-radius: 8px;
+  padding: clamp(8px, 1.2vh, 14px) clamp(12px, 1.5vw, 20px);
+  margin-bottom: clamp(8px, 1.2vh, 14px);
+  font-size: clamp(0.9rem, 1.5vh, 1.1rem);
+  color: #123250;
+  font-family: monospace;
+}
+
 .betreuer-layout { display: flex; align-items: stretch; gap: 0; width: 100%; flex: 1; }
 
 .betreuer-trenner { width: 2px; background: #dde5ee; margin: clamp(6px, 1vh, 14px) clamp(14px, 2vw, 30px); flex-shrink: 0; align-self: stretch; }
@@ -34,6 +46,105 @@
 
 /* Rotes Label fuer destruktive Aktionen (z.B. Datenbank loeschen) */
 .kachel-label-danger { color: #c0392b !important; }
+
+/* Datenbank-Loeschen Dialog */
+.loeschen-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(18, 50, 80, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9000;
+  padding: clamp(12px, 2vh, 24px);
+}
+
+.loeschen-dialog {
+  background: white;
+  border: 3px solid #c0392b;
+  border-radius: 14px;
+  padding: clamp(20px, 3vh, 36px) clamp(24px, 3vw, 44px);
+  max-width: clamp(340px, 50vw, 560px);
+  width: 100%;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(14px, 2vh, 22px);
+}
+
+.loeschen-titel {
+  font-size: clamp(1.25rem, 2.6vh, 1.75rem);
+  font-weight: bold;
+  color: #c0392b;
+  text-align: center;
+}
+
+.loeschen-text {
+  font-size: clamp(1rem, 1.9vh, 1.25rem);
+  color: #123250;
+  text-align: center;
+  line-height: 1.5;
+}
+
+.loeschen-input {
+  padding: clamp(10px, 1.4vh, 16px) clamp(12px, 1.3vw, 20px);
+  font-size: clamp(1.05rem, 2vh, 1.3rem);
+  font-weight: bold;
+  border: 2px solid #dde5ee;
+  border-radius: 8px;
+  outline: none;
+  text-align: center;
+  font-family: inherit;
+}
+.loeschen-input:focus { border-color: #c0392b; }
+
+.loeschen-buttons {
+  display: flex;
+  gap: clamp(10px, 1.5vw, 18px);
+  justify-content: flex-end;
+}
+
+.loeschen-btn {
+  padding: clamp(10px, 1.4vh, 16px) clamp(18px, 2vw, 30px);
+  font-size: clamp(1rem, 1.8vh, 1.2rem);
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s ease, opacity 0.15s ease;
+  font-family: inherit;
+}
+
+.loeschen-btn-cancel { background: #dde5ee; color: #123250; }
+.loeschen-btn-cancel:hover { background: #cdd7e3; }
+
+.loeschen-btn-confirm { background: #c0392b; color: white; }
+.loeschen-btn-confirm:hover { background: #a0321f; }
+.loeschen-btn-confirm:disabled {
+  background: #bbb;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+.loeschen-btn-confirm:disabled:hover { background: #bbb; }
+
+/* Anwendung-Beenden Dialog (nutzt loeschen-overlay + loeschen-buttons) */
+.beenden-dialog {
+  background: white;
+  border: 3px solid #123250;
+  border-radius: 14px;
+  padding: clamp(20px, 3vh, 36px) clamp(24px, 3vw, 44px);
+  max-width: clamp(340px, 45vw, 520px);
+  width: 100%;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(14px, 2vh, 22px);
+}
+.beenden-titel { font-size: clamp(1.25rem, 2.6vh, 1.75rem); font-weight: bold; color: #123250; text-align: center; }
+.beenden-text { font-size: clamp(1rem, 1.9vh, 1.25rem); color: #123250; text-align: center; line-height: 1.5; }
+
+.beenden-btn-ja { background: #36C291; color: white; }
+.beenden-btn-ja:hover { background: #2aab7e; }
 
 /* Import-Status Banner */
 .import-status {

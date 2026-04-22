@@ -3,8 +3,6 @@ import { useState } from 'react'
 
 import './Konto.css'  //Wichtig immer CSS importieren
 
-import kontoIcon from './images/Login.png'
-
 export default function Konto() {
   const navigate = useNavigate()
 
@@ -78,7 +76,7 @@ export default function Konto() {
 
   return (
     <div className="ko-seite">
-      <img src={kontoIcon} alt="Konto" className="ko-icon" />
+      <div className="ko-icon">👤</div>
       <h2 className="ko-titel">Konto</h2>
 
       <div className="ko-inhalt">
