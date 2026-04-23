@@ -90,11 +90,11 @@ fi
 
 # ── SQL-Dump einspielen ──────────────────────────────────────────────────────
 info "=== 10. Datenbank-Schema einspielen ==="
-if [ -f "backend/datenbank.sql" ]; then
-    sudo mariadb -u "$DB_USER" -p"$DB_PASS" < backend/datenbank.sql
-    info "Schema aus backend/datenbank.sql eingespielt."
+if [ -f "backend/database.sql" ]; then
+    sudo mariadb -u "$DB_USER" -p"$DB_PASS" "$DB_NAME" < backend/database.sql
+    info "Schema aus backend/database.sql eingespielt."
 else
-    warn "backend/datenbank.sql nicht gefunden – Schema-Import übersprungen."
+    warn "backend/database.sql nicht gefunden – Schema-Import übersprungen."
 fi
 
 # ── Firewall ─────────────────────────────────────────────────────────────────
