@@ -111,10 +111,23 @@ xset s off
 xset s noblank
 xset -dpms
 
-# USB-Automount im Hintergrund starten
+# --- NEU: Warten auf die lokale Webseite ---
+# Wir warten, bis der Server 192.168.1.10 per Ping antwortet
+# (Maximal 30 Sekunden lang)
+MAX_RETRIES=30
+COUNT=0
+while ! ping -c 1 192.168.1.10 >/dev/null 2>&1 && [ \$COUNT -lt \$MAX_RETRIES ]; do
+    sleep 1
+    COUNT=\$((COUNT + 1))
+done
+
+# Zusätzliche Sekunde Sicherheit für den Browser-Stack
+sleep 2
+
+# USB-Automount
 devmon &
 
-# Chromium Kiosk-Loop (Watchdog)
+# Chromium Kiosk-Loop
 while true; do
   chromium-browser \\
     --kiosk \\
@@ -123,6 +136,8 @@ while true; do
     --disable-infobars \\
     --disable-session-crashed-bubble \\
     --overscroll-history-navigation=0 \\
+    --disable-features=TranslateUI \\
+    --no-proxy-server \\
     --app=$KIOSK_URL
 done
 EOF
