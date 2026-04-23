@@ -15,8 +15,6 @@ error()   { echo -e "${RED}[ERROR]${NC} $*"; exit 1; }
 DB_NAME="stutengarten"
 DB_USER="root"
 DB_PASS="1234"
-REPO_URL="https://github.com/LBBW-Azubis/Stutengarten2026.git"
-REPO_DIR="$HOME/Stutengarten2026"
 STATIC_IP="192.168.1.10/24"
 NETWORK_IFACE="enp0s8"          # ggf. anpassen (ip a)
 NETPLAN_FILE="/etc/netplan/01-netcfg.yaml"
@@ -63,42 +61,26 @@ info "=== 6. Node.js 22 installieren ==="
 curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
 sudo apt install -y nodejs
 
-# ── Repository klonen ────────────────────────────────────────────────────────
-info "=== 7. Repository klonen ==="
-if [ -d "$REPO_DIR" ]; then
-    warn "Verzeichnis $REPO_DIR existiert bereits – überspringe clone."
-else
-    git clone "$REPO_URL" "$REPO_DIR"
-fi
-cd "$REPO_DIR"
-
 # ── Python Virtual Environment ───────────────────────────────────────────────
-info "=== 8. Python-Virtualenv & Packages ==="
+info "=== 7. Python-Virtualenv & Packages ==="
+# Wir gehen davon aus, dass wir uns bereits im Projektordner befinden
 python3.11 -m venv venv
 source venv/bin/activate
 pip install --upgrade pip
 pip install flask flask-cors pandas mysql-connector-python pyinstaller openpyxl waitress
 deactivate
 
-# ── NPM (Backend-Ordner, falls vorhanden) ───────────────────────────────────
-info "=== 9. NPM install (Backend-Ordner) ==="
-if [ -d "backend" ]; then
-    cd backend && npm install && cd "$REPO_DIR"
-else
-    warn "Kein 'backend'-Ordner gefunden – npm install übersprungen."
-fi
-
 # ── SQL-Dump einspielen ──────────────────────────────────────────────────────
-info "=== 10. Datenbank-Schema einspielen ==="
+info "=== 8. Datenbank-Schema einspielen ==="
 if [ -f "backend/database.sql" ]; then
     sudo mariadb -u "$DB_USER" -p"$DB_PASS" "$DB_NAME" < backend/database.sql
     info "Schema aus backend/database.sql eingespielt."
 else
-    warn "backend/database.sql nicht gefunden – Schema-Import übersprungen."
+    warn "backend/database.sql nicht gefunden – Schema-Import übersprungen. Bitte sicherstellen, dass das Skript im Projekt-Root-Verzeichnis ausgeführt wird."
 fi
 
 # ── Firewall ─────────────────────────────────────────────────────────────────
-info "=== 11. UFW-Firewall konfigurieren ==="
+info "=== 9. UFW-Firewall konfigurieren ==="
 sudo ufw allow 5000/tcp
 sudo ufw allow ssh
 sudo ufw allow 80/tcp
@@ -106,7 +88,7 @@ sudo ufw --force enable
 info "UFW aktiv. Offene Ports: 22 (SSH), 80 (HTTP), 5000 (Backend)."
 
 # ── Statische IP (Netplan) ───────────────────────────────────────────────────
-info "=== 12. Statische IP konfigurieren (${STATIC_IP} auf ${NETWORK_IFACE}) ==="
+info "=== 10. Statische IP konfigurieren (${STATIC_IP} auf ${NETWORK_IFACE}) ==="
 sudo tee "$NETPLAN_FILE" > /dev/null <<YAML
 network:
   version: 2
@@ -121,9 +103,8 @@ info "Statische IP gesetzt. Aktuelle Konfiguration:"
 ip a show "$NETWORK_IFACE" 2>/dev/null || warn "Interface ${NETWORK_IFACE} nicht gefunden."
 
 # ── PM2 & Backend starten ────────────────────────────────────────────────────
-info "=== 13. PM2 installieren & Backend starten ==="
+info "=== 11. PM2 installieren & Backend starten ==="
 sudo npm install -g pm2
-cd "$REPO_DIR"
 
 # Vorherige PM2-Instanz sauber entfernen (falls Neustart)
 pm2 delete stutengarten-backend 2>/dev/null || true
