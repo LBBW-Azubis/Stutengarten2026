@@ -1,6 +1,8 @@
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 
+import Emoji from './Emoji'
+
 import './Unternehmen.css'  //Wichtig immer CSS importieren
 
 export default function Unternehmen() {
@@ -26,11 +28,11 @@ export default function Unternehmen() {
   async function erstellen() {
     setFehler('')
     if (!unternehmenName.trim()) {
-      setFehler('Bitte Unternehmenname eingeben.')
+      setFehler('Bitte Unternehmensname eingeben.')
       return
     }
     if (folderHandedOver === null) {
-      setFehler('Bitte Ordner-Uebergabe auswaehlen (Ja oder Nein).')
+      setFehler('Bitte Ordner-Übergabe auswählen (Ja oder Nein).')
       return
     }
 
@@ -64,7 +66,7 @@ export default function Unternehmen() {
 
   return (
     <div className="un-seite">
-      <div className="un-icon">🏢</div>
+      <div className="un-icon"><Emoji char="🏢" /></div>
       <h2 className="un-titel">Unternehmen erstellen</h2>
 
       <div className="un-inhalt">
@@ -83,7 +85,7 @@ export default function Unternehmen() {
         <div className="un-trennlinie"></div>
 
         <div className="un-feld">
-          <label>Ordner uebergeben:</label>
+          <label>Ordner übergeben:</label>
           <div className="un-toggle">
             <button
               type="button"
@@ -114,7 +116,7 @@ export default function Unternehmen() {
 
         <div className="un-buttons">
           <button className="btn btn-dunkel un-btn" onClick={erstellen}>Erstellen</button>
-          <button className="btn btn-gruen un-btn" onClick={() => navigate(-1)}>Zurueck</button>
+          <button className="btn btn-gruen un-btn" onClick={() => navigate(-1)}>Zurück</button>
         </div>
       </div>
     </div>

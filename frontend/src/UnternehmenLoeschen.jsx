@@ -1,5 +1,7 @@
 import { useState } from 'react'
 
+import Emoji from './Emoji'
+
 import './UnternehmenLoeschen.css'  //Wichtig immer CSS importieren
 
 export default function UnternehmenLoeschen() {
@@ -11,7 +13,7 @@ export default function UnternehmenLoeschen() {
     setFehler('')
     setStatus(null)
     if (!unternehmenName.trim()) {
-      setFehler('Bitte Unternehmenname eingeben.')
+      setFehler('Bitte Unternehmensname eingeben.')
       return
     }
 
@@ -25,12 +27,12 @@ export default function UnternehmenLoeschen() {
       console.log('[UnternehmenLoeschen] Response Status:', response.status)
 
       if (response.ok) {
-        setStatus({ typ: 'ok', text: `Unternehmen "${name}" erfolgreich geloescht!` })
+        setStatus({ typ: 'ok', text: `Unternehmen "${name}" erfolgreich gelöscht!` })
         setUnternehmenName('')
       } else if (response.status === 404) {
         setStatus({ typ: 'err', text: 'Unternehmen nicht gefunden.' })
       } else {
-        setStatus({ typ: 'err', text: 'Fehler beim Loeschen des Unternehmens.' })
+        setStatus({ typ: 'err', text: 'Fehler beim Löschen des Unternehmens.' })
       }
     } catch (error) {
       console.error('[UnternehmenLoeschen] Fehler:', error)
@@ -41,8 +43,8 @@ export default function UnternehmenLoeschen() {
 
   return (
     <div className="ul-seite">
-      <div className="ul-icon">🗑️</div>
-      <h2 className="ul-titel">Unternehmen loeschen</h2>
+      <div className="ul-icon"><Emoji char="🗑️" /></div>
+      <h2 className="ul-titel">Unternehmen löschen</h2>
 
       <div className="ul-inhalt">
         <div className="ul-feld">
@@ -55,7 +57,7 @@ export default function UnternehmenLoeschen() {
             onChange={e => { setUnternehmenName(e.target.value); setStatus(null) }}
             onKeyDown={e => { if (e.key === 'Enter') loeschen() }}
           />
-          <button className="btn ul-action-btn" onClick={loeschen}>Loeschen</button>
+          <button className="btn ul-action-btn" onClick={loeschen}>Löschen</button>
         </div>
 
         {fehler && <div className="ul-msg ul-msg-err">{fehler}</div>}

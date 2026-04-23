@@ -99,7 +99,7 @@ export default function Einzahlen() {
     setFehler('')
     const b = parseInt(betrag) || 0
     if (b <= 0) {
-      setFehler('Bitte einen gueltigen Betrag eingeben.')
+      setFehler('Bitte einen gültigen Betrag eingeben.')
       return
     }
 

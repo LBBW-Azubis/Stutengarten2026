@@ -1,6 +1,8 @@
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 
+import Emoji from './Emoji'
+
 import './KontoErstellen.css'  //Wichtig immer CSS importieren
 
 export default function KontoErstellen() {
@@ -21,7 +23,7 @@ export default function KontoErstellen() {
     setFehler('')
 
     if (!id || !vn || !nn) {
-      setFehler('Bitte Kontonummer, Vor- und Nachname ausfuellen.')
+      setFehler('Bitte Kontonummer, Vor- und Nachname ausfüllen.')
       return
     }
 
@@ -84,7 +86,7 @@ export default function KontoErstellen() {
     return (
       <div className="ke-seite">
         <div className="ke-card">
-          <div className="ke-icon">📝</div>
+          <div className="ke-icon"><Emoji char="📝" /></div>
           <div className="ke-frage-text">Neuen Kunden erstellen?</div>
           <div className="ke-buttons">
             <button className="btn btn-gruen ke-btn" onClick={() => setSchritt(2)}>
@@ -103,7 +105,7 @@ export default function KontoErstellen() {
   return (
     <div className="ke-seite">
       <div className="ke-card ke-card-formular">
-        <div className="ke-icon">📝</div>
+        <div className="ke-icon"><Emoji char="📝" /></div>
         <h2 className="ke-titel">Neuen Kunden anlegen</h2>
 
         <div className="ke-formular">
@@ -144,7 +146,7 @@ export default function KontoErstellen() {
 
           <div className="ke-buttons" style={{ marginTop: 20 }}>
             <button className="btn btn-dunkel ke-btn" onClick={fertig}>Fertig</button>
-            <button className="btn btn-gruen ke-btn" onClick={() => setSchritt(1)}>Zurueck</button>
+            <button className="btn btn-gruen ke-btn" onClick={() => setSchritt(1)}>Zurück</button>
           </div>
         </div>
       </div>

@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import { useAppContext } from './AppContext'
+import Emoji from './Emoji'
 
 import './Login.css'  //Wichtig immer CSS importieren
 
@@ -39,7 +40,7 @@ export default function Login() {
   return (
     <div className="login-seite">
       <div className="login-karte">
-        <div className="login-emoji">👤</div>
+        <Emoji char="👤" className="login-emoji" />
         <h1 className="login-titel">Anmelden</h1>
 
         <div className="login-feld">

@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import { useRef, useState } from 'react'
 import { useAppContext } from './AppContext'
+import Emoji from './Emoji'
 
 import './BetreuerMenu.css'  //Wichtig immer CSS importieren
 
@@ -38,7 +39,7 @@ export default function BetreuerMenu() {
   }
 
   async function bestaetigeLoeschen() {
-    if (loeschenInput !== 'Loeschen') return
+    if (loeschenInput !== 'Löschen') return
     schliesseLoeschenDialog()
 
     // === BACKEND: Datenbank zuruecksetzen ===
@@ -49,9 +50,9 @@ export default function BetreuerMenu() {
       })
       console.log('[Datenbank] Clear Status:', response.status)
       if (response.ok) {
-        zeigeImportMeldung('ok', 'Datenbank erfolgreich zurueckgesetzt!')
+        zeigeImportMeldung('ok', 'Datenbank erfolgreich zurückgesetzt!')
       } else {
-        zeigeImportMeldung('err', 'Datenbank zuruecksetzen fehlgeschlagen')
+        zeigeImportMeldung('err', 'Datenbank zurücksetzen fehlgeschlagen')
       }
     } catch (error) {
       console.error('[Datenbank] Fehler:', error)
@@ -259,21 +260,21 @@ export default function BetreuerMenu() {
           <div className="aktionen-grid">
             <div className="kachel" onClick={() => navigate('/mainsite/unternehmen-erstellen')}>
               <div className="kachel-bild">
-                <span className="betreuer-kachel-emoji">🏢</span>
+                <Emoji char="🏢" className="betreuer-kachel-emoji" />
               </div>
               <div className="kachel-label">Unternehmen erstellen</div>
             </div>
 
             <div className="kachel" onClick={() => navigate('/mainsite/unternehmen-loeschen')}>
               <div className="kachel-bild">
-                <span className="betreuer-kachel-emoji">🗑️</span>
+                <Emoji char="🗑️" className="betreuer-kachel-emoji" />
               </div>
-              <div className="kachel-label kachel-label-danger">Unternehmen loeschen</div>
+              <div className="kachel-label kachel-label-danger">Unternehmen löschen</div>
             </div>
 
             <div className="kachel" onClick={() => kundenInputRef.current?.click()}>
               <div className="kachel-bild import-bild">
-                <span className="betreuer-kachel-emoji">👤</span>
+                <Emoji char="👤" className="betreuer-kachel-emoji" />
                 <img src={excelIcon} alt="Excel" className="import-badge" />
               </div>
               <div className="kachel-label">Import Kunden</div>
@@ -281,7 +282,7 @@ export default function BetreuerMenu() {
 
             <div className="kachel" onClick={() => unternehmenInputRef.current?.click()}>
               <div className="kachel-bild import-bild">
-                <span className="betreuer-kachel-emoji">🏢</span>
+                <Emoji char="🏢" className="betreuer-kachel-emoji" />
                 <img src={excelIcon} alt="Excel" className="import-badge" />
               </div>
               <div className="kachel-label">Import Unternehmen</div>
@@ -289,14 +290,14 @@ export default function BetreuerMenu() {
 
             <div className="kachel" onClick={oeffneLoeschenDialog}>
               <div className="kachel-bild">
-                <span className="betreuer-kachel-emoji">🗑️</span>
+                <Emoji char="🗑️" className="betreuer-kachel-emoji" />
               </div>
-              <div className="kachel-label kachel-label-danger">Datenbank Loeschen</div>
+              <div className="kachel-label kachel-label-danger">Datenbank Löschen</div>
             </div>
 
             <div className="kachel" onClick={() => setShowBeendenDialog(true)}>
               <div className="kachel-bild">
-                <span className="betreuer-kachel-emoji">🚪</span>
+                <Emoji char="🚪" className="betreuer-kachel-emoji" />
               </div>
               <div className="kachel-label">Anwendung beenden</div>
             </div>
@@ -324,15 +325,15 @@ export default function BetreuerMenu() {
       {showLoeschenDialog && (
         <div className="loeschen-overlay" onClick={schliesseLoeschenDialog}>
           <div className="loeschen-dialog" onClick={e => e.stopPropagation()}>
-            <div className="loeschen-titel">⚠️ Datenbank zuruecksetzen</div>
+            <div className="loeschen-titel"><Emoji char="⚠️" /> Datenbank zurücksetzen</div>
             <div className="loeschen-text">
-              Willst du wirklich die Datenbank zuruecksetzen?<br />
-              Falls ja, gib <strong>Loeschen</strong> ein.
+              Willst du wirklich die Datenbank zurücksetzen?<br />
+              Falls ja, gib <strong>Löschen</strong> ein.
             </div>
             <input
               type="text"
               className="loeschen-input"
-              placeholder="Loeschen"
+              placeholder="Löschen"
               value={loeschenInput}
               onChange={e => setLoeschenInput(e.target.value)}
               onKeyDown={e => { if (e.key === 'Enter') bestaetigeLoeschen() }}
@@ -346,8 +347,8 @@ export default function BetreuerMenu() {
               <button
                 className="loeschen-btn loeschen-btn-confirm"
                 onClick={bestaetigeLoeschen}
-                disabled={loeschenInput !== 'Loeschen'}
-              >Loeschen</button>
+                disabled={loeschenInput !== 'Löschen'}
+              >Löschen</button>
             </div>
           </div>
         </div>
@@ -359,7 +360,7 @@ export default function BetreuerMenu() {
           <div className="beenden-dialog" onClick={e => e.stopPropagation()}>
             <div className="beenden-titel">Anwendung beenden?</div>
             <div className="beenden-text">
-              Moechtest du die Anwendung wirklich schliessen?
+              Möchtest du die Anwendung wirklich schließen?
             </div>
             <div className="loeschen-buttons">
               <button

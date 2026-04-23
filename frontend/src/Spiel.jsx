@@ -180,7 +180,7 @@ export default function Spiel() {
           Start
         </button>
         <button className="game-action-btn action-undo" onClick={() => { if (!running) setCmds(cmds.slice(0, -1)) }} disabled={running}>
-          Zurueck
+          Zurück
         </button>
         <button className="game-action-btn action-reset" onClick={doReset}>
           Nochmal

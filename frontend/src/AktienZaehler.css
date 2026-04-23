@@ -1,20 +1,20 @@
-/* AktienZaehler Styles - viewport-relativ */
+/* AktienZaehler Styles - kompakt, damit alles ohne Scroll passt */
 
-.az-seite { display: flex; flex-direction: column; align-items: center; width: 100%; flex: 1; }
-.az-titel { font-size: clamp(1.8rem, 4vh, 2.8rem); color: #123250; margin: 0 0 clamp(16px, 2.5vh, 32px) 0; font-weight: bold; }
-.az-inhalt { display: flex; flex-direction: column; gap: clamp(14px, 2.2vh, 26px); width: 100%; max-width: clamp(700px, 85vw, 1400px); }
+.az-seite { display: flex; flex-direction: column; align-items: center; width: 100%; flex: 1; min-height: 0; overflow: hidden; }
+.az-titel { font-size: clamp(1.4rem, 3vh, 2.2rem); color: #123250; margin: 0 0 clamp(10px, 1.6vh, 20px) 0; font-weight: bold; }
+.az-inhalt { display: flex; flex-direction: column; gap: clamp(8px, 1.3vh, 18px); width: 100%; max-width: clamp(700px, 85vw, 1400px); flex: 1; min-height: 0; }
 
-.az-feld { display: flex; align-items: center; gap: clamp(14px, 1.6vw, 24px); }
-.az-feld label { font-size: clamp(1.15rem, 2.2vh, 1.6rem); font-weight: bold; color: #123250; min-width: clamp(180px, 18vw, 280px); text-align: right; white-space: nowrap; }
-.az-feld .feld-input { flex: 1; min-width: 0; padding: clamp(12px, 1.8vh, 20px) clamp(16px, 1.6vw, 26px); font-size: clamp(1.1rem, 2vh, 1.5rem); }
+.az-feld { display: flex; align-items: center; gap: clamp(12px, 1.4vw, 20px); }
+.az-feld label { font-size: clamp(1.05rem, 1.9vh, 1.45rem); font-weight: bold; color: #123250; min-width: clamp(150px, 16vw, 240px); text-align: right; white-space: nowrap; }
+.az-feld .feld-input { flex: 1; min-width: 0; padding: clamp(8px, 1.3vh, 16px) clamp(12px, 1.3vw, 22px); font-size: clamp(1.05rem, 1.8vh, 1.35rem); }
 
-.az-trennlinie { width: 100%; height: 2px; background: #dde5ee; margin: clamp(10px, 1.4vh, 18px) 0; }
+.az-trennlinie { width: 100%; height: 2px; background: #dde5ee; margin: clamp(4px, 0.7vh, 10px) 0; }
 
-/* Aktien-Auswahl als grosse Karten */
+/* Aktien-Auswahl als Karten (kompakter) */
 .az-aktien-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(clamp(180px, 22vw, 260px), 1fr));
-  gap: clamp(12px, 1.6vw, 22px);
+  grid-template-columns: repeat(auto-fit, minmax(clamp(140px, 18vw, 220px), 1fr));
+  gap: clamp(8px, 1.2vw, 16px);
   width: 100%;
 }
 
@@ -24,50 +24,50 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: clamp(8px, 1.2vh, 16px);
-  padding: clamp(18px, 2.6vh, 34px) clamp(12px, 1.2vw, 20px);
-  min-height: clamp(130px, 18vh, 200px);
-  border: 4px solid #dde5ee;
-  border-radius: 16px;
+  gap: clamp(6px, 0.9vh, 12px);
+  padding: clamp(10px, 1.6vh, 20px) clamp(12px, 1.2vw, 20px);
+  min-height: clamp(100px, 14vh, 160px);
+  border: 3px solid #dde5ee;
+  border-radius: 12px;
   background: #fff;
   cursor: pointer;
   transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease, background 0.15s ease;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
   font-family: inherit;
 }
 
 .az-aktien-karte:hover {
-  transform: translateY(-3px);
+  transform: translateY(-2px);
   border-color: #36C291;
-  box-shadow: 0 6px 18px rgba(54,194,145,0.25);
+  box-shadow: 0 4px 12px rgba(54,194,145,0.25);
 }
 
 .az-aktien-karte-aktiv {
   border-color: #36C291;
   background: #e8f5e9;
-  transform: translateY(-4px) scale(1.03);
-  box-shadow: 0 8px 22px rgba(54,194,145,0.4);
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 5px 14px rgba(54,194,145,0.4);
 }
 
 .az-aktien-check {
   position: absolute;
-  top: clamp(6px, 0.8vh, 12px);
-  right: clamp(6px, 0.6vw, 12px);
-  width: clamp(28px, 3.2vw, 40px);
-  height: clamp(28px, 3.2vw, 40px);
+  top: clamp(4px, 0.5vh, 8px);
+  right: clamp(4px, 0.4vw, 8px);
+  width: clamp(22px, 2.6vw, 32px);
+  height: clamp(22px, 2.6vw, 32px);
   border-radius: 50%;
   background: #36C291;
   color: white;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: clamp(1rem, 2vh, 1.4rem);
+  font-size: clamp(0.85rem, 1.7vh, 1.2rem);
   font-weight: bold;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
 
 .az-aktien-name {
-  font-size: clamp(1.15rem, 2.4vh, 1.7rem);
+  font-size: clamp(0.95rem, 1.8vh, 1.35rem);
   font-weight: bold;
   color: #123250;
   text-align: center;
@@ -78,63 +78,63 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: clamp(2px, 0.3vh, 5px);
+  gap: 2px;
 }
 
 .az-aktien-preis-label {
-  font-size: clamp(0.8rem, 1.4vh, 1rem);
+  font-size: clamp(0.65rem, 1.1vh, 0.85rem);
   font-weight: bold;
   color: #123250;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.04em;
 }
 
 .az-aktien-wert {
-  font-size: clamp(1.6rem, 3.6vh, 2.6rem);
+  font-size: clamp(1.15rem, 2.4vh, 1.8rem);
   font-weight: bold;
   color: #fff;
   background: #36C291;
-  padding: clamp(6px, 0.8vh, 12px) clamp(14px, 1.5vw, 26px);
-  border-radius: 10px;
-  min-width: clamp(60px, 8vw, 100px);
+  padding: clamp(3px, 0.5vh, 8px) clamp(10px, 1.2vw, 20px);
+  border-radius: 8px;
+  min-width: clamp(50px, 6vw, 80px);
   text-align: center;
 }
 
 .az-aktien-leer {
-  padding: clamp(20px, 3vh, 40px);
+  padding: clamp(12px, 2vh, 24px);
   text-align: center;
   color: #888;
-  font-size: clamp(1rem, 1.9vh, 1.3rem);
+  font-size: clamp(0.9rem, 1.6vh, 1.15rem);
   background: #f5f8fa;
   border: 2px dashed #dde5ee;
   border-radius: 10px;
 }
 
-.az-label { font-size: clamp(1.1rem, 2vh, 1.4rem); font-weight: bold; color: #123250; text-align: center; }
+.az-label { font-size: clamp(0.95rem, 1.7vh, 1.25rem); font-weight: bold; color: #123250; text-align: center; }
 
-/* Kurs-Auswahl: 5 grosse farbige Karten nebeneinander */
-.az-kurs-reihe { display: grid; grid-template-columns: repeat(5, 1fr); gap: clamp(10px, 1.5vw, 22px); width: 100%; }
+/* Kurs-Auswahl: 5 farbige Karten nebeneinander (kompakter) */
+.az-kurs-reihe { display: grid; grid-template-columns: repeat(5, 1fr); gap: clamp(6px, 1vw, 14px); width: 100%; }
 
 .az-kurs-btn {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: clamp(4px, 0.6vh, 10px);
-  padding: clamp(14px, 2vh, 28px) clamp(8px, 1vw, 16px);
-  min-height: clamp(90px, 14vh, 160px);
+  gap: clamp(3px, 0.5vh, 8px);
+  padding: clamp(10px, 1.6vh, 22px) clamp(8px, 1vw, 14px);
+  min-height: clamp(75px, 11vh, 135px);
   border: 3px solid transparent;
   border-radius: 12px;
   cursor: pointer;
   color: white;
   font-weight: bold;
   transition: transform 0.12s ease, box-shadow 0.12s ease, border-color 0.12s ease;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.12);
 }
 
-.az-kurs-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.18); }
+.az-kurs-btn:hover { transform: translateY(-2px); box-shadow: 0 3px 9px rgba(0,0,0,0.18); }
 
-.az-kurs-zahl { font-size: clamp(1.8rem, 4vh, 3rem); line-height: 1; }
+.az-kurs-zahl { font-size: clamp(1.55rem, 3.2vh, 2.6rem); line-height: 1; }
 .az-kurs-text { font-size: clamp(0.75rem, 1.3vh, 1rem); opacity: 0.95; text-align: center; }
 
 .az-kurs-dunkelrot   { background: #b71c1c; }
@@ -145,22 +145,22 @@
 
 .az-kurs-aktiv {
   border-color: #123250;
-  transform: translateY(-4px) scale(1.04);
-  box-shadow: 0 6px 18px rgba(0,0,0,0.28);
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 4px 14px rgba(0,0,0,0.28);
 }
 
 .az-auswahl {
   text-align: center;
-  font-size: clamp(1.05rem, 1.9vh, 1.35rem);
+  font-size: clamp(0.95rem, 1.7vh, 1.2rem);
   color: #123250;
   background: #e8f5e9;
-  padding: clamp(10px, 1.4vh, 18px) clamp(14px, 1.8vw, 26px);
+  padding: clamp(6px, 1vh, 12px) clamp(12px, 1.5vw, 22px);
   border-radius: 8px;
   border: 2px solid #36C291;
 }
 
 .az-action { display: flex; justify-content: center; }
-.az-eintragen-btn { padding: clamp(14px, 2vh, 22px) clamp(40px, 5vw, 80px); font-size: clamp(1.15rem, 2.2vh, 1.5rem); }
+.az-eintragen-btn { padding: clamp(12px, 1.9vh, 22px) clamp(36px, 4.6vw, 72px); font-size: clamp(1.1rem, 2.1vh, 1.5rem); }
 
 @media (max-width: 800px) {
   .az-kurs-reihe { grid-template-columns: repeat(3, 1fr); }

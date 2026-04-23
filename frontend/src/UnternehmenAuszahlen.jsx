@@ -1,6 +1,8 @@
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 
+import Emoji from './Emoji'
+
 import './UnternehmenAuszahlen.css'  //Wichtig immer CSS importieren
 
 export default function UnternehmenAuszahlen() {
@@ -32,7 +34,7 @@ export default function UnternehmenAuszahlen() {
   function laden() {
     setFehler('')
     if (!unternehmenName.trim()) {
-      setFehler('Bitte Unternehmenname eingeben.')
+      setFehler('Bitte Unternehmensname eingeben.')
       return
     }
 
@@ -51,7 +53,7 @@ export default function UnternehmenAuszahlen() {
     setFehler('')
     const b = parseInt(betrag) || 0
     if (b <= 0) {
-      setFehler('Bitte einen gueltigen Betrag eingeben.')
+      setFehler('Bitte einen gültigen Betrag eingeben.')
       return
     }
     if (b > kontostand) {
@@ -82,7 +84,7 @@ export default function UnternehmenAuszahlen() {
 
   return (
     <div className="ua-seite">
-      <div className="ua-icon">📤</div>
+      <div className="ua-icon"><Emoji char="📤" /></div>
       <h2 className="ua-titel">Unternehmen auszahlen</h2>
 
       <div className="ua-inhalt">

@@ -65,12 +65,12 @@ function DevNavigator() {
         <option value="/mainsite/kunde">Kunde (Hub)</option>
         <option value="/mainsite/unternehmen">Unternehmen (Hub)</option>
         <option value="/mainsite/unternehmen-umsatz">Unternehmen Umsatz</option>
-        <option value="/mainsite/unternehmen-loeschen">Unternehmen Loeschen</option>
+        <option value="/mainsite/unternehmen-loeschen">Unternehmen Löschen</option>
         <option value="/mainsite/konto">Konto</option>
         <option value="/mainsite/kontoerstellen">Konto Erstellen</option>
         <option value="/mainsite/einzahlen">Einzahlen</option>
         <option value="/mainsite/auszahlen">Auszahlen</option>
-        <option value="/mainsite/ueberweisung">Ueberweisung</option>
+        <option value="/mainsite/ueberweisung">Überweisung</option>
         <option value="/mainsite/aktien">Aktien Hub</option>
         <option value="/mainsite/aktien/kaufen">Aktien Kaufen</option>
         <option value="/mainsite/aktien/zaehler">Aktien Zaehler</option>
@@ -165,18 +165,28 @@ function Footer() {
 function ZurueckBar() {
   const navigate = useNavigate()
   const location = useLocation()
+  const { betreuerEingeloggt, setEingeloggt, setAktuellerNutzer } = useAppContext()
   const istLogin = location.pathname === '/'
-  const istStartseite = location.pathname === '/mainsite'
   const istBetreuer = location.pathname === '/mainsite/betreuer'
 
   if (istLogin || istBetreuer) return null
 
+  // Wenn Betreuer eingeloggt, ist "Startseite" das Betreuer-Menu - sonst das Haupt-Menu
+  const startseite = betreuerEingeloggt ? '/mainsite/betreuer' : '/mainsite'
+  const istStartseite = location.pathname === startseite
+
+  function handleAbmelden() {
+    setEingeloggt(false)
+    setAktuellerNutzer(null)
+    navigate('/')
+  }
+
   return (
     <div className="zurueck-bar">
       {!istStartseite ? (
-        <button className="zurueck-btn" onClick={() => navigate('/mainsite')}>zur Startseite</button>
+        <button className="zurueck-btn" onClick={() => navigate(startseite)}>zur Startseite</button>
       ) : <div />}
-      <button className="logout-btn" onClick={() => navigate('/')}>Abmelden</button>
+      <button className="logout-btn" onClick={handleAbmelden}>Abmelden</button>
     </div>
   )
 }

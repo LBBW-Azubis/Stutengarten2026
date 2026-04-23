@@ -1,4 +1,128 @@
-/* AktienVerkaufen Styles - viewport-relativ */
+/* AktienVerkaufen Styles - viewport-relativ, kompakt */
 
-.av-seite { display: flex; flex-direction: column; align-items: center; width: 100%; flex: 1; }
-.av-titel { font-size: clamp(1.8rem, 4vh, 2.8rem); color: #123250; margin: 0 0 clamp(16px, 2.5vh, 32px) 0; font-weight: bold; }
+.av-seite { display: flex; flex-direction: column; align-items: center; width: 100%; flex: 1; min-height: 0; overflow: hidden; }
+.av-titel { font-size: clamp(1.4rem, 3vh, 2.2rem); color: #123250; margin: 0 0 clamp(10px, 1.6vh, 20px) 0; font-weight: bold; }
+.av-inhalt { display: flex; flex-direction: column; gap: clamp(8px, 1.3vh, 18px); width: 100%; max-width: clamp(700px, 85vw, 1400px); flex: 1; min-height: 0; }
+
+.av-feld { display: flex; align-items: center; gap: clamp(12px, 1.4vw, 20px); }
+.av-feld label { font-size: clamp(1.05rem, 1.9vh, 1.45rem); font-weight: bold; color: #123250; min-width: clamp(150px, 16vw, 240px); text-align: right; white-space: nowrap; }
+.av-feld .feld-input { flex: 1; min-width: 0; padding: clamp(8px, 1.3vh, 16px) clamp(12px, 1.3vw, 22px); font-size: clamp(1.05rem, 1.8vh, 1.35rem); }
+.av-action-btn { padding: clamp(8px, 1.3vh, 16px) clamp(20px, 2.4vw, 36px); font-size: clamp(1rem, 1.7vh, 1.25rem); white-space: nowrap; }
+.av-trennlinie { width: 100%; height: 2px; background: #dde5ee; margin: clamp(4px, 0.7vh, 10px) 0; }
+
+.av-label { font-size: clamp(0.95rem, 1.7vh, 1.25rem); font-weight: bold; color: #123250; text-align: center; }
+
+/* Aktien-Auswahl als Karten */
+.av-aktien-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(clamp(140px, 18vw, 220px), 1fr));
+  gap: clamp(8px, 1.2vw, 16px);
+  width: 100%;
+}
+
+.av-aktien-karte {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(6px, 0.9vh, 12px);
+  padding: clamp(10px, 1.6vh, 20px) clamp(12px, 1.2vw, 20px);
+  min-height: clamp(100px, 14vh, 160px);
+  border: 3px solid #dde5ee;
+  border-radius: 12px;
+  background: #fff;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  font-family: inherit;
+}
+
+.av-aktien-karte:hover {
+  transform: translateY(-2px);
+  border-color: #36C291;
+  box-shadow: 0 4px 12px rgba(54,194,145,0.25);
+}
+
+.av-aktien-karte-aktiv {
+  border-color: #36C291;
+  background: #e8f5e9;
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 5px 14px rgba(54,194,145,0.4);
+}
+
+.av-aktien-check {
+  position: absolute;
+  top: clamp(4px, 0.5vh, 8px);
+  right: clamp(4px, 0.4vw, 8px);
+  width: clamp(22px, 2.6vw, 32px);
+  height: clamp(22px, 2.6vw, 32px);
+  border-radius: 50%;
+  background: #36C291;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(0.85rem, 1.7vh, 1.2rem);
+  font-weight: bold;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.av-aktien-name {
+  font-size: clamp(0.95rem, 1.8vh, 1.35rem);
+  font-weight: bold;
+  color: #123250;
+  text-align: center;
+  word-break: break-word;
+}
+
+.av-aktien-preis-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.av-aktien-preis-label {
+  font-size: clamp(0.65rem, 1.1vh, 0.85rem);
+  font-weight: bold;
+  color: #123250;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.av-aktien-wert {
+  font-size: clamp(1.15rem, 2.4vh, 1.8rem);
+  font-weight: bold;
+  color: #fff;
+  background: #36C291;
+  padding: clamp(3px, 0.5vh, 8px) clamp(10px, 1.2vw, 20px);
+  border-radius: 8px;
+  min-width: clamp(50px, 6vw, 80px);
+  text-align: center;
+}
+
+.av-aktien-leer {
+  padding: clamp(12px, 2vh, 24px);
+  text-align: center;
+  color: #888;
+  font-size: clamp(0.9rem, 1.6vh, 1.15rem);
+  background: #f5f8fa;
+  border: 2px dashed #dde5ee;
+  border-radius: 10px;
+}
+
+.av-erloes {
+  text-align: center;
+  font-size: clamp(0.95rem, 1.7vh, 1.2rem);
+  color: #123250;
+  background: #e8f5e9;
+  padding: clamp(6px, 1vh, 12px) clamp(12px, 1.5vw, 22px);
+  border-radius: 8px;
+  border: 2px solid #36C291;
+}
+
+.av-action { display: flex; justify-content: center; }
+.av-verkauf-btn { padding: clamp(12px, 1.9vh, 22px) clamp(36px, 4.6vw, 72px); font-size: clamp(1.1rem, 2.1vh, 1.5rem); }
+
+@media (max-width: 700px) { .av-feld { flex-wrap: wrap; } .av-feld label { min-width: auto; text-align: left; } }

@@ -95,7 +95,7 @@ export default function AktienSammlung() {
         <div className="as-trennlinie"></div>
 
         <div className="as-liste">
-          <div className="as-liste-titel">Aktien-Uebersicht</div>
+          <div className="as-liste-titel">Aktien-Übersicht</div>
           <div className="as-liste-header">
             <span>Aktienname</span>
             <span>Preis</span>
@@ -115,7 +115,7 @@ export default function AktienSammlung() {
             </>
           ) : (
             <div className="as-liste-leer">
-              {geladen ? 'Keine Aktien vorhanden' : 'Kontonummer eingeben und Laden druecken'}
+              {geladen ? 'Keine Aktien vorhanden' : 'Kontonummer eingeben und Laden drücken'}
             </div>
           )}
         </div>

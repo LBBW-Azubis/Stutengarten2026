@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { useAppContext } from './AppContext'
+import Emoji from './Emoji'
 
 import './Menu.css'  //Wichtig immer CSS importieren
 
@@ -26,7 +27,7 @@ export default function Menu() {
             className="menu-v2-karte"
             onClick={() => { if (k.route) navigate(k.route) }}
           >
-            <span className="menu-v2-emoji">{k.emoji}</span>
+            <Emoji char={k.emoji} className="menu-v2-emoji" />
             <span className="menu-v2-label">{k.label}</span>
           </button>
         ))}

@@ -4,6 +4,16 @@
    Kein Scrollen – alles passt in den Viewport
 ============================================== */
 
+/* -- EMOJI (Twemoji-SVGs statt Unicode - OS-unabhaengig) -- */
+.emoji {
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.15em;
+  display: inline-block;
+  object-fit: contain;
+  user-select: none;
+}
+
 /* -- HEADER -- */
 .header {
   background: #123250;
@@ -157,10 +167,10 @@
 /* -- MAIN -- */
 main#app {
   flex: 1;
+  min-height: 0;
   padding: clamp(8px, 1.5vh, 20px) clamp(12px, 2vw, 40px) clamp(8px, 1vh, 16px);
   background: #fff;
-  overflow-y: auto;
-  overflow-x: hidden;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   align-items: center;

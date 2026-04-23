@@ -1,6 +1,8 @@
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 
+import Emoji from './Emoji'
+
 import './Konto.css'  //Wichtig immer CSS importieren
 
 export default function Konto() {
@@ -65,7 +67,7 @@ export default function Konto() {
       } else if (response.status === 404) {
         setFehler('Kein Kunde mit dieser Kontonummer gefunden.')
       } else {
-        setFehler('Serverfehler. Bitte spaeter erneut versuchen.')
+        setFehler('Serverfehler. Bitte später erneut versuchen.')
       }
     } catch (error) {
       console.error('[Konto] Fehler beim Laden:', error)
@@ -76,7 +78,7 @@ export default function Konto() {
 
   return (
     <div className="ko-seite">
-      <div className="ko-icon">👤</div>
+      <div className="ko-icon"><Emoji char="👤" /></div>
       <h2 className="ko-titel">Konto</h2>
 
       <div className="ko-inhalt">

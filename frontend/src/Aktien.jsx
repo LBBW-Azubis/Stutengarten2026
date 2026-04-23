@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom'
+import Emoji from './Emoji'
 
 import './Aktien.css'  //Wichtig immer CSS importieren
 
@@ -23,7 +24,7 @@ export default function Aktien() {
             className="aktien-karte"
             onClick={() => navigate(k.route)}
           >
-            <span className="aktien-emoji">{k.emoji}</span>
+            <Emoji char={k.emoji} className="aktien-emoji" />
             <span className="aktien-label">{k.label}</span>
           </button>
         ))}
