@@ -32,6 +32,7 @@ import UnternehmenEinzahlen from './UnternehmenEinzahlen'
 import UnternehmenAuszahlen from './UnternehmenAuszahlen'
 import UnternehmenUmsatz from './UnternehmenUmsatz'
 import UnternehmenInfo from './UnternehmenInfo'
+import AlleUnternehmen from './AlleUnternehmen'
 import UnternehmenLoeschen from './UnternehmenLoeschen'
 
 // Bilder importieren
@@ -69,6 +70,7 @@ function DevNavigator() {
         <option value="/mainsite/unternehmen">Unternehmen (Hub)</option>
         <option value="/mainsite/unternehmen-umsatz">Unternehmen Umsatz</option>
         <option value="/mainsite/unternehmen-info">Unternehmen Info</option>
+        <option value="/mainsite/unternehmen-alle">Alle Unternehmen</option>
         <option value="/mainsite/unternehmen-loeschen">Unternehmen Löschen</option>
         <option value="/mainsite/konto">Konto</option>
         <option value="/mainsite/kontoerstellen">Konto Erstellen</option>
@@ -203,6 +205,44 @@ function ZurueckBar() {
 }
 
 
+// Settings-Sync Komponente
+// Holt alle 5 Sekunden die aktuellen Settings vom Backend,
+// damit alle 4 PCs immer synchron sind. Ueberschreibt NICHT wenn
+// der Betreuer gerade im Betreuer-Menu editiert.
+function SettingsSync() {
+  const location = useLocation()
+  const {
+    setHackerAktiv, setHackerIntervall, setHackerAutoStart,
+    setSpieleAktiv, setSpieleAutoStart,
+  } = useAppContext()
+
+  useEffect(() => {
+    // Auf dem Betreuer-Menu kein Polling - sonst ueberschreibt der
+    // Sync die gerade editierten Werte bevor der Betreuer speichern kann.
+    if (location.pathname === '/mainsite/betreuer') return
+
+    async function sync() {
+      try {
+        const r = await fetch('http://192.168.1.10:5000/settings')
+        if (!r.ok) return
+        const s = await r.json()
+        if (typeof s.hackerAktiv === 'boolean')      setHackerAktiv(s.hackerAktiv)
+        if (s.hackerIntervall != null)                setHackerIntervall(Number(s.hackerIntervall) * 60)  // Stunden -> Minuten
+        if (typeof s.hackerAutoStart === 'boolean')  setHackerAutoStart(s.hackerAutoStart)
+        if (typeof s.spieleAktiv === 'boolean')      setSpieleAktiv(s.spieleAktiv)
+        if (typeof s.spieleAutoStart === 'boolean')  setSpieleAutoStart(s.spieleAutoStart)
+      } catch { /* stumm - Backend eventuell offline, naechster Tick klappt wieder */ }
+    }
+
+    sync()                                // sofort beim Mount / Pfadwechsel
+    const id = setInterval(sync, 5000)    // dann alle 5 Sek
+    return () => clearInterval(id)
+  }, [location.pathname, setHackerAktiv, setHackerIntervall, setHackerAutoStart, setSpieleAktiv, setSpieleAutoStart])
+
+  return null
+}
+
+
 // Hacker-Timer Komponente
 // Timer laeuft UNABHAENGIG von Seitenwechseln durch.
 // Nur auf Login und BetreuerMenu wird er pausiert (nicht gestoppt!).
@@ -240,6 +280,7 @@ function AppLayout() {
   return (
     <>
       <HackerTimerManager />
+      <SettingsSync />
       <DevNavigator />
       <Header />
       <ZurueckBar />
@@ -271,6 +312,7 @@ function AppLayout() {
           <Route path="/mainsite/unternehmen-auszahlen" element={<UnternehmenAuszahlen />} />
           <Route path="/mainsite/unternehmen-umsatz" element={<UnternehmenUmsatz />} />
           <Route path="/mainsite/unternehmen-info" element={<UnternehmenInfo />} />
+          <Route path="/mainsite/unternehmen-alle" element={<AlleUnternehmen />} />
           <Route path="/mainsite/unternehmen-loeschen" element={<UnternehmenLoeschen />} />
           <Route path="/mainsite/tschuess" element={<Tschuess />} />
           <Route path="*" element={<NoMatch />} />

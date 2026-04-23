@@ -16,7 +16,7 @@ export default function BetreuerMenu() {
   const [importStatus, setImportStatus] = useState(null)  // { typ: 'ok'|'err', text: string }
   const [showLoeschenDialog, setShowLoeschenDialog] = useState(false)
   const [loeschenInput, setLoeschenInput] = useState('')
-  const [showBeendenDialog, setShowBeendenDialog] = useState(false)
+  const [settingsDebug, setSettingsDebug] = useState(null)
 
   function oeffneLoeschenDialog() {
     setLoeschenInput('')
@@ -28,14 +28,52 @@ export default function BetreuerMenu() {
     setLoeschenInput('')
   }
 
-  function beendeAnwendung() {
-    setShowBeendenDialog(false)
-    // Im Chromium-Kiosk-Mode schliesst das das Fenster wie ALT+F4.
-    // In normalen Browser-Tabs blockiert der Browser window.close() aus
-    // Sicherheitsgruenden - dann fallen wir auf about:blank zurueck.
-    try { window.open('', '_self', '')?.close() } catch (e) { /* ignore */ }
-    try { window.close() } catch (e) { /* ignore */ }
-    setTimeout(() => { window.location.href = 'about:blank' }, 200)
+  async function handleSettingsSpeichern() {
+    // === BACKEND: Settings speichern ===
+    // PATCH http://192.168.1.10:5000/settings
+    // hackerIntervall wird in Stunden gesendet (intern in Minuten gespeichert)
+    const body = {
+      hackerAktiv,
+      hackerIntervall: hackerIntervall / 60,
+      hackerAutoStart,
+      spieleAktiv,
+      spieleAutoStart,
+    }
+    const debug = { aktion: 'PATCH', url: 'http://192.168.1.10:5000/settings', body }
+    try {
+      const response = await fetch('http://192.168.1.10:5000/settings', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json; charset=utf-8' },
+        body: JSON.stringify(body),
+      })
+      debug.status = response.status
+      const text = await response.text()
+      try { debug.data = JSON.parse(text) }
+      catch { debug.data_raw = text }
+      setSettingsDebug(debug)
+    } catch (error) {
+      console.error('[Settings] PATCH Fehler:', error)
+      debug.error = String(error)
+      setSettingsDebug(debug)
+    }
+    // === ENDE BACKEND ===
+  }
+
+  async function handleSettingsGet() {
+    // === TEST: Settings vom Backend holen ===
+    const debug = { aktion: 'GET', url: 'http://192.168.1.10:5000/settings' }
+    try {
+      const response = await fetch('http://192.168.1.10:5000/settings')
+      debug.status = response.status
+      const text = await response.text()
+      try { debug.data = JSON.parse(text) }
+      catch { debug.data_raw = text }
+      setSettingsDebug(debug)
+    } catch (error) {
+      console.error('[Settings] GET Fehler:', error)
+      debug.error = String(error)
+      setSettingsDebug(debug)
+    }
   }
 
   async function bestaetigeLoeschen() {
@@ -150,7 +188,7 @@ export default function BetreuerMenu() {
     spieleAutoStart, setSpieleAutoStart,
   } = useAppContext()
 
-  const intervallOptionen = [0.166, 30, 60, 90, 120, 180, 240]  // in Minuten: 10 Sek, 0,5 H, 1 H, 1,5 H, 2 H, 3 H, 4 H
+  const intervallOptionen = [30, 60, 90, 120, 180, 240]  // in Minuten: 0,5 H, 1 H, 1,5 H, 2 H, 3 H, 4 H
 
   return (
     <div className="page betreuer-page">
@@ -193,7 +231,7 @@ export default function BetreuerMenu() {
                         className={`intervall-btn ${hackerIntervall === min ? 'ausgewaehlt' : ''}`}
                         onClick={() => setHackerIntervall(min)}
                       >
-                        {min < 1 ? '10 Sek' : `${(min / 60).toString().replace('.', ',')} H`}
+                        {`${(min / 60).toString().replace('.', ',')} H`}
                       </button>
                     ))}
                   </div>
@@ -241,6 +279,27 @@ export default function BetreuerMenu() {
               </div>
             </div>
           </div>
+
+          {/* Speichern + GET-Test unter den Einstellungen */}
+          <div className="settings-speichern">
+            <button
+              className="settings-speichern-btn"
+              style={{ background: '#f0ad4e', marginRight: 'auto' }}
+              onClick={handleSettingsGet}
+            >GET (Test)</button>
+            <button
+              className="settings-speichern-btn"
+              onClick={handleSettingsSpeichern}
+            >Speichern</button>
+          </div>
+
+          {/* DEBUG: Roh-Response vom Settings-Endpoint */}
+          {settingsDebug && (
+            <div className="settings-debug">
+              <div className="settings-debug-titel">Debug — {settingsDebug.aktion} /settings</div>
+              <pre className="settings-debug-pre">{JSON.stringify(settingsDebug, null, 2)}</pre>
+            </div>
+          )}
 
         </div>
 
@@ -295,12 +354,6 @@ export default function BetreuerMenu() {
               <div className="kachel-label kachel-label-danger">Datenbank Löschen</div>
             </div>
 
-            <div className="kachel" onClick={() => setShowBeendenDialog(true)}>
-              <div className="kachel-bild">
-                <Emoji char="🚪" className="betreuer-kachel-emoji" />
-              </div>
-              <div className="kachel-label">Anwendung beenden</div>
-            </div>
           </div>
 
           <input
@@ -354,27 +407,6 @@ export default function BetreuerMenu() {
         </div>
       )}
 
-      {/* Anwendung-Beenden Bestaetigungs-Dialog */}
-      {showBeendenDialog && (
-        <div className="loeschen-overlay" onClick={() => setShowBeendenDialog(false)}>
-          <div className="beenden-dialog" onClick={e => e.stopPropagation()}>
-            <div className="beenden-titel">Anwendung beenden?</div>
-            <div className="beenden-text">
-              Möchtest du die Anwendung wirklich schließen?
-            </div>
-            <div className="loeschen-buttons">
-              <button
-                className="loeschen-btn loeschen-btn-cancel"
-                onClick={() => setShowBeendenDialog(false)}
-              >Nein</button>
-              <button
-                className="loeschen-btn beenden-btn-ja"
-                onClick={beendeAnwendung}
-              >Ja</button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   )
 }

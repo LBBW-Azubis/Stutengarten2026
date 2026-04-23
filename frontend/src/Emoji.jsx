@@ -25,6 +25,7 @@ import u1f4b0 from './images/emoji/1f4b0.svg'   // 💰 Money Bag
 import u1f3a1 from './images/emoji/1f3a1.svg'   // 🎡 Ferris Wheel
 import u1f4b8 from './images/emoji/1f4b8.svg'   // 💸 Money With Wings
 import u1f4ca from './images/emoji/1f4ca.svg'   // 📊 Bar Chart
+import u1f4cb from './images/emoji/1f4cb.svg'   // 📋 Clipboard
 import u1f5d1 from './images/emoji/1f5d1.svg'   // 🗑️ Wastebasket
 import u1f6aa from './images/emoji/1f6aa.svg'   // 🚪 Door
 import u26a0  from './images/emoji/26a0.svg'    // ⚠️ Warning
@@ -42,6 +43,7 @@ const EMOJI_MAP = {
   '🎡': u1f3a1,
   '💸': u1f4b8,
   '📊': u1f4ca,
+  '📋': u1f4cb,
   '🗑️': u1f5d1,
   '🗑':  u1f5d1,  // Variante ohne FE0F-Selector
   '🚪': u1f6aa,

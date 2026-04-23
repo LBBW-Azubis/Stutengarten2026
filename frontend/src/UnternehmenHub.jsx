@@ -11,6 +11,7 @@ export default function UnternehmenHub() {
     { route: '/mainsite/unternehmen-auszahlen', label: 'Unternehmen auszahlen', emoji: '📤' },
     { route: '/mainsite/unternehmen-umsatz',    label: 'Unternehmen Umsatz',    emoji: '📊' },
     { route: '/mainsite/unternehmen-info',      label: 'Unternehmen Info',      emoji: '🏢' },
+    { route: '/mainsite/unternehmen-alle',      label: 'Alle Unternehmen',      emoji: '📋' },
   ]
 
   return (

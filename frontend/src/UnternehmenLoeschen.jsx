@@ -8,14 +8,20 @@ export default function UnternehmenLoeschen() {
   const [unternehmenName, setUnternehmenName] = useState('')
   const [fehler, setFehler] = useState('')
   const [status, setStatus] = useState(null)  // { typ: 'ok'|'err', text: String }
+  const [showConfirm, setShowConfirm] = useState(false)
 
-  async function loeschen() {
+  function confirmLoeschen() {
     setFehler('')
     setStatus(null)
     if (!unternehmenName.trim()) {
       setFehler('Bitte Unternehmensname eingeben.')
       return
     }
+    setShowConfirm(true)
+  }
+
+  async function loeschen() {
+    setShowConfirm(false)
 
     // === BACKEND: Unternehmen loeschen ===
     // DELETE http://192.168.1.10:5000/company/<company_name>
@@ -57,7 +63,7 @@ export default function UnternehmenLoeschen() {
             onChange={e => { setUnternehmenName(e.target.value); setStatus(null) }}
             onKeyDown={e => { if (e.key === 'Enter') loeschen() }}
           />
-          <button className="btn ul-action-btn" onClick={loeschen}>Löschen</button>
+          <button className="btn ul-action-btn" onClick={confirmLoeschen}>Löschen</button>
         </div>
 
         {fehler && <div className="ul-msg ul-msg-err">{fehler}</div>}
@@ -65,6 +71,24 @@ export default function UnternehmenLoeschen() {
           <div className={`ul-msg ul-msg-${status.typ}`}>{status.text}</div>
         )}
       </div>
+
+      {/* Bestaetigungs-Dialog */}
+      {showConfirm && (
+        <div className="ul-overlay" onClick={() => setShowConfirm(false)}>
+          <div className="ul-dialog" onClick={e => e.stopPropagation()}>
+            <div className="ul-dialog-titel">
+              <Emoji char="⚠️" /> Unternehmen löschen
+            </div>
+            <div className="ul-dialog-text">
+              Wollen Sie sicher <strong>"{unternehmenName.trim()}"</strong> löschen?
+            </div>
+            <div className="ul-dialog-buttons">
+              <button className="ul-dialog-btn ul-dialog-btn-nein" onClick={() => setShowConfirm(false)}>Nein</button>
+              <button className="ul-dialog-btn ul-dialog-btn-ja" onClick={loeschen}>Ja</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
