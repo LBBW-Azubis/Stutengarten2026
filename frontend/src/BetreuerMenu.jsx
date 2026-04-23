@@ -16,7 +16,6 @@ export default function BetreuerMenu() {
   const [importStatus, setImportStatus] = useState(null)  // { typ: 'ok'|'err', text: string }
   const [showLoeschenDialog, setShowLoeschenDialog] = useState(false)
   const [loeschenInput, setLoeschenInput] = useState('')
-  const [settingsDebug, setSettingsDebug] = useState(null)
 
   function oeffneLoeschenDialog() {
     setLoeschenInput('')
@@ -39,41 +38,16 @@ export default function BetreuerMenu() {
       spieleAktiv,
       spieleAutoStart,
     }
-    const debug = { aktion: 'PATCH', url: 'http://192.168.1.10:5000/settings', body }
     try {
-      const response = await fetch('http://192.168.1.10:5000/settings', {
+      await fetch('http://192.168.1.10:5000/settings', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json; charset=utf-8' },
         body: JSON.stringify(body),
       })
-      debug.status = response.status
-      const text = await response.text()
-      try { debug.data = JSON.parse(text) }
-      catch { debug.data_raw = text }
-      setSettingsDebug(debug)
     } catch (error) {
       console.error('[Settings] PATCH Fehler:', error)
-      debug.error = String(error)
-      setSettingsDebug(debug)
     }
     // === ENDE BACKEND ===
-  }
-
-  async function handleSettingsGet() {
-    // === TEST: Settings vom Backend holen ===
-    const debug = { aktion: 'GET', url: 'http://192.168.1.10:5000/settings' }
-    try {
-      const response = await fetch('http://192.168.1.10:5000/settings')
-      debug.status = response.status
-      const text = await response.text()
-      try { debug.data = JSON.parse(text) }
-      catch { debug.data_raw = text }
-      setSettingsDebug(debug)
-    } catch (error) {
-      console.error('[Settings] GET Fehler:', error)
-      debug.error = String(error)
-      setSettingsDebug(debug)
-    }
   }
 
   async function bestaetigeLoeschen() {
@@ -192,10 +166,6 @@ export default function BetreuerMenu() {
 
   return (
     <div className="page betreuer-page">
-      <div className="betreuer-todo">
-        <strong>To-Do:</strong>
-        <div>1. Settings API Call einbauen / testen (Donnerstag - Backend)</div>
-      </div>
       <div className="betreuer-layout">
 
         {/* Links: Einstellungen */}
@@ -280,26 +250,13 @@ export default function BetreuerMenu() {
             </div>
           </div>
 
-          {/* Speichern + GET-Test unter den Einstellungen */}
+          {/* Speichern unter den Einstellungen */}
           <div className="settings-speichern">
-            <button
-              className="settings-speichern-btn"
-              style={{ background: '#f0ad4e', marginRight: 'auto' }}
-              onClick={handleSettingsGet}
-            >GET (Test)</button>
             <button
               className="settings-speichern-btn"
               onClick={handleSettingsSpeichern}
             >Speichern</button>
           </div>
-
-          {/* DEBUG: Roh-Response vom Settings-Endpoint */}
-          {settingsDebug && (
-            <div className="settings-debug">
-              <div className="settings-debug-titel">Debug — {settingsDebug.aktion} /settings</div>
-              <pre className="settings-debug-pre">{JSON.stringify(settingsDebug, null, 2)}</pre>
-            </div>
-          )}
 
         </div>
 
