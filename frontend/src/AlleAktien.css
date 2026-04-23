@@ -1,0 +1,26 @@
+/* Alle Aktien - 3-spaltiges Grid (Name | Ordner | Kontostand) */
+
+.aa-liste-header,
+.aa-liste-zeile,
+.aa-liste-gesamt {
+  display: grid !important;
+  grid-template-columns: 2fr 1fr 1fr !important;
+}
+
+.aa-liste-header span:last-child,
+.aa-liste-zeile .as-preis,
+.aa-liste-gesamt span:last-child {
+  text-align: right;
+}
+
+.aa-liste-header span:nth-child(2),
+.aa-liste-zeile .aa-ordner {
+  text-align: center;
+}
+
+.aa-ordner {
+  font-weight: bold;
+}
+
+.aa-ordner-ja { color: #155724; }
+.aa-ordner-nein { color: #721c24; }

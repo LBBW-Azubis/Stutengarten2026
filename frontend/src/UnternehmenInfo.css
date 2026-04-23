@@ -1,0 +1,30 @@
+/* UnternehmenInfo Styles - viewport-relativ */
+
+.ui-seite { display: flex; flex-direction: column; align-items: center; width: 100%; flex: 1; }
+.ui-icon {
+  font-size: clamp(3rem, 7vh, 5.5rem);
+  line-height: 1;
+  width: clamp(110px, 16vh, 180px);
+  height: clamp(110px, 16vh, 180px);
+  background: linear-gradient(135deg, #f0f5fa 0%, #dfe9f2 100%);
+  border: 5px solid #cdd7e3;
+  border-radius: clamp(16px, 1.8vw, 26px);
+  box-shadow: 0 4px 14px rgba(18,50,80,0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+.ui-titel { font-size: clamp(1.5rem, 3vh, 2.2rem); color: #123250; margin: clamp(10px, 1.5vh, 20px) 0 clamp(16px, 2.5vh, 32px) 0; font-weight: bold; }
+
+.ui-inhalt { display: flex; flex-direction: column; gap: clamp(12px, 2vh, 22px); width: 100%; max-width: clamp(700px, 85vw, 1400px); }
+
+.ui-feld { display: flex; align-items: center; gap: clamp(14px, 1.6vw, 24px); }
+.ui-feld label { font-size: clamp(1.15rem, 2.2vh, 1.6rem); font-weight: bold; color: #123250; min-width: clamp(180px, 18vw, 280px); text-align: right; white-space: nowrap; }
+.ui-feld .feld-input { flex: 1; min-width: 0; padding: clamp(12px, 1.8vh, 20px) clamp(16px, 1.6vw, 26px); font-size: clamp(1.1rem, 2vh, 1.5rem); }
+.ui-action-btn { padding: clamp(12px, 1.8vh, 20px) clamp(26px, 3vw, 44px); font-size: clamp(1.1rem, 2vh, 1.4rem); white-space: nowrap; }
+.ui-trennlinie { width: 100%; height: 2px; background: #dde5ee; margin: clamp(6px, 1vh, 12px) 0; }
+
+.ui-kontostand { background: #123250 !important; color: white; font-weight: bold; }
+
+@media (max-width: 700px) { .ui-feld { flex-wrap: wrap; } .ui-feld label { min-width: auto; text-align: left; } }

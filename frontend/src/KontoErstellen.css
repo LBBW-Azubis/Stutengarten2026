@@ -13,4 +13,9 @@
 .ke-feld label { font-size: clamp(1rem, 1.8vh, 1.3rem); font-weight: bold; color: #123250; min-width: clamp(140px, 14vw, 200px); text-align: right; white-space: nowrap; }
 .ke-feld .feld-input { flex: 1; min-width: 0; padding: clamp(8px, 1.2vh, 12px) clamp(12px, 1.2vw, 18px); font-size: clamp(1rem, 1.6vh, 1.15rem); }
 
+/* Debug-Fenster */
+.ke-debug { margin-top: clamp(12px, 1.5vh, 20px); border: 2px solid #f0ad4e; border-radius: 8px; overflow: hidden; background: #fff8e1; width: 100%; }
+.ke-debug-titel { background: #f0ad4e; color: white; font-weight: bold; padding: clamp(8px, 1vh, 12px) clamp(12px, 1.5vw, 20px); font-size: clamp(0.9rem, 1.5vh, 1.1rem); font-family: monospace; }
+.ke-debug-pre { margin: 0; padding: clamp(10px, 1.4vh, 16px) clamp(12px, 1.5vw, 20px); font-family: 'Consolas', 'Monaco', monospace; font-size: clamp(0.8rem, 1.3vh, 1rem); color: #123250; white-space: pre-wrap; word-break: break-all; max-height: 350px; overflow-y: auto; }
+
 @media (max-width: 600px) { .ke-card { padding: 16px; } .ke-feld { flex-direction: column; align-items: flex-start; gap: 4px; } .ke-feld label { min-width: auto; text-align: left; } }

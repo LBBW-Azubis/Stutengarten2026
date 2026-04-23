@@ -36,38 +36,19 @@ export default function UnternehmenUmsatz() {
     }
 
     // === BACKEND: Umsatz laden ===
-    // 1) GET /company/<name>           → { id, name, folder_handed_over }
-    // 2) GET /company/<id>/transactions → Umsatz-Daten
+    // GET /company/<name>/transactions → Umsatz-Daten
     const name = unternehmenName.trim()
-    const debug = {}
+    const url = `http://192.168.1.10:5000/company/${encodeURIComponent(name)}/transactions`
+    const debug = { url }
     try {
-      // 1) Company-ID holen
-      const url1 = `http://192.168.1.10:5000/company/${encodeURIComponent(name)}`
-      debug.schritt_1_url = url1
-      const r1 = await fetch(url1)
-      debug.schritt_1_status = r1.status
-      const text1 = await r1.text()
-      try { debug.schritt_1_data = JSON.parse(text1) }
-      catch { debug.schritt_1_data_raw = text1 }
-
-      if (!r1.ok) {
-        setDebugInfo(debug)
-        setFehler('Unternehmen nicht gefunden.')
-        return
-      }
-      const companyId = debug.schritt_1_data?.id
-
-      // 2) Transactions holen
-      const url2 = `http://192.168.1.10:5000/company/${companyId}/transactions`
-      debug.schritt_2_url = url2
-      const r2 = await fetch(url2)
-      debug.schritt_2_status = r2.status
-      const text2 = await r2.text()
-      try { debug.schritt_2_data = JSON.parse(text2) }
-      catch { debug.schritt_2_data_raw = text2 }
+      const response = await fetch(url)
+      debug.status = response.status
+      const text = await response.text()
+      try { debug.data = JSON.parse(text) }
+      catch { debug.data_raw = text }
 
       setDebugInfo(debug)
-      if (!r2.ok) {
+      if (!response.ok) {
         setFehler('Umsatzdaten konnten nicht geladen werden.')
         return
       }

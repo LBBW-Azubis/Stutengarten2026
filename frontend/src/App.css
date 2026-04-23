@@ -151,6 +151,26 @@
 
 .zurueck-btn:hover { background: #2aab7e; }
 
+.zurueck-bar-links {
+  display: flex;
+  align-items: center;
+  gap: clamp(8px, 1.2vw, 18px);
+}
+
+.zurueck-back-btn {
+  background: #19AAD2;
+  color: white;
+  border: none;
+  padding: clamp(8px, 1.2vh, 14px) clamp(18px, 2.2vw, 36px);
+  font-size: clamp(1rem, 1.8vh, 1.3rem);
+  font-weight: bold;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.zurueck-back-btn:hover { background: #1588a8; }
+
 .logout-btn {
   background: #D9534F;
   color: white;
@@ -170,7 +190,8 @@ main#app {
   min-height: 0;
   padding: clamp(8px, 1.5vh, 20px) clamp(12px, 2vw, 40px) clamp(8px, 1vh, 16px);
   background: #fff;
-  overflow: hidden;
+  overflow-y: auto;  /* TEMP: fuer Debug - spaeter wieder auf hidden */
+  overflow-x: hidden;
   display: flex;
   flex-direction: column;
   align-items: center;

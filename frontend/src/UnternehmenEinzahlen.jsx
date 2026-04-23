@@ -56,8 +56,10 @@ export default function UnternehmenEinzahlen() {
         setFehler('Unternehmen nicht gefunden oder kein Konto.')
         return
       }
+      // Backend liefert Array: [{ balance, name }]
       const d = debug.data
-      setKontostand(Number(d?.balance) || 0)
+      const eintrag = Array.isArray(d) ? d[0] : d
+      setKontostand(Number(eintrag?.balance) || 0)
 
       setGeladen(true)
       setBetrag('')
@@ -87,19 +89,21 @@ export default function UnternehmenEinzahlen() {
     // === BACKEND: Einzahlung an Unternehmen senden ===
     // PATCH http://192.168.1.10:5000/company/<name>/savingsbook
     // Body: { balance: (kontostand + betrag) }
-    const url = `http://192.168.1.10:5000/company/${encodeURIComponent(unternehmenName.trim())}/savingsbook`
+    const url = `http://192.168.1.10:5000/company/${encodeURIComponent(unternehmenName.trim())}/savingsbook/balance`
     const body = { balance: neuerStand }
-    console.log('[Unternehmen Einzahlen] PATCH URL:', url)
-    console.log('[Unternehmen Einzahlen] PATCH Body:', JSON.stringify(body))
+    const debug = { aktion: 'einzahlen', url, body }
     try {
       const response = await fetch(url, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json; charset=utf-8' },
         body: JSON.stringify(body),
       })
-      const data = await response.json()
-      console.log('[Unternehmen Einzahlen] Response:', response.status, data)
+      debug.status = response.status
+      const text = await response.text()
+      try { debug.data = JSON.parse(text) }
+      catch { debug.data_raw = text }
 
+      setDebugInfo(debug)
       if (response.ok) {
         setKontostandNeu(neuerStand)
         setKontostand(neuerStand)
@@ -108,6 +112,8 @@ export default function UnternehmenEinzahlen() {
       }
     } catch (error) {
       console.error('[Unternehmen Einzahlen] Fehler:', error)
+      debug.error = String(error)
+      setDebugInfo(debug)
       setFehler('Verbindung zum Server fehlgeschlagen.')
     }
     // === ENDE BACKEND ===

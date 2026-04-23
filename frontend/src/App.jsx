@@ -21,6 +21,8 @@ import AktienKaufen from './AktienKaufen'
 import AktienZaehler from './AktienZaehler'
 import AktienVerkaufen from './AktienVerkaufen'
 import AktienSammlung from './AktienSammlung'
+import KundeAktien from './KundeAktien'
+import AlleAktien from './AlleAktien'
 import Hacker from './Hacker'
 import Spiel from './Spiel'
 import Tschuess from './Tschuess'
@@ -29,6 +31,7 @@ import UnternehmenHub from './UnternehmenHub'
 import UnternehmenEinzahlen from './UnternehmenEinzahlen'
 import UnternehmenAuszahlen from './UnternehmenAuszahlen'
 import UnternehmenUmsatz from './UnternehmenUmsatz'
+import UnternehmenInfo from './UnternehmenInfo'
 import UnternehmenLoeschen from './UnternehmenLoeschen'
 
 // Bilder importieren
@@ -65,6 +68,7 @@ function DevNavigator() {
         <option value="/mainsite/kunde">Kunde (Hub)</option>
         <option value="/mainsite/unternehmen">Unternehmen (Hub)</option>
         <option value="/mainsite/unternehmen-umsatz">Unternehmen Umsatz</option>
+        <option value="/mainsite/unternehmen-info">Unternehmen Info</option>
         <option value="/mainsite/unternehmen-loeschen">Unternehmen Löschen</option>
         <option value="/mainsite/konto">Konto</option>
         <option value="/mainsite/kontoerstellen">Konto Erstellen</option>
@@ -75,7 +79,9 @@ function DevNavigator() {
         <option value="/mainsite/aktien/kaufen">Aktien Kaufen</option>
         <option value="/mainsite/aktien/zaehler">Aktien Zaehler</option>
         <option value="/mainsite/aktien/verkaufen">Aktien Verkaufen</option>
-        <option value="/mainsite/aktien/sammlung">Aktien Sammlung</option>
+        <option value="/mainsite/aktien/sammlung">Aktien Sammlung (Hub)</option>
+        <option value="/mainsite/aktien/sammlung/kunde">Kunde Aktien</option>
+        <option value="/mainsite/aktien/sammlung/alle">Alle Aktien</option>
         <option value="/mainsite/hacker">Hacker</option>
         <option value="/mainsite/spiel">Spiel</option>
         <option value="/mainsite/tschuess">Tschuess</option>
@@ -183,9 +189,14 @@ function ZurueckBar() {
 
   return (
     <div className="zurueck-bar">
-      {!istStartseite ? (
-        <button className="zurueck-btn" onClick={() => navigate(startseite)}>zur Startseite</button>
-      ) : <div />}
+      <div className="zurueck-bar-links">
+        {!istStartseite && (
+          <>
+            <button className="zurueck-back-btn" onClick={() => navigate(-1)}>← Zurück</button>
+            <button className="zurueck-btn" onClick={() => navigate(startseite)}>zur Startseite</button>
+          </>
+        )}
+      </div>
       <button className="logout-btn" onClick={handleAbmelden}>Abmelden</button>
     </div>
   )
@@ -250,6 +261,8 @@ function AppLayout() {
           <Route path="/mainsite/aktien/zaehler" element={<AktienZaehler />} />
           <Route path="/mainsite/aktien/verkaufen" element={<AktienVerkaufen />} />
           <Route path="/mainsite/aktien/sammlung" element={<AktienSammlung />} />
+          <Route path="/mainsite/aktien/sammlung/kunde" element={<KundeAktien />} />
+          <Route path="/mainsite/aktien/sammlung/alle" element={<AlleAktien />} />
           <Route path="/mainsite/hacker" element={<Hacker />} />
           <Route path="/mainsite/spiel" element={<Spiel />} />
           <Route path="/mainsite/unternehmen" element={<UnternehmenHub />} />
@@ -257,6 +270,7 @@ function AppLayout() {
           <Route path="/mainsite/unternehmen-einzahlen" element={<UnternehmenEinzahlen />} />
           <Route path="/mainsite/unternehmen-auszahlen" element={<UnternehmenAuszahlen />} />
           <Route path="/mainsite/unternehmen-umsatz" element={<UnternehmenUmsatz />} />
+          <Route path="/mainsite/unternehmen-info" element={<UnternehmenInfo />} />
           <Route path="/mainsite/unternehmen-loeschen" element={<UnternehmenLoeschen />} />
           <Route path="/mainsite/tschuess" element={<Tschuess />} />
           <Route path="*" element={<NoMatch />} />
