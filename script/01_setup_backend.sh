@@ -112,8 +112,12 @@ pm2 delete stutengarten-backend 2>/dev/null || true
 pm2 start "venv/bin/python3 backend/app.py" --name stutengarten-backend
 pm2 save
 
-info "PM2 Startup-Befehl generieren (bitte manuell ausführen):"
-pm2 startup | tail -1   # gibt den sudo-Befehl aus – muss manuell kopiert & ausgeführt werden
+info "PM2 in den Autostart eintragen..."
+# Spezieller und direkter Autostart-Befehl für Ubuntu (systemd)
+sudo env PATH=$PATH:/usr/bin /usr/lib/node_modules/pm2/bin/pm2 startup systemd -u $USER --hp $HOME
+
+# Nochmals speichern
+pm2 save
 
 echo ""
 echo -e "${GREEN}════════════════════════════════════════════════════════${NC}"
