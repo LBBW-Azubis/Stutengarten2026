@@ -42,6 +42,11 @@ fi
 read -p "Kiosk-URL [https://ubuntu.com]: " KIOSK_URL
 KIOSK_URL=${KIOSK_URL:-https://ubuntu.com}
 
+# Falls nur IP/Hostname eingegeben wurde, automatisch http:// ergänzen.
+if [[ ! "$KIOSK_URL" =~ ^https?:// ]]; then
+    KIOSK_URL="http://$KIOSK_URL"
+fi
+
 echo -e "\n${YELLOW}Zusammenfassung:${NC}"
 if [ "$STATIC_IP" = true ]; then
     echo -e "IP-Adresse: $IP_ADDR/$PREFIX"
