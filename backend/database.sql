@@ -1,8 +1,3 @@
--- SQL Skript für Datenbank
-CREATE DATABASE stutengarten;
-USE stutengarten;
-
-
 -- Kinderkonten
 CREATE TABLE kunden (
 	id INT AUTO_INCREMENT PRIMARY KEY,
