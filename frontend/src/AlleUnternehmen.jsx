@@ -1,6 +1,7 @@
 import { useState } from 'react'
 
 import './AktienSammlung.css'  //Nutzt bestehende Sammlung-Styles
+import './AlleUnternehmen.css'
 
 export default function AlleUnternehmen() {
   const [unternehmen, setUnternehmen] = useState([])
@@ -32,7 +33,7 @@ export default function AlleUnternehmen() {
   }
 
   return (
-    <div className="as-seite">
+    <div className="as-seite alle-un-seite">
       <h2 className="as-titel">Alle Unternehmen</h2>
 
       <div className="as-inhalt">

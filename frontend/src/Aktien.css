@@ -41,12 +41,12 @@
 .aktien-karte:active { transform: translateY(-2px) scale(0.98); }
 
 .aktien-emoji {
-  font-size: clamp(2.5rem, 6vh, 5rem);
+  font-size: clamp(3.8rem, 9vh, 7.5rem);
   line-height: 1;
 }
 
 .aktien-label {
-  font-size: clamp(1rem, 2vh, 1.55rem);
+  font-size: clamp(1.4rem, 2.8vh, 2.2rem);
   font-weight: bold;
   color: #123250;
   text-align: center;

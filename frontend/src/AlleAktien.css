@@ -1,4 +1,14 @@
 /* Alle Aktien - 3-spaltiges Grid (Name | Ordner | Kontostand) */
+/* Inhalt ganz oben ansetzen */
+
+.alle-ak-seite {
+  justify-content: flex-start !important;
+  padding-top: 0 !important;
+}
+
+.alle-ak-seite .as-titel {
+  margin-top: 0;
+}
 
 .aa-liste-header,
 .aa-liste-zeile,

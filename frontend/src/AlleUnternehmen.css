@@ -1,0 +1,10 @@
+/* Alle Unternehmen - Inhalt ganz oben ansetzen */
+
+.alle-un-seite {
+  justify-content: flex-start !important;
+  padding-top: 0 !important;
+}
+
+.alle-un-seite .as-titel {
+  margin-top: 0;
+}

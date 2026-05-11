@@ -35,7 +35,7 @@ export default function AlleAktien() {
   const gesamtBalance = eintraege.reduce((s, e) => s + (Number(e.balance) || 0), 0)
 
   return (
-    <div className="as-seite">
+    <div className="as-seite alle-ak-seite">
       <h2 className="as-titel">Alle Aktien</h2>
 
       <div className="as-inhalt">

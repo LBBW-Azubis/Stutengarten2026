@@ -49,50 +49,6 @@ function NoMatch() {
   )
 }
 
-function DevNavigator() {
-  const navigate = useNavigate()
-  const loc = useLocation()
-
-  function handleChange(e) {
-    const path = e.target.value
-    if (path !== '') navigate(path)
-  }
-
-  return (
-    <div style={{ position: 'fixed', top: 10, left: 10, zIndex: 9999 }}>
-      <select onChange={handleChange} value={loc.pathname}>
-        <option value="" disabled>TESTMENU</option>
-        <option value="/">Login</option>
-        <option value="/mainsite">Menu</option>
-        <option value="/mainsite/betreuer">Betreuer Menu</option>
-        <option value="/mainsite/info">Info</option>
-        <option value="/mainsite/kunde">Kunde (Hub)</option>
-        <option value="/mainsite/unternehmen">Unternehmen (Hub)</option>
-        <option value="/mainsite/unternehmen-umsatz">Unternehmen Umsatz</option>
-        <option value="/mainsite/unternehmen-info">Unternehmen Info</option>
-        <option value="/mainsite/unternehmen-alle">Alle Unternehmen</option>
-        <option value="/mainsite/unternehmen-loeschen">Unternehmen Löschen</option>
-        <option value="/mainsite/konto">Konto</option>
-        <option value="/mainsite/kontoerstellen">Konto Erstellen</option>
-        <option value="/mainsite/einzahlen">Einzahlen</option>
-        <option value="/mainsite/auszahlen">Auszahlen</option>
-        <option value="/mainsite/ueberweisung">Überweisung</option>
-        <option value="/mainsite/aktien">Aktien Hub</option>
-        <option value="/mainsite/aktien/kaufen">Aktien Kaufen</option>
-        <option value="/mainsite/aktien/zaehler">Aktien Zaehler</option>
-        <option value="/mainsite/aktien/verkaufen">Aktien Verkaufen</option>
-        <option value="/mainsite/aktien/sammlung">Aktien Sammlung (Hub)</option>
-        <option value="/mainsite/aktien/sammlung/kunde">Kunde Aktien</option>
-        <option value="/mainsite/aktien/sammlung/alle">Alle Aktien</option>
-        <option value="/mainsite/hacker">Hacker</option>
-        <option value="/mainsite/spiel">Spiel</option>
-        <option value="/mainsite/tschuess">Tschuess</option>
-      </select>
-    </div>
-  )
-}
-
-
 // Header-Komponente mit buntem Titel
 function Header() {
   const buchstaben = 'Stutengarten Bankfiliale'
@@ -281,7 +237,6 @@ function AppLayout() {
     <>
       <HackerTimerManager />
       <SettingsSync />
-      <DevNavigator />
       <Header />
       <ZurueckBar />
 

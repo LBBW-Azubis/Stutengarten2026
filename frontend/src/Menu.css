@@ -49,12 +49,12 @@
 .menu-v2-karte:active { transform: translateY(-2px) scale(0.98); }
 
 .menu-v2-emoji {
-  font-size: clamp(2.2rem, 5vh, 4.5rem);
+  font-size: clamp(5rem, 14vh, 11rem);
   line-height: 1;
 }
 
 .menu-v2-label {
-  font-size: clamp(0.95rem, 1.8vh, 1.4rem);
+  font-size: clamp(1.8rem, 4vh, 3.2rem);
   font-weight: bold;
   color: #123250;
   text-align: center;

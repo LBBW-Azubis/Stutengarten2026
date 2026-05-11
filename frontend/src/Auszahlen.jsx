@@ -128,12 +128,12 @@ export default function Auszahlen() {
   }
 
   return (
-    <div className="az-seite">
-      <h2 className="az-titel">Auszahlen</h2>
+    <div className="aus-seite">
+      <h2 className="aus-titel">Auszahlen</h2>
 
-      <div className="az-inhalt">
+      <div className="aus-inhalt">
         {/* Kontonummer */}
-        <div className="az-feld">
+        <div className="aus-feld">
           <label>Kontonummer:</label>
           <input
             type="text"
@@ -145,29 +145,29 @@ export default function Auszahlen() {
             onChange={e => { setKontonummer(e.target.value); setKundeGeladen(false); setKontostandNeu('') }}
             onKeyDown={e => { if (e.key === 'Enter') laden() }}
           />
-          <button className="btn btn-dunkel az-action-btn" onClick={laden}>Laden</button>
+          <button className="btn btn-dunkel aus-action-btn" onClick={laden}>Laden</button>
         </div>
 
-        <div className="az-trennlinie"></div>
+        <div className="aus-trennlinie"></div>
 
         {/* Kundendaten */}
-        <div className="az-feld">
+        <div className="aus-feld">
           <label>Vorname:</label>
           <span className="feld-input anzeige">{kundeGeladen ? vorname : ''}</span>
         </div>
-        <div className="az-feld">
+        <div className="aus-feld">
           <label>Nachname:</label>
           <span className="feld-input anzeige">{kundeGeladen ? nachname : ''}</span>
         </div>
-        <div className="az-feld">
+        <div className="aus-feld">
           <label>Kontostand:</label>
           <span className="feld-input anzeige">{kundeGeladen ? `${kontostand}` : ''}</span>
         </div>
 
-        <div className="az-trennlinie"></div>
+        <div className="aus-trennlinie"></div>
 
         {/* Betrag + Auszahlen */}
-        <div className="az-feld">
+        <div className="aus-feld">
           <label>Betrag:</label>
           <input
             type="text"
@@ -178,18 +178,18 @@ export default function Auszahlen() {
             onChange={handleBetragChange}
             onKeyDown={e => { if (e.key === 'Enter') auszahlen() }}
           />
-          <button className="btn btn-dunkel az-action-btn" onClick={auszahlen}>Auszahlen</button>
+          <button className="btn btn-dunkel aus-action-btn" onClick={auszahlen}>Auszahlen</button>
         </div>
 
         {fehler && <span className="fehler-text" style={{ display: 'block', textAlign: 'center' }}>{fehler}</span>}
 
-        <div className="az-trennlinie"></div>
+        <div className="aus-trennlinie"></div>
 
         {/* Kontostand Neu */}
-        <div className="az-feld">
+        <div className="aus-feld">
           <label>Kontostand Neu:</label>
           {/* === BACKEND: Neuen Kontostand vom Backend laden nach Auszahlung === */}
-          <span className="feld-input anzeige az-kontostand-neu">{kontostandNeu !== '' ? `${kontostandNeu}` : ''}</span>
+          <span className="feld-input anzeige aus-kontostand-neu">{kontostandNeu !== '' ? `${kontostandNeu}` : ''}</span>
           {/* === ENDE BACKEND === */}
         </div>
       </div>

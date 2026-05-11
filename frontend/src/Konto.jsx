@@ -79,7 +79,7 @@ export default function Konto() {
   return (
     <div className="ko-seite">
       <div className="ko-icon"><Emoji char="👤" /></div>
-      <h2 className="ko-titel">Konto</h2>
+      <h2 className="ko-titel">Konto Info</h2>
 
       <div className="ko-inhalt">
         {/* Kontonummer */}

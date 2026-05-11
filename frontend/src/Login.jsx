@@ -39,7 +39,7 @@ export default function Login() {
 
   return (
     <div className="login-seite">
-      <div className="login-karte">
+      <form className="login-karte" autoComplete="off" onSubmit={e => { e.preventDefault(); anmelden() }}>
         <Emoji char="👤" className="login-emoji" />
         <h1 className="login-titel">Anmelden</h1>
 
@@ -55,6 +55,10 @@ export default function Login() {
             value={ausweis}
             onChange={e => setAusweis(e.target.value)}
             onKeyDown={handleKeyDown}
+            autoComplete="off"
+            name="stg-ausweis"
+            data-lpignore="true"
+            data-1p-ignore="true"
           />
         </div>
 
@@ -68,13 +72,17 @@ export default function Login() {
             value={passwort}
             onChange={e => setPasswort(e.target.value)}
             onKeyDown={handleKeyDown}
+            autoComplete="new-password"
+            name="stg-passwort"
+            data-lpignore="true"
+            data-1p-ignore="true"
           />
         </div>
 
         {fehler && <div className="login-fehler">{fehler}</div>}
 
-        <button className="login-btn" onClick={anmelden}>Anmelden</button>
-      </div>
+        <button type="submit" className="login-btn" onClick={anmelden}>Anmelden</button>
+      </form>
     </div>
   )
 }
