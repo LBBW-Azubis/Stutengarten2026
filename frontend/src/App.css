@@ -26,7 +26,7 @@
 }
 
 .header-title {
-  font-size: clamp(1.4rem, 3.2vw, 3.2rem);
+  font-size: clamp(1.7rem, 3.8vw, 3.9rem);
   font-weight: bold;
   letter-spacing: 0.12em;
   text-align: center;
@@ -48,14 +48,15 @@
   background: #d32f2f;
   color: white;
   border: none;
-  width: clamp(40px, 4.5vh, 58px);
   height: clamp(40px, 4.5vh, 58px);
+  padding: 0 clamp(14px, 1.8vw, 28px);
   font-weight: bold;
   font-size: clamp(1rem, 1.8vh, 1.4rem);
   cursor: pointer;
   border-radius: 6px;
   flex-shrink: 0;
   transition: background 0.15s ease, opacity 0.15s ease;
+  white-space: nowrap;
 }
 
 .x-btn-disabled {

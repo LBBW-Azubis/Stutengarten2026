@@ -110,7 +110,7 @@ export default function Spiel() {
         </div>
       </div>
 
-      {/* Spiel rechts */}
+      {/* Spiel mitte */}
       <div className="game">
 
       {/* Spielfeld */}
@@ -156,24 +156,6 @@ export default function Spiel() {
         </div>
       )}
 
-      {/* Grosse Buttons */}
-      <div className="game-buttons">
-        <button className="game-big-btn game-btn-blue" onClick={() => add('up')} disabled={running}>
-          <span className="game-arrow">{'\u2191'}</span>
-        </button>
-      </div>
-      <div className="game-buttons">
-        <button className="game-big-btn game-btn-purple" onClick={() => add('left')} disabled={running}>
-          <span className="game-arrow">{'\u2190'}</span>
-        </button>
-        <button className="game-big-btn game-btn-orange" onClick={() => add('down')} disabled={running}>
-          <span className="game-arrow">{'\u2193'}</span>
-        </button>
-        <button className="game-big-btn game-btn-green" onClick={() => add('right')} disabled={running}>
-          <span className="game-arrow">{'\u2192'}</span>
-        </button>
-      </div>
-
       {/* Aktions-Reihe */}
       <div className="game-actions">
         <button className="game-action-btn action-run" onClick={run} disabled={running || cmds.length === 0}>
@@ -198,6 +180,26 @@ export default function Spiel() {
         ))}
       </div>
     </div>
+
+      {/* Pfeile rechts neben dem Spiel */}
+      <div className="game-pfeile">
+        <div className="game-buttons">
+          <button className="game-big-btn game-btn-blue" onClick={() => add('up')} disabled={running}>
+            <span className="game-arrow">{'↑'}</span>
+          </button>
+        </div>
+        <div className="game-buttons">
+          <button className="game-big-btn game-btn-purple" onClick={() => add('left')} disabled={running}>
+            <span className="game-arrow">{'←'}</span>
+          </button>
+          <button className="game-big-btn game-btn-orange" onClick={() => add('down')} disabled={running}>
+            <span className="game-arrow">{'↓'}</span>
+          </button>
+          <button className="game-big-btn game-btn-green" onClick={() => add('right')} disabled={running}>
+            <span className="game-arrow">{'→'}</span>
+          </button>
+        </div>
+      </div>
     </div>
   )
 }

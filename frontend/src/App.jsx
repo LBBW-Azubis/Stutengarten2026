@@ -101,7 +101,7 @@ function Footer() {
         className={`x-btn${betreuerEingeloggt ? '' : ' x-btn-disabled'}`}
         onClick={handleXClick}
         aria-label={betreuerEingeloggt ? 'Betreuer abmelden' : ''}
-      >X</button>
+      >Abmelden</button>
       <div className="betreuer-bereich">
         <span className="betreuer-label">Betreuer-Login:</span>
         <input
