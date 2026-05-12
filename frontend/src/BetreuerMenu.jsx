@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import { useRef, useState } from 'react'
 import { useAppContext } from './AppContext'
+import Emoji from './Emoji'
 
 import './BetreuerMenu.css'  //Wichtig immer CSS importieren
 
@@ -13,6 +14,64 @@ export default function BetreuerMenu() {
   const kundenInputRef = useRef(null)
   const unternehmenInputRef = useRef(null)
   const [importStatus, setImportStatus] = useState(null)  // { typ: 'ok'|'err', text: string }
+  const [showLoeschenDialog, setShowLoeschenDialog] = useState(false)
+  const [loeschenInput, setLoeschenInput] = useState('')
+
+  function oeffneLoeschenDialog() {
+    setLoeschenInput('')
+    setShowLoeschenDialog(true)
+  }
+
+  function schliesseLoeschenDialog() {
+    setShowLoeschenDialog(false)
+    setLoeschenInput('')
+  }
+
+  async function handleSettingsSpeichern() {
+    // === BACKEND: Settings speichern ===
+    // PATCH http://192.168.1.10:5000/settings
+    // hackerIntervall wird in Stunden gesendet (intern in Minuten gespeichert)
+    const body = {
+      hackerAktiv,
+      hackerIntervall: hackerIntervall / 60,
+      hackerAutoStart,
+      spieleAktiv,
+      spieleAutoStart,
+    }
+    try {
+      await fetch('http://192.168.1.10:5000/settings', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json; charset=utf-8' },
+        body: JSON.stringify(body),
+      })
+    } catch (error) {
+      console.error('[Settings] PATCH Fehler:', error)
+    }
+    // === ENDE BACKEND ===
+  }
+
+  async function bestaetigeLoeschen() {
+    if (loeschenInput !== 'Löschen') return
+    schliesseLoeschenDialog()
+
+    // === BACKEND: Datenbank zuruecksetzen ===
+    // POST http://192.168.1.10:5000/clear-database
+    try {
+      const response = await fetch('http://192.168.1.10:5000/clear-database', {
+        method: 'POST',
+      })
+      console.log('[Datenbank] Clear Status:', response.status)
+      if (response.ok) {
+        zeigeImportMeldung('ok', 'Datenbank erfolgreich zurückgesetzt!')
+      } else {
+        zeigeImportMeldung('err', 'Datenbank zurücksetzen fehlgeschlagen')
+      }
+    } catch (error) {
+      console.error('[Datenbank] Fehler:', error)
+      zeigeImportMeldung('err', 'Verbindung zum Server fehlgeschlagen')
+    }
+    // === ENDE BACKEND ===
+  }
 
   function zeigeImportMeldung(typ, text) {
     setImportStatus({ typ, text })
@@ -103,7 +162,7 @@ export default function BetreuerMenu() {
     spieleAutoStart, setSpieleAutoStart,
   } = useAppContext()
 
-  const intervallOptionen = [0.166, 30, 60, 90, 120, 180, 240]  // in Minuten: 10 Sek, 0,5 H, 1 H, 1,5 H, 2 H, 3 H, 4 H
+  const intervallOptionen = [30, 60, 90, 120, 180, 240]  // in Minuten: 0,5 H, 1 H, 1,5 H, 2 H, 3 H, 4 H
 
   return (
     <div className="page betreuer-page">
@@ -142,7 +201,7 @@ export default function BetreuerMenu() {
                         className={`intervall-btn ${hackerIntervall === min ? 'ausgewaehlt' : ''}`}
                         onClick={() => setHackerIntervall(min)}
                       >
-                        {min < 1 ? '10 Sek' : `${(min / 60).toString().replace('.', ',')} H`}
+                        {`${(min / 60).toString().replace('.', ',')} H`}
                       </button>
                     ))}
                   </div>
@@ -191,6 +250,14 @@ export default function BetreuerMenu() {
             </div>
           </div>
 
+          {/* Speichern unter den Einstellungen */}
+          <div className="settings-speichern">
+            <button
+              className="settings-speichern-btn"
+              onClick={handleSettingsSpeichern}
+            >Speichern</button>
+          </div>
+
         </div>
 
         {/* Trennlinie */}
@@ -207,30 +274,23 @@ export default function BetreuerMenu() {
           )}
 
           <div className="aktionen-grid">
-            <div className="kachel" onClick={() => navigate('/mainsite/unternehmen')}>
+            <div className="kachel" onClick={() => navigate('/mainsite/unternehmen-erstellen')}>
               <div className="kachel-bild">
-                <span className="betreuer-kachel-emoji">🏢</span>
+                <Emoji char="🏢" className="betreuer-kachel-emoji" />
               </div>
               <div className="kachel-label">Unternehmen erstellen</div>
             </div>
 
-            <div className="kachel" onClick={() => navigate('/mainsite/unternehmen-einzahlen')}>
+            <div className="kachel" onClick={() => navigate('/mainsite/unternehmen-loeschen')}>
               <div className="kachel-bild">
-                <span className="betreuer-kachel-emoji">📥</span>
+                <Emoji char="🗑️" className="betreuer-kachel-emoji" />
               </div>
-              <div className="kachel-label">Unternehmen einzahlen</div>
-            </div>
-
-            <div className="kachel" onClick={() => navigate('/mainsite/unternehmen-auszahlen')}>
-              <div className="kachel-bild">
-                <span className="betreuer-kachel-emoji">📤</span>
-              </div>
-              <div className="kachel-label">Unternehmen auszahlen</div>
+              <div className="kachel-label kachel-label-danger">Unternehmen löschen</div>
             </div>
 
             <div className="kachel" onClick={() => kundenInputRef.current?.click()}>
               <div className="kachel-bild import-bild">
-                <span className="betreuer-kachel-emoji">👤</span>
+                <Emoji char="👤" className="betreuer-kachel-emoji" />
                 <img src={excelIcon} alt="Excel" className="import-badge" />
               </div>
               <div className="kachel-label">Import Kunden</div>
@@ -238,18 +298,19 @@ export default function BetreuerMenu() {
 
             <div className="kachel" onClick={() => unternehmenInputRef.current?.click()}>
               <div className="kachel-bild import-bild">
-                <span className="betreuer-kachel-emoji">🏢</span>
+                <Emoji char="🏢" className="betreuer-kachel-emoji" />
                 <img src={excelIcon} alt="Excel" className="import-badge" />
               </div>
               <div className="kachel-label">Import Unternehmen</div>
             </div>
 
-            <div className="kachel" onClick={() => { /* TODO: Datenbank loeschen */ }}>
+            <div className="kachel" onClick={oeffneLoeschenDialog}>
               <div className="kachel-bild">
-                <span className="betreuer-kachel-emoji">🗑️</span>
+                <Emoji char="🗑️" className="betreuer-kachel-emoji" />
               </div>
-              <div className="kachel-label kachel-label-danger">Datenbank Loeschen</div>
+              <div className="kachel-label kachel-label-danger">Datenbank Löschen</div>
             </div>
+
           </div>
 
           <input
@@ -269,6 +330,40 @@ export default function BetreuerMenu() {
         </div>
 
       </div>
+
+      {/* Datenbank-Loeschen Bestaetigungs-Dialog */}
+      {showLoeschenDialog && (
+        <div className="loeschen-overlay" onClick={schliesseLoeschenDialog}>
+          <div className="loeschen-dialog" onClick={e => e.stopPropagation()}>
+            <div className="loeschen-titel"><Emoji char="⚠️" /> Datenbank zurücksetzen</div>
+            <div className="loeschen-text">
+              Willst du wirklich die Datenbank zurücksetzen?<br />
+              Falls ja, gib <strong>Löschen</strong> ein.
+            </div>
+            <input
+              type="text"
+              className="loeschen-input"
+              placeholder="Löschen"
+              value={loeschenInput}
+              onChange={e => setLoeschenInput(e.target.value)}
+              onKeyDown={e => { if (e.key === 'Enter') bestaetigeLoeschen() }}
+              autoFocus
+            />
+            <div className="loeschen-buttons">
+              <button
+                className="loeschen-btn loeschen-btn-cancel"
+                onClick={schliesseLoeschenDialog}
+              >Abbrechen</button>
+              <button
+                className="loeschen-btn loeschen-btn-confirm"
+                onClick={bestaetigeLoeschen}
+                disabled={loeschenInput !== 'Löschen'}
+              >Löschen</button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   )
 }

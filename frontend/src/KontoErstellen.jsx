@@ -1,6 +1,8 @@
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 
+import Emoji from './Emoji'
+
 import './KontoErstellen.css'  //Wichtig immer CSS importieren
 
 export default function KontoErstellen() {
@@ -13,67 +15,48 @@ export default function KontoErstellen() {
   const [vorname, setVorname] = useState('')
   const [nachname, setNachname] = useState('')
   const [fehler, setFehler] = useState('')
+  const [debugInfo, setDebugInfo] = useState(null)
 
   async function fertig() {
     const id = kontonummer.trim().toUpperCase()
     const vn = vorname.trim()
     const nn = nachname.trim()
     setFehler('')
+    setDebugInfo(null)
 
     if (!id || !vn || !nn) {
-      setFehler('Bitte Kontonummer, Vor- und Nachname ausfuellen.')
+      setFehler('Bitte Kontonummer, Vor- und Nachname ausfüllen.')
       return
     }
 
     // === BACKEND: Kunde anlegen ===
-    // API-Call: POST http://192.168.1.10:5000/customer
-    // Body: { stutengarten_id: String, first_name: String, last_name: String }
-    // Response 200: JSON mit Kundendaten bei Erfolg
-    // Response 400: { error: "..." } wenn Pflichtfelder fehlen oder ungueltig
-    // Response 500: { error: "..." } bei anderen Fehlern
+    // POST http://192.168.1.10:5000/customer
+    // Body: { stutengarten_id, first_name, last_name }
+    // Das Sparbuch wird vom Backend automatisch mit angelegt.
+    const url = 'http://192.168.1.10:5000/customer'
+    const body = { stutengarten_id: id, first_name: vn, last_name: nn }
+    const debug = { url, body }
     try {
-      const response = await fetch('http://192.168.1.10:5000/customer', {
+      const response = await fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json; charset=utf-8' },
-        body: JSON.stringify({
-          stutengarten_id: id,    // String - Kontonummer
-          first_name: vn,         // String - Vorname
-          last_name: nn,          // String - Nachname
-        }),
+        body: JSON.stringify(body),
       })
+      debug.status = response.status
+      const text = await response.text()
+      try { debug.data = JSON.parse(text) }
+      catch { debug.data_raw = text }
 
-      const data = await response.json()
-
+      setDebugInfo(debug)
       if (response.ok) {
-        console.log('[KontoErstellen] Kunde angelegt:', data)
-
-        // === BACKEND: Sparbuch/Konto fuer den Kunden anlegen ===
-        // API-Call: POST http://192.168.1.10:5000/customer/<stutengarten_id>/savingsbook
-        // Kein Body noetig
-        // Response 201: { customer_id: ..., balance: 0 }
-        // Response 500: { error: "..." }
-        try {
-          const sbResponse = await fetch(`http://192.168.1.10:5000/customer/${id}/savingsbook`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json; charset=utf-8' },
-          })
-          const sbData = await sbResponse.json()
-          if (sbResponse.ok) {
-            console.log('[KontoErstellen] Sparbuch angelegt:', sbData)
-          } else {
-            console.error('[KontoErstellen] Sparbuch Fehler:', sbData)
-          }
-        } catch (sbError) {
-          console.error('[KontoErstellen] Sparbuch Verbindungsfehler:', sbError)
-        }
-        // === ENDE BACKEND: Sparbuch ===
-
         navigate('/mainsite')
       } else {
         setFehler('Fehler beim Anlegen des Kunden.')
       }
     } catch (error) {
       console.error('[KontoErstellen] Fehler:', error)
+      debug.error = String(error)
+      setDebugInfo(debug)
       setFehler('Verbindung zum Server fehlgeschlagen.')
     }
     // === ENDE BACKEND ===
@@ -84,7 +67,7 @@ export default function KontoErstellen() {
     return (
       <div className="ke-seite">
         <div className="ke-card">
-          <div className="ke-icon">📝</div>
+          <div className="ke-icon"><Emoji char="📝" /></div>
           <div className="ke-frage-text">Neuen Kunden erstellen?</div>
           <div className="ke-buttons">
             <button className="btn btn-gruen ke-btn" onClick={() => setSchritt(2)}>
@@ -103,7 +86,7 @@ export default function KontoErstellen() {
   return (
     <div className="ke-seite">
       <div className="ke-card ke-card-formular">
-        <div className="ke-icon">📝</div>
+        <div className="ke-icon"><Emoji char="📝" /></div>
         <h2 className="ke-titel">Neuen Kunden anlegen</h2>
 
         <div className="ke-formular">
@@ -144,8 +127,16 @@ export default function KontoErstellen() {
 
           <div className="ke-buttons" style={{ marginTop: 20 }}>
             <button className="btn btn-dunkel ke-btn" onClick={fertig}>Fertig</button>
-            <button className="btn btn-gruen ke-btn" onClick={() => setSchritt(1)}>Zurueck</button>
+            <button className="btn btn-gruen ke-btn" onClick={() => setSchritt(1)}>Zurück</button>
           </div>
+
+          {/* DEBUG: Roh-Response vom Backend */}
+          {debugInfo && (
+            <div className="ke-debug">
+              <div className="ke-debug-titel">Debug — Roh-Response vom Backend</div>
+              <pre className="ke-debug-pre">{JSON.stringify(debugInfo, null, 2)}</pre>
+            </div>
+          )}
         </div>
       </div>
     </div>

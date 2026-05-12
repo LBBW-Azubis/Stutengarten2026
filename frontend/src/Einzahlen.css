@@ -1,13 +1,13 @@
-/* Einzahlen Styles - viewport-relativ */
+/* Einzahlen Styles - viewport-relativ, leicht oben angesetzt */
 
-.ez-seite { display: flex; flex-direction: column; align-items: center; width: 100%; flex: 1; }
-.ez-titel { font-size: clamp(1.5rem, 3vh, 2.2rem); color: #123250; margin: 0 0 clamp(10px, 1.8vh, 22px) 0; font-weight: bold; }
-.ez-inhalt { display: flex; flex-direction: column; gap: clamp(10px, 1.5vh, 16px); width: 100%; max-width: clamp(550px, 60vw, 900px); }
-.ez-feld { display: flex; align-items: center; gap: clamp(10px, 1.2vw, 18px); }
-.ez-feld label { font-size: clamp(1rem, 1.8vh, 1.35rem); font-weight: bold; color: #123250; min-width: clamp(150px, 16vw, 220px); text-align: right; white-space: nowrap; }
-.ez-feld .feld-input { flex: 1; min-width: 0; padding: clamp(8px, 1.2vh, 14px) clamp(12px, 1.2vw, 20px); font-size: clamp(1rem, 1.6vh, 1.2rem); }
-.ez-action-btn { padding: clamp(8px, 1.2vh, 14px) clamp(20px, 2.4vw, 34px); font-size: clamp(1rem, 1.6vh, 1.15rem); white-space: nowrap; }
-.ez-trennlinie { width: 100%; height: 2px; background: #dde5ee; margin: clamp(6px, 0.8vh, 10px) 0; }
+.ez-seite { display: flex; flex-direction: column; align-items: center; justify-content: flex-start; width: 100%; flex: 1; padding-top: clamp(10px, 2vh, 30px); }
+.ez-titel { font-size: clamp(2rem, 4.5vh, 3rem); color: #123250; margin: 0 0 clamp(14px, 2.2vh, 28px) 0; font-weight: bold; }
+.ez-inhalt { display: flex; flex-direction: column; gap: clamp(14px, 2.2vh, 26px); width: 100%; max-width: clamp(750px, 88vw, 1500px); }
+.ez-feld { display: flex; align-items: center; gap: clamp(14px, 1.6vw, 24px); }
+.ez-feld label { font-size: clamp(1.3rem, 2.4vh, 1.8rem); font-weight: bold; color: #123250; min-width: clamp(220px, 20vw, 320px); text-align: right; white-space: nowrap; }
+.ez-feld .feld-input { flex: 1; min-width: 0; padding: clamp(13px, 1.9vh, 22px) clamp(17px, 1.7vw, 28px); font-size: clamp(1.25rem, 2.2vh, 1.65rem); }
+.ez-action-btn { padding: clamp(13px, 1.9vh, 22px) clamp(28px, 3.2vw, 48px); font-size: clamp(1.2rem, 2.1vh, 1.55rem); white-space: nowrap; }
+.ez-trennlinie { width: 100%; height: 2px; background: #dde5ee; margin: clamp(6px, 1vh, 12px) 0; }
 .ez-kontostand { background: #123250 !important; color: white; font-weight: bold; }
 
 /* Debug-Fenster */

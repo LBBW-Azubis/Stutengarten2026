@@ -4,14 +4,14 @@ import infoIcon from './images/Info_menü.png'
 
 export default function Info() {
   return (
-    <div className="page">
-      <div className="seite-layout">
-        <div className="seite-icon">
+    <div className="info-seite">
+      <div className="info-inhalt">
+        <div className="info-icon">
           <img src={infoIcon} alt="Info" />
         </div>
-        <div className="seite-felder">
-          <h2>Info</h2>
-          <p style={{ marginTop: 8 }}>Hier findest du wichtige Informationen zur App.</p>
+        <div className="info-texte">
+          <h2 className="info-titel">Info</h2>
+          <p className="info-text">Hier findest du wichtige Informationen zur App.</p>
         </div>
       </div>
     </div>

@@ -80,9 +80,9 @@ export default function Ueberweisung() {
   async function ladenAn() {
     setFehler('')
     setAnGeladen(false)
-    if (!kontoAn.trim()) { setFehler('Bitte Empfaenger-Kontonummer eingeben.'); return }
+    if (!kontoAn.trim()) { setFehler('Bitte Empfänger-Kontonummer eingeben.'); return }
     if (kontoAn.trim() === kontoVon.trim()) {
-      setFehler('Absender und Empfaenger duerfen nicht gleich sein.')
+      setFehler('Absender und Empfänger dürfen nicht gleich sein.')
       return
     }
 
@@ -91,7 +91,7 @@ export default function Ueberweisung() {
       const id = kontoAn.trim()
       const response = await fetch(`http://192.168.1.10:5000/customer/${id}`)
       const data = await response.json()
-      if (!response.ok) { setFehler('Empfaenger nicht gefunden.'); return }
+      if (!response.ok) { setFehler('Empfänger nicht gefunden.'); return }
       setAnVorname(data.first_name)
       setAnNachname(data.last_name)
 
@@ -113,9 +113,9 @@ export default function Ueberweisung() {
   async function ueberweisen() {
     setFehler('')
     const b = parseInt(betrag) || 0
-    if (b <= 0) { setFehler('Bitte einen gueltigen Betrag eingeben.'); return }
+    if (b <= 0) { setFehler('Bitte einen gültigen Betrag eingeben.'); return }
     if (!vonGeladen) { setFehler('Bitte zuerst Absender laden.'); return }
-    if (!anGeladen) { setFehler('Bitte zuerst Empfaenger laden.'); return }
+    if (!anGeladen) { setFehler('Bitte zuerst Empfänger laden.'); return }
     if (b > vonKontostand) { setFehler('Nicht genug Guthaben!'); return }
 
     // === BACKEND: Ueberweisung senden ===
@@ -128,7 +128,7 @@ export default function Ueberweisung() {
       from: kontoVon.trim(),
       to: kontoAn.trim(),
       amount: b,
-      purpose: 'Ueberweisung',
+      purpose: 'Überweisung',
     }
     try {
       const response = await fetch('http://192.168.1.10:5000/customer/transfer', {
@@ -141,7 +141,7 @@ export default function Ueberweisung() {
         setVonKontostandNeu(vonKontostand - b)
         setAnKontostandNeu(anKontostand + b)
       } else {
-        setFehler('Fehler bei der Ueberweisung.')
+        setFehler('Fehler bei der Überweisung.')
       }
     } catch (error) {
       console.error('[Ueberweisung] Fehler:', error)
@@ -162,7 +162,7 @@ export default function Ueberweisung() {
 
   return (
     <div className="uw-seite">
-      <h2 className="uw-titel">Ueberweisung</h2>
+      <h2 className="uw-titel">Überweisung</h2>
 
       <div className="uw-container">
         {/* Absender (links) */}
@@ -212,7 +212,7 @@ export default function Ueberweisung() {
 
         {/* Empfaenger (rechts) */}
         <div className="uw-konto">
-          <h3 className="uw-konto-titel">Empfaenger</h3>
+          <h3 className="uw-konto-titel">Empfänger</h3>
 
           <div className="uw-feld">
             <label>Kontonummer:</label>
@@ -271,7 +271,7 @@ export default function Ueberweisung() {
             onChange={handleBetragChange}
             onKeyDown={e => { if (e.key === 'Enter') ueberweisen() }}
           />
-          <button className="btn btn-dunkel uw-action-btn" onClick={ueberweisen}>Ueberweisen</button>
+          <button className="btn btn-dunkel uw-action-btn" onClick={ueberweisen}>Überweisen</button>
         </div>
 
         {fehler && <span className="fehler-text" style={{ display: 'block', textAlign: 'center' }}>{fehler}</span>}

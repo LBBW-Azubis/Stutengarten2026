@@ -1,22 +1,22 @@
-/* Unternehmen erstellen - viewport-relativ */
+/* Unternehmen erstellen - viewport-relativ, leicht oben angesetzt */
 
-.un-seite { display: flex; flex-direction: column; align-items: center; width: 100%; flex: 1; }
-.un-icon { font-size: clamp(3rem, 7vh, 5.5rem); line-height: 1; width: clamp(110px, 16vh, 180px); height: clamp(110px, 16vh, 180px); background: linear-gradient(135deg, #f0f5fa 0%, #dfe9f2 100%); border: 5px solid #cdd7e3; border-radius: clamp(16px, 1.8vw, 26px); box-shadow: 0 4px 14px rgba(18,50,80,0.15); display: flex; align-items: center; justify-content: center; box-sizing: border-box; }
-.un-titel { font-size: clamp(1.5rem, 3vh, 2.2rem); color: #123250; margin: clamp(6px, 0.8vh, 10px) 0 clamp(10px, 1.8vh, 22px) 0; }
-.un-inhalt { display: flex; flex-direction: column; gap: clamp(10px, 1.5vh, 16px); width: 100%; max-width: clamp(550px, 60vw, 900px); }
-.un-feld { display: flex; align-items: center; gap: clamp(10px, 1.2vw, 18px); }
-.un-feld label { font-size: clamp(1rem, 1.8vh, 1.35rem); font-weight: bold; color: #123250; min-width: clamp(170px, 17vw, 220px); text-align: right; white-space: nowrap; }
-.un-feld .feld-input { flex: 1; min-width: 0; padding: clamp(8px, 1.2vh, 14px) clamp(12px, 1.2vw, 20px); font-size: clamp(1rem, 1.6vh, 1.2rem); }
+.un-seite { display: flex; flex-direction: column; align-items: center; justify-content: flex-start; width: 100%; flex: 1; padding-top: clamp(10px, 2vh, 30px); }
+.un-icon { font-size: clamp(4rem, 10vh, 7.5rem); line-height: 1; width: clamp(120px, 17vh, 190px); height: clamp(120px, 17vh, 190px); background: linear-gradient(135deg, #f0f5fa 0%, #dfe9f2 100%); border: 5px solid #cdd7e3; border-radius: clamp(16px, 1.8vw, 26px); box-shadow: 0 4px 14px rgba(18,50,80,0.15); display: flex; align-items: center; justify-content: center; box-sizing: border-box; }
+.un-titel { font-size: clamp(2rem, 4.5vh, 3rem); color: #123250; margin: clamp(10px, 1.6vh, 20px) 0 clamp(14px, 2.2vh, 28px) 0; font-weight: bold; }
+.un-inhalt { display: flex; flex-direction: column; gap: clamp(14px, 2.2vh, 26px); width: 100%; max-width: clamp(750px, 88vw, 1500px); }
+.un-feld { display: flex; align-items: center; gap: clamp(14px, 1.6vw, 24px); }
+.un-feld label { font-size: clamp(1.3rem, 2.4vh, 1.8rem); font-weight: bold; color: #123250; min-width: clamp(240px, 22vw, 340px); text-align: right; white-space: nowrap; }
+.un-feld .feld-input { flex: 1; min-width: 0; padding: clamp(13px, 1.9vh, 22px) clamp(17px, 1.7vw, 28px); font-size: clamp(1.25rem, 2.2vh, 1.65rem); }
 .un-kontostand { background: #123250 !important; color: white; font-weight: bold; }
-.un-trennlinie { width: 100%; height: 2px; background: #dde5ee; margin: clamp(6px, 0.8vh, 10px) 0; }
-.un-msg { padding: clamp(8px, 1.3vh, 14px) clamp(12px, 1.8vw, 22px); border-radius: 8px; font-size: clamp(1rem, 1.7vh, 1.15rem); font-weight: bold; text-align: center; }
+.un-trennlinie { width: 100%; height: 2px; background: #dde5ee; margin: clamp(6px, 1vh, 12px) 0; }
+.un-msg { padding: clamp(10px, 1.6vh, 18px) clamp(14px, 1.8vw, 24px); border-radius: 8px; font-size: clamp(1.15rem, 2vh, 1.45rem); font-weight: bold; text-align: center; }
 .un-msg-err { background: #ffe0e0; color: #c0392b; }
 .un-msg-ok { background: #d5f5e3; color: #1e8449; }
-.un-buttons { display: flex; gap: clamp(12px, 1.8vw, 22px); justify-content: flex-end; margin-top: clamp(6px, 0.8vh, 10px); }
-.un-btn { min-width: clamp(130px, 14vw, 170px); padding: clamp(10px, 1.3vh, 16px) 0; font-size: clamp(1.05rem, 1.7vh, 1.2rem); text-align: center; }
+.un-buttons { display: flex; gap: clamp(14px, 2vw, 26px); justify-content: flex-end; margin-top: clamp(8px, 1.2vh, 14px); }
+.un-btn { min-width: clamp(150px, 16vw, 210px); padding: clamp(13px, 1.9vh, 20px) 0; font-size: clamp(1.2rem, 2.1vh, 1.55rem); text-align: center; }
 
-.un-toggle { display: flex; gap: 0; border-radius: 8px; overflow: hidden; border: 2px solid #123250; flex: 1; max-width: clamp(200px, 24vw, 340px); }
-.un-toggle-btn { flex: 1; padding: clamp(10px, 1.4vh, 16px) clamp(14px, 1.8vw, 24px); font-size: clamp(1rem, 1.7vh, 1.2rem); font-weight: bold; border: none; cursor: pointer; background: #e8e8f0; color: #123250; transition: background 0.15s ease, color 0.15s ease; }
+.un-toggle { display: flex; gap: 0; border-radius: 8px; overflow: hidden; border: 2px solid #123250; flex: 1; max-width: clamp(240px, 28vw, 400px); }
+.un-toggle-btn { flex: 1; padding: clamp(13px, 1.9vh, 22px) clamp(18px, 2.2vw, 30px); font-size: clamp(1.2rem, 2.1vh, 1.55rem); font-weight: bold; border: none; cursor: pointer; background: #e8e8f0; color: #123250; transition: background 0.15s ease, color 0.15s ease; }
 .un-toggle-ja.un-toggle-aktiv { background: #36C291; color: white; }
 .un-toggle-nein.un-toggle-aktiv { background: #d32f2f; color: white; }
 .un-toggle-btn:hover:not(.un-toggle-aktiv) { background: #d5dae4; }

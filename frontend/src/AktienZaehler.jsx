@@ -29,7 +29,7 @@ export default function AktienZaehler() {
   const kursOptionen = [
     { wert: -2, label: '−2', farbe: 'dunkelrot',   text: 'Starker Verlust' },
     { wert: -1, label: '−1', farbe: 'hellrot',     text: 'Leichter Verlust' },
-    { wert:  0, label:  '0', farbe: 'neutral',     text: 'Keine Aenderung' },
+    { wert:  0, label:  '0', farbe: 'neutral',     text: 'Keine Änderung' },
     { wert: +1, label: '+1', farbe: 'hellgruen',   text: 'Leichter Gewinn' },
     { wert: +2, label: '+2', farbe: 'dunkelgruen', text: 'Starker Gewinn' },
   ]
@@ -80,11 +80,11 @@ export default function AktienZaehler() {
       return
     }
     if (ausgewaehltIdx === null) {
-      setFehler('Bitte eine Aktie auswaehlen.')
+      setFehler('Bitte eine Aktie auswählen.')
       return
     }
     if (kurs === null) {
-      setFehler('Bitte Drehrad-Ergebnis auswaehlen.')
+      setFehler('Bitte Drehrad-Ergebnis auswählen.')
       return
     }
 
@@ -172,7 +172,7 @@ export default function AktienZaehler() {
         <div className="az-trennlinie"></div>
 
         {/* Aktien-Auswahl als grosse Karten */}
-        <div className="az-label">Waehle eine Aktie:</div>
+        <div className="az-label">Wähle eine Aktie:</div>
         {geladen && aktien.length > 0 ? (
           <div className="az-aktien-grid">
             {aktien.map((a, i) => (
@@ -193,13 +193,13 @@ export default function AktienZaehler() {
           </div>
         ) : (
           <div className="az-aktien-leer">
-            {geladen ? 'Keine Aktien vorhanden' : 'Kontonummer eingeben und Laden druecken'}
+            {geladen ? 'Keine Aktien vorhanden' : 'Kontonummer eingeben und Laden drücken'}
           </div>
         )}
 
         <div className="az-trennlinie"></div>
 
-        <div className="az-label">Drehrad-Ergebnis waehlen:</div>
+        <div className="az-label">Drehrad-Ergebnis wählen:</div>
 
         <div className="az-kurs-reihe">
           {kursOptionen.map(o => (

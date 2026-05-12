@@ -110,7 +110,7 @@ export default function Spiel() {
         </div>
       </div>
 
-      {/* Spiel rechts */}
+      {/* Spiel mitte */}
       <div className="game">
 
       {/* Spielfeld */}
@@ -156,31 +156,13 @@ export default function Spiel() {
         </div>
       )}
 
-      {/* Grosse Buttons */}
-      <div className="game-buttons">
-        <button className="game-big-btn game-btn-blue" onClick={() => add('up')} disabled={running}>
-          <span className="game-arrow">{'\u2191'}</span>
-        </button>
-      </div>
-      <div className="game-buttons">
-        <button className="game-big-btn game-btn-purple" onClick={() => add('left')} disabled={running}>
-          <span className="game-arrow">{'\u2190'}</span>
-        </button>
-        <button className="game-big-btn game-btn-orange" onClick={() => add('down')} disabled={running}>
-          <span className="game-arrow">{'\u2193'}</span>
-        </button>
-        <button className="game-big-btn game-btn-green" onClick={() => add('right')} disabled={running}>
-          <span className="game-arrow">{'\u2192'}</span>
-        </button>
-      </div>
-
       {/* Aktions-Reihe */}
       <div className="game-actions">
         <button className="game-action-btn action-run" onClick={run} disabled={running || cmds.length === 0}>
           Start
         </button>
         <button className="game-action-btn action-undo" onClick={() => { if (!running) setCmds(cmds.slice(0, -1)) }} disabled={running}>
-          Zurueck
+          Zurück
         </button>
         <button className="game-action-btn action-reset" onClick={doReset}>
           Nochmal
@@ -190,14 +172,38 @@ export default function Spiel() {
       {/* Level-Anzeige */}
       <div className="game-level">
         {LEVELS.map((_, i) => (
-          <div
+          <button
             key={i}
-            className={`game-level-dot ${i === lvl ? 'dot-now' : ''} ${i < lvl ? 'dot-done' : ''}`}
+            type="button"
+            className={`game-level-btn ${i === lvl ? 'level-now' : ''} ${i < lvl ? 'level-done' : ''}`}
             onClick={() => { if (!running) setLvl(i) }}
-          />
+            disabled={running}
+          >
+            Level {i + 1}
+          </button>
         ))}
       </div>
     </div>
+
+      {/* Pfeile rechts neben dem Spiel */}
+      <div className="game-pfeile">
+        <div className="game-buttons">
+          <button className="game-big-btn game-btn-blue" onClick={() => add('up')} disabled={running}>
+            <span className="game-arrow">{'↑'}</span>
+          </button>
+        </div>
+        <div className="game-buttons">
+          <button className="game-big-btn game-btn-purple" onClick={() => add('left')} disabled={running}>
+            <span className="game-arrow">{'←'}</span>
+          </button>
+          <button className="game-big-btn game-btn-orange" onClick={() => add('down')} disabled={running}>
+            <span className="game-arrow">{'↓'}</span>
+          </button>
+          <button className="game-big-btn game-btn-green" onClick={() => add('right')} disabled={running}>
+            <span className="game-arrow">{'→'}</span>
+          </button>
+        </div>
+      </div>
     </div>
   )
 }

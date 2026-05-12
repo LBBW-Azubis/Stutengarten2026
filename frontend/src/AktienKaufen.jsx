@@ -12,14 +12,15 @@ export default function AktienKaufen() {
   // EINGABEN (User tippt ein):
   //   kontonummer   (String) - z.B. "K1" - Kunde laden
   //   aktienname    (String) - z.B. "BWBank" - Name der zu kaufenden Aktie
-  //   betrag        (String, nur Ziffern) - z.B. "50" - Kaufbetrag in Stuggis
+  //
+  // FESTER PREIS: 3 Stuggis pro Aktie
   //
   // VOM BACKEND GELADEN (nach "Laden" Button):
   //   kontostand    (int) - z.B. 150
   // ============================================================
+  const AKTIEN_PREIS = 3
   const [kontonummer, setKontonummer] = useState('')     // String - User-Eingabe
   const [aktienname, setAktienname] = useState('')       // String - User-Eingabe
-  const [betrag, setBetrag] = useState('')               // String (nur Ziffern) - User-Eingabe
   const [fehler, setFehler] = useState('')
   const [kundeGeladen, setKundeGeladen] = useState(false)
 
@@ -60,7 +61,6 @@ export default function AktienKaufen() {
 
     setKundeGeladen(true)
     setAktienname('')
-    setBetrag('')
   }
 
   async function kaufen() {
@@ -69,21 +69,16 @@ export default function AktienKaufen() {
       setFehler('Bitte Aktienname eingeben.')
       return
     }
-    const b = parseInt(betrag) || 0
-    if (b <= 0) {
-      setFehler('Bitte einen gueltigen Betrag eingeben.')
-      return
-    }
-    if (b > kontostand) {
+    if (AKTIEN_PREIS > kontostand) {
       setFehler('Nicht genug Guthaben!')
       return
     }
 
     // === BACKEND: Aktien kaufen ===
     // API-Call: POST http://192.168.1.10:5000/customer/<stutengarten_id>/shares/buy
-    // Body: { share_name: String, amount: int }
+    // Body: { share_name: String, amount: int } - amount ist fest 3 Stuggis pro Aktie
     const url = `http://192.168.1.10:5000/customer/${kontonummer.trim()}/shares/buy`
-    const body = { share_name: aktienname.trim(), amount: b }
+    const body = { share_name: aktienname.trim(), amount: AKTIEN_PREIS }
     console.log('[Aktien] POST URL:', url)
     console.log('[Aktien] POST Body:', JSON.stringify(body))
     try {
@@ -107,13 +102,6 @@ export default function AktienKaufen() {
       setFehler('Verbindung zum Server fehlgeschlagen.')
     }
     // === ENDE BACKEND ===
-  }
-
-  function handleBetragChange(e) {
-    const val = e.target.value
-    if (val === '' || /^\d+$/.test(val)) {
-      setBetrag(val)
-    }
   }
 
   return (
@@ -168,16 +156,8 @@ export default function AktienKaufen() {
           />
         </div>
         <div className="ak-feld">
-          <label>Betrag:</label>
-          <input
-            type="text"
-            inputMode="numeric"
-            className="feld-input"
-            placeholder="Betrag eingeben"
-            value={betrag}
-            onChange={handleBetragChange}
-            onKeyDown={e => { if (e.key === 'Enter') kaufen() }}
-          />
+          <label>Preis:</label>
+          <span className="feld-input anzeige">{AKTIEN_PREIS} Stuggis</span>
           <button className="btn btn-dunkel ak-action-btn" onClick={kaufen}>Kaufen</button>
         </div>
 

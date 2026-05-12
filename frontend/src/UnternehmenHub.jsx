@@ -1,0 +1,35 @@
+import { useNavigate } from 'react-router-dom'
+import Emoji from './Emoji'
+
+import './Aktien.css'  //Nutzen die Hub-Styles von Aktien
+
+export default function UnternehmenHub() {
+  const navigate = useNavigate()
+
+  const kacheln = [
+    { route: '/mainsite/unternehmen-einzahlen', label: 'Unternehmen einzahlen', emoji: '📥' },
+    { route: '/mainsite/unternehmen-auszahlen', label: 'Unternehmen auszahlen', emoji: '📤' },
+    { route: '/mainsite/unternehmen-umsatz',    label: 'Unternehmen Umsatz',    emoji: '📊' },
+    { route: '/mainsite/unternehmen-info',      label: 'Unternehmen Info',      emoji: '🏢' },
+    { route: '/mainsite/unternehmen-alle',      label: 'Alle Unternehmen',      emoji: '📋' },
+  ]
+
+  return (
+    <div className="aktien-seite">
+      <h2 className="aktien-titel">Unternehmen</h2>
+      <div className="aktien-grid">
+        {kacheln.map((k, i) => (
+          <button
+            key={i}
+            type="button"
+            className="aktien-karte"
+            onClick={() => navigate(k.route)}
+          >
+            <Emoji char={k.emoji} className="aktien-emoji" />
+            <span className="aktien-label">{k.label}</span>
+          </button>
+        ))}
+      </div>
+    </div>
+  )
+}

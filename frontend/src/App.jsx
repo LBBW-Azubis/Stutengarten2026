@@ -10,6 +10,7 @@ import Login from './Login'
 import Menu from './Menu'
 import BetreuerMenu from './BetreuerMenu'
 import Info from './Info'
+import Kunde from './Kunde'
 import Konto from './Konto'
 import KontoErstellen from './KontoErstellen'
 import Einzahlen from './Einzahlen'
@@ -20,17 +21,22 @@ import AktienKaufen from './AktienKaufen'
 import AktienZaehler from './AktienZaehler'
 import AktienVerkaufen from './AktienVerkaufen'
 import AktienSammlung from './AktienSammlung'
+import KundeAktien from './KundeAktien'
+import AlleAktien from './AlleAktien'
 import Hacker from './Hacker'
-import Ranking from './Ranking'
 import Spiel from './Spiel'
 import Tschuess from './Tschuess'
 import Unternehmen from './Unternehmen'
+import UnternehmenHub from './UnternehmenHub'
 import UnternehmenEinzahlen from './UnternehmenEinzahlen'
 import UnternehmenAuszahlen from './UnternehmenAuszahlen'
+import UnternehmenUmsatz from './UnternehmenUmsatz'
+import UnternehmenInfo from './UnternehmenInfo'
+import AlleUnternehmen from './AlleUnternehmen'
+import UnternehmenLoeschen from './UnternehmenLoeschen'
 
 // Bilder importieren
 import bwBankLogo from './images/BwBank_Logo.png'
-import suchenIcon from './images/Suchen.png'
 
 
 function NoMatch() {
@@ -43,47 +49,10 @@ function NoMatch() {
   )
 }
 
-function DevNavigator() {
-  const navigate = useNavigate()
-  const loc = useLocation()
-
-  function handleChange(e) {
-    const path = e.target.value
-    if (path !== '') navigate(path)
-  }
-
-  return (
-    <div style={{ position: 'fixed', top: 10, left: 10, zIndex: 9999 }}>
-      <select onChange={handleChange} value={loc.pathname}>
-        <option value="" disabled>TESTMENU</option>
-        <option value="/">Login</option>
-        <option value="/mainsite">Menu</option>
-        <option value="/mainsite/betreuer">Betreuer Menu</option>
-        <option value="/mainsite/info">Info</option>
-        <option value="/mainsite/konto">Konto</option>
-        <option value="/mainsite/kontoerstellen">Konto Erstellen</option>
-        <option value="/mainsite/einzahlen">Einzahlen</option>
-        <option value="/mainsite/auszahlen">Auszahlen</option>
-        <option value="/mainsite/ueberweisung">Ueberweisung</option>
-        <option value="/mainsite/aktien">Aktien Hub</option>
-        <option value="/mainsite/aktien/kaufen">Aktien Kaufen</option>
-        <option value="/mainsite/aktien/zaehler">Aktien Zaehler</option>
-        <option value="/mainsite/aktien/verkaufen">Aktien Verkaufen</option>
-        <option value="/mainsite/aktien/sammlung">Aktien Sammlung</option>
-        <option value="/mainsite/hacker">Hacker</option>
-        <option value="/mainsite/ranking">Ranking</option>
-        <option value="/mainsite/spiel">Spiel</option>
-        <option value="/mainsite/tschuess">Tschuess</option>
-      </select>
-    </div>
-  )
-}
-
-
 // Header-Komponente mit buntem Titel
 function Header() {
   const buchstaben = 'Stutengarten Bankfiliale'
-  const farben = ['#c3aad2', '#F0825A', '#19AAD2', '#FFD719']
+  const farben = ['#FF6B9D', '#FF8C42', '#FFD43B', '#51CF66', '#4DABF7', '#CC5DE8']
 
   return (
     <header className="header">
@@ -102,7 +71,7 @@ function Header() {
 // Footer-Komponente mit Betreuer-Login, X-Button und BW-Bank-Logo
 function Footer() {
   const navigate = useNavigate()
-  const { betreuerEingeloggt, setBetreuerEingeloggt } = useAppContext()
+  const { betreuerEingeloggt, setBetreuerEingeloggt, eingeloggt } = useAppContext()
   const [betreuerPw, setBetreuerPw] = useState('')
   const [placeholder, setPlaceholder] = useState('')
 
@@ -110,7 +79,6 @@ function Footer() {
     if (betreuerPw === '1234') {
       setBetreuerEingeloggt(true)
       setBetreuerPw('')
-      setPlaceholder('Eingeloggt')
       navigate('/mainsite/betreuer')
     } else {
       setBetreuerPw('')
@@ -119,9 +87,21 @@ function Footer() {
     }
   }
 
+  function handleXClick() {
+    if (!betreuerEingeloggt) return  // ohne Betreuer-Login keine Funktion
+    setBetreuerEingeloggt(false)
+    // Falls kein Kind eingeloggt war (Betreuer direkt vom Login-Screen), zurueck
+    // zur Login-Seite; sonst zurueck auf die Startseite.
+    navigate(eingeloggt ? '/mainsite' : '/')
+  }
+
   return (
     <footer className="fusszeile">
-      <button className="x-btn" onClick={() => navigate('/mainsite/tschuess')}>X</button>
+      <button
+        className={`x-btn${betreuerEingeloggt ? '' : ' x-btn-disabled'}`}
+        onClick={handleXClick}
+        aria-label={betreuerEingeloggt ? 'Betreuer abmelden' : ''}
+      >Abmelden</button>
       <div className="betreuer-bereich">
         <span className="betreuer-label">Betreuer-Login:</span>
         <input
@@ -129,12 +109,15 @@ function Footer() {
           value={betreuerPw}
           placeholder={placeholder}
           maxLength="10"
+          disabled={betreuerEingeloggt}
           onChange={e => setBetreuerPw(e.target.value)}
           onKeyDown={e => { if (e.key === 'Enter') handleBetreuerLogin() }}
         />
-        <button className="betreuer-such-btn" onClick={handleBetreuerLogin} aria-label="Betreuer suchen">
-          <img src={suchenIcon} alt="Suchen" />
-        </button>
+        <button
+          className={`betreuer-login-btn${betreuerEingeloggt ? ' betreuer-login-btn-disabled' : ''}`}
+          onClick={handleBetreuerLogin}
+          disabled={betreuerEingeloggt}
+        >Login</button>
       </div>
       <img src={bwBankLogo} alt="BW Bank" className="bwbank-logo" />
     </footer>
@@ -146,19 +129,73 @@ function Footer() {
 function ZurueckBar() {
   const navigate = useNavigate()
   const location = useLocation()
+  const { betreuerEingeloggt, setEingeloggt, setAktuellerNutzer } = useAppContext()
   const istLogin = location.pathname === '/'
-  const istStartseite = location.pathname === '/mainsite'
+  const istBetreuer = location.pathname === '/mainsite/betreuer'
 
-  if (istLogin) return null
+  if (istLogin || istBetreuer) return null
+
+  // Wenn Betreuer eingeloggt, ist "Startseite" das Betreuer-Menu - sonst das Haupt-Menu
+  const startseite = betreuerEingeloggt ? '/mainsite/betreuer' : '/mainsite'
+  const istStartseite = location.pathname === startseite
+
+  function handleAbmelden() {
+    setEingeloggt(false)
+    setAktuellerNutzer(null)
+    navigate('/')
+  }
 
   return (
     <div className="zurueck-bar">
-      {!istStartseite ? (
-        <button className="zurueck-btn" onClick={() => navigate('/mainsite')}>zur Startseite</button>
-      ) : <div />}
-      <button className="logout-btn" onClick={() => navigate('/')}>Abmelden</button>
+      <div className="zurueck-bar-links">
+        {!istStartseite && (
+          <>
+            <button className="zurueck-back-btn" onClick={() => navigate(-1)}>← Zurück</button>
+            <button className="zurueck-btn" onClick={() => navigate(startseite)}>zur Startseite</button>
+          </>
+        )}
+      </div>
+      <button className="logout-btn" onClick={handleAbmelden}>Abmelden</button>
     </div>
   )
+}
+
+
+// Settings-Sync Komponente
+// Holt alle 5 Sekunden die aktuellen Settings vom Backend,
+// damit alle 4 PCs immer synchron sind. Ueberschreibt NICHT wenn
+// der Betreuer gerade im Betreuer-Menu editiert.
+function SettingsSync() {
+  const location = useLocation()
+  const {
+    setHackerAktiv, setHackerIntervall, setHackerAutoStart,
+    setSpieleAktiv, setSpieleAutoStart,
+  } = useAppContext()
+
+  useEffect(() => {
+    // Auf dem Betreuer-Menu kein Polling - sonst ueberschreibt der
+    // Sync die gerade editierten Werte bevor der Betreuer speichern kann.
+    if (location.pathname === '/mainsite/betreuer') return
+
+    async function sync() {
+      try {
+        const r = await fetch('http://192.168.1.10:5000/settings')
+        if (!r.ok) return
+        const s = await r.json()
+        if (typeof s.hackerAktiv === 'boolean')      setHackerAktiv(s.hackerAktiv)
+        if (s.hackerIntervall != null)                setHackerIntervall(Number(s.hackerIntervall) * 60)  // Stunden -> Minuten
+        if (typeof s.hackerAutoStart === 'boolean')  setHackerAutoStart(s.hackerAutoStart)
+        if (typeof s.spieleAktiv === 'boolean')      setSpieleAktiv(s.spieleAktiv)
+        if (typeof s.spieleAutoStart === 'boolean')  setSpieleAutoStart(s.spieleAutoStart)
+      } catch { /* stumm - Backend eventuell offline, naechster Tick klappt wieder */ }
+    }
+
+    sync()                                // sofort beim Mount / Pfadwechsel
+    const id = setInterval(sync, 5000)    // dann alle 5 Sek
+    return () => clearInterval(id)
+  }, [location.pathname, setHackerAktiv, setHackerIntervall, setHackerAutoStart, setSpieleAktiv, setSpieleAutoStart])
+
+  return null
 }
 
 
@@ -199,7 +236,7 @@ function AppLayout() {
   return (
     <>
       <HackerTimerManager />
-      <DevNavigator />
+      <SettingsSync />
       <Header />
       <ZurueckBar />
 
@@ -209,6 +246,7 @@ function AppLayout() {
           <Route path="/mainsite" element={<Menu />} />
           <Route path="/mainsite/betreuer" element={<BetreuerMenu />} />
           <Route path="/mainsite/info" element={<Info />} />
+          <Route path="/mainsite/kunde" element={<Kunde />} />
           <Route path="/mainsite/konto" element={<Konto />} />
           <Route path="/mainsite/kontoerstellen" element={<KontoErstellen />} />
           <Route path="/mainsite/einzahlen" element={<Einzahlen />} />
@@ -219,12 +257,18 @@ function AppLayout() {
           <Route path="/mainsite/aktien/zaehler" element={<AktienZaehler />} />
           <Route path="/mainsite/aktien/verkaufen" element={<AktienVerkaufen />} />
           <Route path="/mainsite/aktien/sammlung" element={<AktienSammlung />} />
+          <Route path="/mainsite/aktien/sammlung/kunde" element={<KundeAktien />} />
+          <Route path="/mainsite/aktien/sammlung/alle" element={<AlleAktien />} />
           <Route path="/mainsite/hacker" element={<Hacker />} />
-          <Route path="/mainsite/ranking" element={<Ranking />} />
           <Route path="/mainsite/spiel" element={<Spiel />} />
-          <Route path="/mainsite/unternehmen" element={<Unternehmen />} />
+          <Route path="/mainsite/unternehmen" element={<UnternehmenHub />} />
+          <Route path="/mainsite/unternehmen-erstellen" element={<Unternehmen />} />
           <Route path="/mainsite/unternehmen-einzahlen" element={<UnternehmenEinzahlen />} />
           <Route path="/mainsite/unternehmen-auszahlen" element={<UnternehmenAuszahlen />} />
+          <Route path="/mainsite/unternehmen-umsatz" element={<UnternehmenUmsatz />} />
+          <Route path="/mainsite/unternehmen-info" element={<UnternehmenInfo />} />
+          <Route path="/mainsite/unternehmen-alle" element={<AlleUnternehmen />} />
+          <Route path="/mainsite/unternehmen-loeschen" element={<UnternehmenLoeschen />} />
           <Route path="/mainsite/tschuess" element={<Tschuess />} />
           <Route path="*" element={<NoMatch />} />
         </Routes>

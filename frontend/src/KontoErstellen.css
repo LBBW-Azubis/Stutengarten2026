@@ -1,16 +1,21 @@
-/* KontoErstellen Styles - viewport-relativ */
+/* KontoErstellen Styles - viewport-relativ, leicht oben angesetzt */
 
-.ke-seite { display: flex; justify-content: center; align-items: flex-start; width: 100%; flex: 1; }
-.ke-card { display: flex; flex-direction: column; align-items: center; background: white; padding: clamp(20px, 2.5vh, 40px) clamp(24px, 3.5vw, 64px); gap: clamp(16px, 2vh, 26px); width: 100%; max-width: clamp(500px, 52vw, 720px); }
-.ke-card-formular { max-width: clamp(550px, 58vw, 820px); }
-.ke-icon { width: clamp(110px, 16vh, 180px); height: clamp(110px, 16vh, 180px); background: linear-gradient(135deg, #f0f5fa 0%, #dfe9f2 100%); border: 5px solid #cdd7e3; border-radius: clamp(16px, 1.8vw, 26px); box-shadow: 0 4px 14px rgba(18,50,80,0.15); display: flex; align-items: center; justify-content: center; box-sizing: border-box; font-size: clamp(3.5rem, 9vh, 7rem); line-height: 1; }
-.ke-frage-text { background: #36C291; color: white; font-size: clamp(1.15rem, 2.4vh, 1.6rem); font-weight: bold; padding: clamp(10px, 1.5vh, 18px) clamp(20px, 2.4vw, 40px); border-radius: 8px; text-align: center; }
-.ke-titel { color: #123250; font-size: clamp(1.4rem, 3vh, 1.85rem); margin: 0; }
-.ke-buttons { display: flex; gap: clamp(12px, 1.8vw, 22px); justify-content: flex-end; }
-.ke-btn { min-width: clamp(120px, 12vw, 160px); padding: clamp(10px, 1.3vh, 16px) 0; font-size: clamp(1.05rem, 1.7vh, 1.2rem); text-align: center; }
-.ke-formular { display: flex; flex-direction: column; gap: clamp(10px, 1.5vh, 20px); width: 100%; }
-.ke-feld { display: flex; align-items: center; gap: clamp(10px, 1.2vw, 18px); }
-.ke-feld label { font-size: clamp(1rem, 1.8vh, 1.3rem); font-weight: bold; color: #123250; min-width: clamp(140px, 14vw, 200px); text-align: right; white-space: nowrap; }
-.ke-feld .feld-input { flex: 1; min-width: 0; padding: clamp(8px, 1.2vh, 12px) clamp(12px, 1.2vw, 18px); font-size: clamp(1rem, 1.6vh, 1.15rem); }
+.ke-seite { display: flex; justify-content: center; align-items: flex-start; width: 100%; flex: 1; padding-top: clamp(10px, 2vh, 30px); }
+.ke-card { display: flex; flex-direction: column; align-items: center; background: white; padding: clamp(24px, 3vh, 48px) clamp(28px, 4vw, 72px); gap: clamp(18px, 2.4vh, 32px); width: 100%; max-width: clamp(600px, 65vw, 900px); }
+.ke-card-formular { max-width: clamp(700px, 75vw, 1100px); }
+.ke-icon { width: clamp(120px, 17vh, 190px); height: clamp(120px, 17vh, 190px); background: linear-gradient(135deg, #f0f5fa 0%, #dfe9f2 100%); border: 5px solid #cdd7e3; border-radius: clamp(16px, 1.8vw, 26px); box-shadow: 0 4px 14px rgba(18,50,80,0.15); display: flex; align-items: center; justify-content: center; box-sizing: border-box; font-size: clamp(4rem, 10vh, 7.5rem); line-height: 1; }
+.ke-frage-text { background: #36C291; color: white; font-size: clamp(1.4rem, 2.8vh, 2rem); font-weight: bold; padding: clamp(12px, 1.8vh, 22px) clamp(22px, 2.6vw, 44px); border-radius: 8px; text-align: center; }
+.ke-titel { color: #123250; font-size: clamp(2rem, 4.5vh, 3rem); margin: 0; }
+.ke-buttons { display: flex; gap: clamp(14px, 2vw, 26px); justify-content: flex-end; }
+.ke-btn { min-width: clamp(150px, 15vw, 200px); padding: clamp(13px, 1.9vh, 20px) 0; font-size: clamp(1.2rem, 2.1vh, 1.55rem); text-align: center; }
+.ke-formular { display: flex; flex-direction: column; gap: clamp(14px, 2.2vh, 26px); width: 100%; }
+.ke-feld { display: flex; align-items: center; gap: clamp(14px, 1.6vw, 24px); }
+.ke-feld label { font-size: clamp(1.3rem, 2.4vh, 1.8rem); font-weight: bold; color: #123250; min-width: clamp(200px, 19vw, 290px); text-align: right; white-space: nowrap; }
+.ke-feld .feld-input { flex: 1; min-width: 0; padding: clamp(13px, 1.9vh, 22px) clamp(17px, 1.7vw, 28px); font-size: clamp(1.25rem, 2.2vh, 1.65rem); }
+
+/* Debug-Fenster */
+.ke-debug { margin-top: clamp(12px, 1.5vh, 20px); border: 2px solid #f0ad4e; border-radius: 8px; overflow: hidden; background: #fff8e1; width: 100%; }
+.ke-debug-titel { background: #f0ad4e; color: white; font-weight: bold; padding: clamp(8px, 1vh, 12px) clamp(12px, 1.5vw, 20px); font-size: clamp(0.9rem, 1.5vh, 1.1rem); font-family: monospace; }
+.ke-debug-pre { margin: 0; padding: clamp(10px, 1.4vh, 16px) clamp(12px, 1.5vw, 20px); font-family: 'Consolas', 'Monaco', monospace; font-size: clamp(0.8rem, 1.3vh, 1rem); color: #123250; white-space: pre-wrap; word-break: break-all; max-height: 350px; overflow-y: auto; }
 
 @media (max-width: 600px) { .ke-card { padding: 16px; } .ke-feld { flex-direction: column; align-items: flex-start; gap: 4px; } .ke-feld label { min-width: auto; text-align: left; } }

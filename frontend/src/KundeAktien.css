@@ -1,0 +1,10 @@
+/* Kunde Aktien - Inhalt nach oben ansetzen */
+
+.kunde-ak-seite {
+  justify-content: flex-start !important;
+  padding-top: clamp(10px, 2vh, 30px);
+}
+
+.kunde-ak-seite .as-titel {
+  margin-top: 0;
+}

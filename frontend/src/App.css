@@ -4,10 +4,20 @@
    Kein Scrollen – alles passt in den Viewport
 ============================================== */
 
+/* -- EMOJI (Twemoji-SVGs statt Unicode - OS-unabhaengig) -- */
+.emoji {
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.15em;
+  display: inline-block;
+  object-fit: contain;
+  user-select: none;
+}
+
 /* -- HEADER -- */
 .header {
   background: #123250;
-  height: clamp(40px, 6vh, 70px);
+  height: clamp(64px, 9vh, 110px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -16,7 +26,7 @@
 }
 
 .header-title {
-  font-size: clamp(1rem, 2.5vw, 2.4rem);
+  font-size: clamp(1.7rem, 3.8vw, 3.9rem);
   font-weight: bold;
   letter-spacing: 0.12em;
   text-align: center;
@@ -24,13 +34,13 @@
 
 /* -- FOOTER-LEISTE -- */
 .fusszeile {
-  height: clamp(36px, 5vh, 60px);
+  height: clamp(56px, 8vh, 96px);
   background: #fff;
   border-top: 2px solid #dde5ee;
   display: flex;
   align-items: center;
   padding: 0 1.5vw;
-  gap: clamp(8px, 1vw, 16px);
+  gap: clamp(10px, 1.2vw, 20px);
   flex-shrink: 0;
 }
 
@@ -38,63 +48,81 @@
   background: #d32f2f;
   color: white;
   border: none;
-  width: clamp(28px, 3vh, 40px);
-  height: clamp(28px, 3vh, 40px);
+  height: clamp(40px, 4.5vh, 58px);
+  padding: 0 clamp(14px, 1.8vw, 28px);
   font-weight: bold;
-  font-size: clamp(0.7rem, 1.2vh, 1rem);
+  font-size: clamp(1rem, 1.8vh, 1.4rem);
   cursor: pointer;
-  border-radius: 4px;
+  border-radius: 6px;
   flex-shrink: 0;
+  transition: background 0.15s ease, opacity 0.15s ease;
+  white-space: nowrap;
+}
+
+.x-btn-disabled {
+  background: #bbb;
+  cursor: default;
+  opacity: 0.55;
 }
 
 .betreuer-bereich {
   display: flex;
   align-items: center;
-  gap: clamp(4px, 0.5vw, 8px);
+  gap: clamp(6px, 0.7vw, 12px);
   flex: 1;
 }
 
 .betreuer-label {
-  font-size: clamp(0.7rem, 1.2vh, 0.95rem);
+  font-size: clamp(1rem, 1.7vh, 1.3rem);
   color: #555;
   white-space: nowrap;
+  font-weight: 600;
 }
 
 .betreuer-bereich input {
-  width: clamp(100px, 12vw, 180px);
-  padding: clamp(3px, 0.4vh, 6px) clamp(6px, 0.8vw, 12px);
+  width: clamp(140px, 16vw, 240px);
+  padding: clamp(6px, 0.9vh, 10px) clamp(10px, 1vw, 16px);
   border: 1px solid #bbb;
-  border-radius: 4px;
-  font-size: clamp(0.75rem, 1.2vh, 0.95rem);
+  border-radius: 6px;
+  font-size: clamp(1rem, 1.7vh, 1.25rem);
   outline: none;
 }
 
 .betreuer-bereich input:focus { border-color: #36C291; }
+.betreuer-bereich input:disabled { background: #eee; color: #999; cursor: not-allowed; }
 
-.betreuer-such-btn {
-  background: none;
+.betreuer-login-btn {
+  background: #123250;
+  color: white;
   border: none;
-  padding: 0 2px;
-  display: inline-flex;
-  align-items: center;
+  padding: clamp(6px, 0.9vh, 10px) clamp(14px, 1.4vw, 22px);
+  font-size: clamp(1rem, 1.7vh, 1.25rem);
+  font-weight: bold;
+  border-radius: 6px;
   cursor: pointer;
+  transition: background 0.15s ease;
 }
 
-.betreuer-such-btn img {
-  height: clamp(16px, 2.5vh, 28px);
-  width: auto;
-  object-fit: contain;
+.betreuer-login-btn:hover { background: #1d4b75; }
+
+.betreuer-login-btn-disabled,
+.betreuer-login-btn:disabled {
+  background: #bbb;
+  cursor: not-allowed;
+  opacity: 0.6;
 }
+.betreuer-login-btn-disabled:hover,
+.betreuer-login-btn:disabled:hover { background: #bbb; }
 
 .bwbank-logo {
-  height: clamp(20px, 3.5vh, 40px);
+  height: clamp(32px, 5vh, 60px);
   object-fit: contain;
   margin-left: auto;
 }
 
 .bwbank-fallback {
   font-weight: bold;
-  font-size: clamp(0.8rem, 1.5vh, 1.2rem);
+  font-size: clamp(1.1rem, 2vh, 1.6rem);
   color: #123250;
   margin-left: auto;
 }
@@ -124,6 +152,26 @@
 
 .zurueck-btn:hover { background: #2aab7e; }
 
+.zurueck-bar-links {
+  display: flex;
+  align-items: center;
+  gap: clamp(8px, 1.2vw, 18px);
+}
+
+.zurueck-back-btn {
+  background: #19AAD2;
+  color: white;
+  border: none;
+  padding: clamp(8px, 1.2vh, 14px) clamp(18px, 2.2vw, 36px);
+  font-size: clamp(1rem, 1.8vh, 1.3rem);
+  font-weight: bold;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.zurueck-back-btn:hover { background: #1588a8; }
+
 .logout-btn {
   background: #D9534F;
   color: white;
@@ -140,9 +188,10 @@
 /* -- MAIN -- */
 main#app {
   flex: 1;
+  min-height: 0;
   padding: clamp(8px, 1.5vh, 20px) clamp(12px, 2vw, 40px) clamp(8px, 1vh, 16px);
   background: #fff;
-  overflow-y: auto;
+  overflow-y: auto;  /* TEMP: fuer Debug - spaeter wieder auf hidden */
   overflow-x: hidden;
   display: flex;
   flex-direction: column;
