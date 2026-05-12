@@ -55,8 +55,25 @@ while true; do
     --disable-infobars \\
     --disable-session-crashed-bubble \\
     --overscroll-history-navigation=0 \\
+    --password-store=basic \\
+    --disable-save-password-bubble \\
     --app=$KIOSK_URL
 done
+EOF
+
+# 3.5 Openbox Tastenkombinationen (F1 blockieren)
+echo "--- Deaktiviere F1-Taste (Hilfe) in Openbox ---"
+cat > ~/.config/openbox/rc.xml <<EOF
+<?xml version="1.0" encoding="UTF-8"?>
+<openbox_config xmlns="http://openbox.org/3.4/rc" xmlns:xi="http://www.w3.org/2001/XInclude">
+  <keyboard>
+    <keybind key="F1">
+      <action name="Execute">
+        <command>true</command>
+      </action>
+    </keybind>
+  </keyboard>
+</openbox_config>
 EOF
 
 # Rechte für Autostart vergeben
