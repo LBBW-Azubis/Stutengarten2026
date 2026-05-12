@@ -6,6 +6,9 @@ from datetime import datetime
 from db_connector import DbConnector
 from customer import Customer, CustomerException
 from share import Share
+import logging
+
+log = logging.getLogger(__name__)
 
 
 class CustomerShares:
@@ -53,6 +56,7 @@ class CustomerShares:
                      invested_amount, current_weekday)
                 )
                 self.id = cursor.lastrowid
+                log.info("Inserted customer share id=%s owner=%s aktie_fk=%s amount=%s", self.id, customer_stutengarten_id, share_id, invested_amount)
                 self.customer_stutengarten_id = customer_stutengarten_id
                 self.share_id = share_id
                 self.invested_amount = invested_amount
@@ -71,6 +75,7 @@ class CustomerShares:
 
             except Exception as err:
                 conn.rollback()
+                log.exception("Error buying share for %s aktie_fk=%s amount=%s", customer_stutengarten_id, share_id, invested_amount)
                 raise CustomerException(f"Error buying share: {err}") from err
             finally:
                 cursor.close()

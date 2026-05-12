@@ -1,7 +1,10 @@
 """
     import db_connector for connection to database
 """
+import logging
 from db_connector import DbConnector
+
+log = logging.getLogger(__name__)
 
 class ShareException(Exception):
     """Exception for share errors"""
@@ -35,11 +38,13 @@ class Share:
                     (name, symbol, description)
                 )
                 self.id = cursor.lastrowid
+                log.info("Inserted share '%s' id=%s symbol=%s", name, self.id, symbol)
                 self.name = name
                 self.symbol = symbol
                 self.description = description
                 conn.commit()
             except Exception as err:
+                log.exception("Error inserting share %s (%s)", name, symbol)
                 raise ShareException(f"Error creating share: {err}") from err
             finally:
                 cursor.close()
