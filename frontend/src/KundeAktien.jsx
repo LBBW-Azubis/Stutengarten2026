@@ -1,6 +1,7 @@
 import { useState } from 'react'
 
 import './AktienSammlung.css'  //Nutzt bestehende Sammlung-Styles
+import './KundeAktien.css'
 
 export default function KundeAktien() {
   // ============================================================
@@ -60,7 +61,7 @@ export default function KundeAktien() {
   }
 
   return (
-    <div className="as-seite">
+    <div className="as-seite kunde-ak-seite">
       <h2 className="as-titel">Kunde Aktien</h2>
 
       <div className="as-inhalt">

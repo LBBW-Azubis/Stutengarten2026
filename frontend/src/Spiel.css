@@ -1,7 +1,7 @@
 /* Spiel - Robo-Programmierer: 3-Spalten Layout (Hilfe | Spielfeld | Pfeile) */
 
 /* Wrapper: Hilfe links, Spiel mittig, Pfeile rechts */
-.game-wrapper { display: flex; gap: clamp(16px, 2vw, 36px); align-items: center; justify-content: center; width: 100%; padding-top: clamp(6px, 1.2vh, 18px); }
+.game-wrapper { display: flex; gap: clamp(16px, 2vw, 36px); align-items: flex-start; justify-content: center; width: 100%; padding-top: clamp(4px, 0.8vh, 12px); }
 
 /* Erklaerung */
 .game-hilfe { width: clamp(200px, 20vw, 300px); flex-shrink: 0; background: #123250; border-radius: clamp(12px, 1.6vh, 20px); padding: clamp(14px, 2vh, 26px) clamp(12px, 1.4vw, 22px); display: flex; flex-direction: column; gap: clamp(10px, 1.5vh, 18px); }
@@ -56,11 +56,26 @@
 .action-undo { background: #FFD719; color: #123250; }
 .action-reset { background: #F0825A; }
 
-/* Level Dots */
-.game-level { display: flex; gap: clamp(8px, 1vw, 14px); justify-content: center; }
-.game-level-dot { width: clamp(14px, 2vh, 22px); height: clamp(14px, 2vh, 22px); border-radius: 50%; background: #ddd; cursor: pointer; transition: all 0.2s; }
-.dot-now { background: #123250; transform: scale(1.3); }
-.dot-done { background: #36C291; }
+/* Level Buttons */
+.game-level { display: flex; gap: clamp(6px, 0.9vw, 12px); justify-content: center; flex-wrap: wrap; }
+.game-level-btn {
+  padding: clamp(7px, 1.1vh, 13px) clamp(12px, 1.4vw, 20px);
+  font-size: clamp(0.95rem, 1.55vh, 1.2rem);
+  font-weight: bold;
+  border: 2px solid #cdd7e3;
+  border-radius: clamp(6px, 0.9vh, 12px);
+  background: white;
+  color: #123250;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-family: inherit;
+  white-space: nowrap;
+}
+.game-level-btn:hover:not(:disabled) { background: #eef3f8; border-color: #123250; }
+.game-level-btn:disabled { cursor: not-allowed; opacity: 0.6; }
+.level-now { background: #123250 !important; color: white; border-color: #123250; }
+.level-done { background: #36C291; color: white; border-color: #36C291; }
+.level-done:hover:not(:disabled) { background: #2aab7e; border-color: #2aab7e; }
 
 @media (max-width: 900px) {
   .game-wrapper { flex-direction: column; align-items: center; }

@@ -172,11 +172,15 @@ export default function Spiel() {
       {/* Level-Anzeige */}
       <div className="game-level">
         {LEVELS.map((_, i) => (
-          <div
+          <button
             key={i}
-            className={`game-level-dot ${i === lvl ? 'dot-now' : ''} ${i < lvl ? 'dot-done' : ''}`}
+            type="button"
+            className={`game-level-btn ${i === lvl ? 'level-now' : ''} ${i < lvl ? 'level-done' : ''}`}
             onClick={() => { if (!running) setLvl(i) }}
-          />
+            disabled={running}
+          >
+            Level {i + 1}
+          </button>
         ))}
       </div>
     </div>
