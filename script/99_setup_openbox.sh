@@ -94,6 +94,8 @@ EOF
     sudo netplan apply
 fi
 
+sudo ip link set wlo1 down
+
 # 3. LightDM Konfiguration (Autologin)
 echo -e "${GREEN}>>> Konfiguriere Autologin...${NC}"
 sudo bash -c "cat > /etc/lightdm/lightdm.conf" <<EOF
