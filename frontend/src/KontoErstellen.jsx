@@ -15,14 +15,12 @@ export default function KontoErstellen() {
   const [vorname, setVorname] = useState('')
   const [nachname, setNachname] = useState('')
   const [fehler, setFehler] = useState('')
-  const [debugInfo, setDebugInfo] = useState(null)
 
   async function fertig() {
     const id = kontonummer.trim().toUpperCase()
     const vn = vorname.trim()
     const nn = nachname.trim()
     setFehler('')
-    setDebugInfo(null)
 
     if (!id || !vn || !nn) {
       setFehler('Bitte Kontonummer, Vor- und Nachname ausfüllen.')
@@ -33,21 +31,13 @@ export default function KontoErstellen() {
     // POST http://192.168.1.10:5000/customer
     // Body: { stutengarten_id, first_name, last_name }
     // Das Sparbuch wird vom Backend automatisch mit angelegt.
-    const url = 'http://192.168.1.10:5000/customer'
-    const body = { stutengarten_id: id, first_name: vn, last_name: nn }
-    const debug = { url, body }
     try {
-      const response = await fetch(url, {
+      const response = await fetch('http://192.168.1.10:5000/customer', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json; charset=utf-8' },
-        body: JSON.stringify(body),
+        body: JSON.stringify({ stutengarten_id: id, first_name: vn, last_name: nn }),
       })
-      debug.status = response.status
-      const text = await response.text()
-      try { debug.data = JSON.parse(text) }
-      catch { debug.data_raw = text }
 
-      setDebugInfo(debug)
       if (response.ok) {
         navigate('/mainsite')
       } else {
@@ -55,8 +45,6 @@ export default function KontoErstellen() {
       }
     } catch (error) {
       console.error('[KontoErstellen] Fehler:', error)
-      debug.error = String(error)
-      setDebugInfo(debug)
       setFehler('Verbindung zum Server fehlgeschlagen.')
     }
     // === ENDE BACKEND ===
@@ -129,14 +117,6 @@ export default function KontoErstellen() {
             <button className="btn btn-dunkel ke-btn" onClick={fertig}>Fertig</button>
             <button className="btn btn-gruen ke-btn" onClick={() => setSchritt(1)}>Zurück</button>
           </div>
-
-          {/* DEBUG: Roh-Response vom Backend */}
-          {debugInfo && (
-            <div className="ke-debug">
-              <div className="ke-debug-titel">Debug — Roh-Response vom Backend</div>
-              <pre className="ke-debug-pre">{JSON.stringify(debugInfo, null, 2)}</pre>
-            </div>
-          )}
         </div>
       </div>
     </div>

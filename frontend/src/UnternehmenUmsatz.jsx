@@ -15,7 +15,6 @@ export default function UnternehmenUmsatz() {
   const [fehler, setFehler] = useState('')
   const [geladen, setGeladen] = useState(false)
   const [geladenerName, setGeladenerName] = useState('')
-  const [debugInfo, setDebugInfo] = useState(null)
 
   // Platzhalter-Daten - werden spaeter vom Backend ueberschrieben
   const [umsatzDaten, setUmsatzDaten] = useState([
@@ -29,7 +28,6 @@ export default function UnternehmenUmsatz() {
   async function laden() {
     setFehler('')
     setGeladen(false)
-    setDebugInfo(null)
     if (!unternehmenName.trim()) {
       setFehler('Bitte Unternehmenname eingeben.')
       return
@@ -37,17 +35,10 @@ export default function UnternehmenUmsatz() {
 
     // === BACKEND: Umsatz laden ===
     // GET /company/<name>/transactions → Umsatz-Daten
-    const name = unternehmenName.trim()
-    const url = `http://192.168.1.10:5000/company/${encodeURIComponent(name)}/transactions`
-    const debug = { url }
     try {
-      const response = await fetch(url)
-      debug.status = response.status
-      const text = await response.text()
-      try { debug.data = JSON.parse(text) }
-      catch { debug.data_raw = text }
+      const name = unternehmenName.trim()
+      const response = await fetch(`http://192.168.1.10:5000/company/${encodeURIComponent(name)}/transactions`)
 
-      setDebugInfo(debug)
       if (!response.ok) {
         setFehler('Umsatzdaten konnten nicht geladen werden.')
         return
@@ -58,8 +49,6 @@ export default function UnternehmenUmsatz() {
       setGeladen(true)
     } catch (error) {
       console.error('[UnternehmenUmsatz] Fehler:', error)
-      debug.error = String(error)
-      setDebugInfo(debug)
       setFehler('Verbindung zum Server fehlgeschlagen.')
     }
     // === ENDE BACKEND ===
@@ -111,14 +100,6 @@ export default function UnternehmenUmsatz() {
             })}
           </div>
         </div>
-
-        {/* DEBUG: Roh-Response vom Backend */}
-        {debugInfo && (
-          <div className="uu-debug">
-            <div className="uu-debug-titel">Debug — Roh-Response vom Backend</div>
-            <pre className="uu-debug-pre">{JSON.stringify(debugInfo, null, 2)}</pre>
-          </div>
-        )}
       </div>
     </div>
   )
