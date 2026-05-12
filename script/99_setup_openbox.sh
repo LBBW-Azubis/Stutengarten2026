@@ -87,6 +87,7 @@ network:
   ethernets:
     $INTERFACE:
       dhcp4: no
+      optional: true
       addresses:
         - $IP_ADDR/$PREFIX
 EOF

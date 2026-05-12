@@ -110,6 +110,8 @@ network:
   renderer: networkd
   ethernets:
     ${NETWORK_IFACE}:
+      dhcp4: no
+      optional: true
       addresses:
         - ${STATIC_IP}
 YAML
