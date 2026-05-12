@@ -76,7 +76,7 @@ function Footer() {
   const [placeholder, setPlaceholder] = useState('')
 
   function handleBetreuerLogin() {
-    if (betreuerPw === '1234') {
+    if (betreuerPw === 'betreuer-stg2026') {
       setBetreuerEingeloggt(true)
       setBetreuerPw('')
       navigate('/mainsite/betreuer')
