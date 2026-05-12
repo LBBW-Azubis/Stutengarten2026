@@ -25,7 +25,7 @@ export default function Login() {
     }
 
     setMitarbeiter({ id: ausweis.trim().toUpperCase() })
-    if (passwort === '1234') setBetreuerEingeloggt(true)
+    if (passwort === 'betreuer-stg2026') setBetreuerEingeloggt(true)
     setAktuellerNutzer(null)
     if (hackerAutoStart) setHackerAktiv(true)
     if (spieleAutoStart) setSpieleAktiv(true)
