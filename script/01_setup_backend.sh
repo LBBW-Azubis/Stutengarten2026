@@ -87,8 +87,23 @@ sudo ufw allow 80/tcp
 sudo ufw --force enable
 info "UFW aktiv. Offene Ports: 22 (SSH), 80 (HTTP), 5000 (Backend)."
 
+
+# ── PM2 & Backend starten ────────────────────────────────────────────────────
+info "=== 10. PM2 installieren & Backend starten ==="
+sudo npm install -g pm2
+
+# Vorherige PM2-Instanz sauber entfernen (falls Neustart)
+pm2 delete stutengarten-backend 2>/dev/null || true
+
+pm2 start "venv/bin/python3 backend/app.py" --name stutengarten-backend
+pm2 save
+
+info "PM2 in den Autostart eintragen..."
+# Spezieller und direkter Autostart-Befehl für Ubuntu (systemd)
+sudo env PATH=$PATH:/usr/bin /usr/lib/node_modules/pm2/bin/pm2 startup systemd -u $USER --hp $HOME
+
 # ── Statische IP (Netplan) ───────────────────────────────────────────────────
-info "=== 10. Statische IP konfigurieren (${STATIC_IP} auf ${NETWORK_IFACE}) ==="
+info "=== 11. Statische IP konfigurieren (${STATIC_IP} auf ${NETWORK_IFACE}) ==="
 sudo tee "$NETPLAN_FILE" > /dev/null <<YAML
 network:
   version: 2
@@ -101,20 +116,6 @@ YAML
 sudo netplan apply
 info "Statische IP gesetzt. Aktuelle Konfiguration:"
 ip a show "$NETWORK_IFACE" 2>/dev/null || warn "Interface ${NETWORK_IFACE} nicht gefunden."
-
-# ── PM2 & Backend starten ────────────────────────────────────────────────────
-info "=== 11. PM2 installieren & Backend starten ==="
-sudo npm install -g pm2
-
-# Vorherige PM2-Instanz sauber entfernen (falls Neustart)
-pm2 delete stutengarten-backend 2>/dev/null || true
-
-pm2 start "venv/bin/python3 backend/app.py" --name stutengarten-backend
-pm2 save
-
-info "PM2 in den Autostart eintragen..."
-# Spezieller und direkter Autostart-Befehl für Ubuntu (systemd)
-sudo env PATH=$PATH:/usr/bin /usr/lib/node_modules/pm2/bin/pm2 startup systemd -u $USER --hp $HOME
 
 # Nochmals speichern
 pm2 save
