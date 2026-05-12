@@ -28,45 +28,34 @@ export default function UnternehmenAuszahlen() {
 
   const [kontostand, setKontostand] = useState(0)
   const [kontostandNeu, setKontostandNeu] = useState('')
-  const [debugInfo, setDebugInfo] = useState(null)
 
   async function laden() {
     setFehler('')
     setGeladen(false)
     setKontostandNeu('')
-    setDebugInfo(null)
     if (!unternehmenName.trim()) {
       setFehler('Bitte Unternehmensname eingeben.')
       return
     }
 
     // === BACKEND: Kontostand laden ===
-    const name = unternehmenName.trim()
-    const url = `http://192.168.1.10:5000/company/${encodeURIComponent(name)}/savingsbook`
-    const debug = { url }
     try {
-      const response = await fetch(url)
-      debug.status = response.status
-      const text = await response.text()
-      try { debug.data = JSON.parse(text) }
-      catch { debug.data_raw = text }
+      const name = unternehmenName.trim()
+      const response = await fetch(`http://192.168.1.10:5000/company/${encodeURIComponent(name)}/savingsbook`)
+      const data = await response.json()
 
-      setDebugInfo(debug)
       if (!response.ok) {
         setFehler('Unternehmen nicht gefunden oder kein Konto.')
         return
       }
       // Backend liefert Array: [{ balance, name }]
-      const d = debug.data
-      const eintrag = Array.isArray(d) ? d[0] : d
+      const eintrag = Array.isArray(data) ? data[0] : data
       setKontostand(Number(eintrag?.balance) || 0)
 
       setGeladen(true)
       setBetrag('')
     } catch (error) {
       console.error('[Unternehmen Auszahlen] Fehler beim Laden:', error)
-      debug.error = String(error)
-      setDebugInfo(debug)
       setFehler('Verbindung zum Server fehlgeschlagen.')
     }
     // === ENDE BACKEND ===
@@ -93,21 +82,13 @@ export default function UnternehmenAuszahlen() {
     // === BACKEND: Auszahlung vom Unternehmen senden ===
     // PATCH http://192.168.1.10:5000/company/<name>/savingsbook/balance
     // Body: { balance: (kontostand - betrag) }
-    const url = `http://192.168.1.10:5000/company/${encodeURIComponent(unternehmenName.trim())}/savingsbook/balance`
-    const body = { balance: neuerStand }
-    const debug = { aktion: 'auszahlen', url, body }
     try {
-      const response = await fetch(url, {
+      const response = await fetch(`http://192.168.1.10:5000/company/${encodeURIComponent(unternehmenName.trim())}/savingsbook/balance`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json; charset=utf-8' },
-        body: JSON.stringify(body),
+        body: JSON.stringify({ balance: neuerStand }),
       })
-      debug.status = response.status
-      const text = await response.text()
-      try { debug.data = JSON.parse(text) }
-      catch { debug.data_raw = text }
 
-      setDebugInfo(debug)
       if (response.ok) {
         setKontostandNeu(neuerStand)
         setKontostand(neuerStand)
@@ -116,8 +97,6 @@ export default function UnternehmenAuszahlen() {
       }
     } catch (error) {
       console.error('[Unternehmen Auszahlen] Fehler:', error)
-      debug.error = String(error)
-      setDebugInfo(debug)
       setFehler('Verbindung zum Server fehlgeschlagen.')
     }
     // === ENDE BACKEND ===
@@ -179,18 +158,8 @@ export default function UnternehmenAuszahlen() {
 
         <div className="ua-feld">
           <label>Kontostand Neu:</label>
-          {/* === BACKEND: Neuen Kontostand vom Backend laden === */}
           <span className="feld-input anzeige ua-kontostand-neu">{kontostandNeu !== '' ? `${kontostandNeu}` : ''}</span>
-          {/* === ENDE BACKEND === */}
         </div>
-
-        {/* DEBUG: Roh-Response vom Backend */}
-        {debugInfo && (
-          <div className="ua-debug">
-            <div className="ua-debug-titel">Debug — Roh-Response vom Backend</div>
-            <pre className="ua-debug-pre">{JSON.stringify(debugInfo, null, 2)}</pre>
-          </div>
-        )}
       </div>
     </div>
   )
