@@ -16,7 +16,7 @@ DB_NAME="stutengarten"
 DB_USER="root"
 DB_PASS="1234"
 STATIC_IP="192.168.1.10/24"
-NETWORK_IFACE="enp0s8"          # ggf. anpassen (ip a)
+NETWORK_IFACE="enp3s0"          # ggf. anpassen (ip a)
 NETPLAN_FILE="/etc/netplan/01-netcfg.yaml"
 
 # ============================================================================
