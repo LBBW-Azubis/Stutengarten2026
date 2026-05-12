@@ -36,10 +36,10 @@ sudo add-apt-repository ppa:deadsnakes/ppa -y
 sudo apt update
 sudo apt install -y python3.11 python3.11-venv python3.11-dev
 
-# ── MariaDB 12 ──────────────────────────────────────────────────────────────
-info "=== 4. MariaDB 12 installieren ==="
+# ── MariaDB 11 ──────────────────────────────────────────────────────────────
+info "=== 4. MariaDB 11 installieren ==="
 curl -LsS https://r.mariadb.com/downloads/mariadb_repo_setup \
-    | sudo bash -s -- --mariadb-server-version="mariadb-12.0"
+    | sudo bash -s -- --mariadb-server-version="mariadb-11.4"
 sudo apt update
 sudo apt install -y mariadb-server
 sudo systemctl enable mariadb
