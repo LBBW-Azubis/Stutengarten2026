@@ -108,7 +108,7 @@ function Footer() {
           type="password"
           value={betreuerPw}
           placeholder={placeholder}
-          maxLength="10"
+          maxLength="32"
           disabled={betreuerEingeloggt}
           onChange={e => setBetreuerPw(e.target.value)}
           onKeyDown={e => { if (e.key === 'Enter') handleBetreuerLogin() }}

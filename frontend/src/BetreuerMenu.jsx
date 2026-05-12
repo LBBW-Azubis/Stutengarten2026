@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom'
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 import { useAppContext } from './AppContext'
 import Emoji from './Emoji'
 
@@ -7,13 +7,10 @@ import './BetreuerMenu.css'  //Wichtig immer CSS importieren
 
 import hackerIcon from './images/Hacker_Bidl.png'
 import spieleIcon from './images/Spiel_menü.png'
-import excelIcon from './images/Excel_Icon.svg'
 
 export default function BetreuerMenu() {
   const navigate = useNavigate()
-  const kundenInputRef = useRef(null)
-  const unternehmenInputRef = useRef(null)
-  const [importStatus, setImportStatus] = useState(null)  // { typ: 'ok'|'err', text: string }
+  const [importStatus, setImportStatus] = useState(null)  // { typ: 'ok'|'err', text: string } - Statusmeldung fuer Datenbank-Aktionen
   const [showLoeschenDialog, setShowLoeschenDialog] = useState(false)
   const [loeschenInput, setLoeschenInput] = useState('')
 
@@ -78,82 +75,6 @@ export default function BetreuerMenu() {
     setTimeout(() => setImportStatus(null), 5000)
   }
 
-  async function handleKundenImport(e) {
-    const datei = e.target.files?.[0]
-    if (!datei) return
-
-    // === BACKEND: Kunden-Excel importieren ===
-    // POST http://192.168.1.10:5000/customer/import - Excel als multipart/form-data
-    try {
-      const formData = new FormData()
-      formData.append('file', datei)
-
-      const response = await fetch('http://192.168.1.10:5000/customer/import', {
-        method: 'POST',
-        body: formData,
-      })
-      const text = await response.text()
-      let data = null
-      try { data = JSON.parse(text) } catch { /* keine JSON */ }
-      console.log('[Import Kunden] Status:', response.status, 'Body:', data ?? text)
-
-      if (response.ok) {
-        // Anzahl aus count-Feld oder aus Message-String extrahieren
-        const rawMsg = data?.message || text || ''
-        const match = rawMsg.match(/(\d+)/)
-        const anzahl = data?.count ?? (match ? match[1] : null)
-        zeigeImportMeldung('ok', anzahl !== null
-          ? `Excel erfolgreich hochgeladen mit ${anzahl} Kunden`
-          : 'Excel erfolgreich hochgeladen')
-      } else {
-        zeigeImportMeldung('err', 'Import fehlgeschlagen')
-      }
-    } catch (error) {
-      console.error('[Import Kunden] Fehler:', error)
-      zeigeImportMeldung('err', 'Verbindung zum Server fehlgeschlagen')
-    }
-    // === ENDE BACKEND ===
-
-    e.target.value = ''
-  }
-
-  async function handleUnternehmenImport(e) {
-    const datei = e.target.files?.[0]
-    if (!datei) return
-
-    // === BACKEND: Unternehmen-Excel importieren ===
-    // POST http://192.168.1.10:5000/company/import - Excel als multipart/form-data
-    try {
-      const formData = new FormData()
-      formData.append('file', datei)
-
-      const response = await fetch('http://192.168.1.10:5000/company/import', {
-        method: 'POST',
-        body: formData,
-      })
-      const text = await response.text()
-      let data = null
-      try { data = JSON.parse(text) } catch { /* keine JSON */ }
-      console.log('[Import Unternehmen] Status:', response.status, 'Body:', data ?? text)
-
-      if (response.ok) {
-        const rawMsg = data?.message || text || ''
-        const match = rawMsg.match(/(\d+)/)
-        const anzahl = data?.count ?? (match ? match[1] : null)
-        zeigeImportMeldung('ok', anzahl !== null
-          ? `Excel erfolgreich hochgeladen mit ${anzahl} Unternehmen`
-          : 'Excel erfolgreich hochgeladen')
-      } else {
-        zeigeImportMeldung('err', 'Import fehlgeschlagen')
-      }
-    } catch (error) {
-      console.error('[Import Unternehmen] Fehler:', error)
-      zeigeImportMeldung('err', 'Verbindung zum Server fehlgeschlagen')
-    }
-    // === ENDE BACKEND ===
-
-    e.target.value = ''
-  }
   const {
     hackerAktiv, setHackerAktiv,
     hackerIntervall, setHackerIntervall,
@@ -288,22 +209,6 @@ export default function BetreuerMenu() {
               <div className="kachel-label kachel-label-danger">Unternehmen löschen</div>
             </div>
 
-            <div className="kachel" onClick={() => kundenInputRef.current?.click()}>
-              <div className="kachel-bild import-bild">
-                <Emoji char="👤" className="betreuer-kachel-emoji" />
-                <img src={excelIcon} alt="Excel" className="import-badge" />
-              </div>
-              <div className="kachel-label">Import Kunden</div>
-            </div>
-
-            <div className="kachel" onClick={() => unternehmenInputRef.current?.click()}>
-              <div className="kachel-bild import-bild">
-                <Emoji char="🏢" className="betreuer-kachel-emoji" />
-                <img src={excelIcon} alt="Excel" className="import-badge" />
-              </div>
-              <div className="kachel-label">Import Unternehmen</div>
-            </div>
-
             <div className="kachel" onClick={oeffneLoeschenDialog}>
               <div className="kachel-bild">
                 <Emoji char="🗑️" className="betreuer-kachel-emoji" />
@@ -312,21 +217,6 @@ export default function BetreuerMenu() {
             </div>
 
           </div>
-
-          <input
-            ref={kundenInputRef}
-            type="file"
-            accept=".xlsx,.xls,.csv"
-            style={{ display: 'none' }}
-            onChange={handleKundenImport}
-          />
-          <input
-            ref={unternehmenInputRef}
-            type="file"
-            accept=".xlsx,.xls,.csv"
-            style={{ display: 'none' }}
-            onChange={handleUnternehmenImport}
-          />
         </div>
 
       </div>
