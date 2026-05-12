@@ -62,7 +62,22 @@ if [[ "$CONFIRM" != "y" ]]; then echo "Abgebrochen."; exit 1; fi
 
 # --- AUSFÜHRUNG ---
 
-# 1. Netzwerk konfigurieren (falls IP angegeben)
+# 1. System-Update und Installation der Pakete
+echo -e "${GREEN}>>> Installiere Kiosk-Komponenten (X11, Openbox, Chromium)...${NC}"
+sudo apt update
+sudo apt install -y --no-install-recommends \
+    xserver-xorg-core \
+    xserver-xorg \
+    xinit \
+    openbox \
+    lightdm \
+    lightdm-gtk-greeter \
+    chromium-browser \
+    udevil \
+    xdg-desktop-portal-gtk \
+    x11-xserver-utils
+
+# 2. Netzwerk konfigurieren (falls IP angegeben)
 if [ "$STATIC_IP" = true ]; then
     echo -e "\n${GREEN}>>> Konfiguriere Netzwerk via Netplan...${NC}"
     sudo tee /etc/netplan/01-netcfg.yaml > /dev/null <<EOF
@@ -77,21 +92,6 @@ network:
 EOF
     sudo netplan apply
 fi
-
-# 2. System-Update und Installation der Pakete
-echo -e "${GREEN}>>> Installiere Kiosk-Komponenten (X11, Openbox, Chromium)...${NC}"
-sudo apt update
-sudo apt install -y --no-install-recommends \
-    xserver-xorg-core \
-    xserver-xorg \
-    xinit \
-    openbox \
-    lightdm \
-    lightdm-gtk-greeter \
-    chromium-browser \
-    udevil \
-    xdg-desktop-portal-gtk \
-    x11-xserver-utils
 
 # 3. LightDM Konfiguration (Autologin)
 echo -e "${GREEN}>>> Konfiguriere Autologin...${NC}"
