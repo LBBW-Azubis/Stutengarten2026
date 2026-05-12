@@ -132,6 +132,9 @@ EOF
 # Rechte für Autostart vergeben
 chmod +x ~/.config/openbox/autostart
 
+# Dienst für langsamen Start deaktivieren
+sudo systemctl disable systemd-networkd-wait-online.service
+
 # 5. Gruppenberechtigungen für Hardware-Zugriff
 echo -e "${GREEN}>>> Setze Gruppenberechtigungen...${NC}"
 sudo usermod -a -G video,plugdev $TARGET_USER
