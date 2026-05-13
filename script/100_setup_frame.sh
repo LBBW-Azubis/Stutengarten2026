@@ -20,8 +20,8 @@ INTERFACE=${INTERFACE:-$DEFAULT_IFACE}
 read -p "Gewünschte IP-Adresse (leer für DHCP): " IP_ADDR
 if [[ -z "$IP_ADDR" ]]; then STATIC_IP=false; else STATIC_IP=true; fi
 
-read -p "Frame Kiosk-URL oder IP des Ziel-VDI [http://192.168.1.10]: " KIOSK_URL
-KIOSK_URL=${KIOSK_URL:-http://192.168.1.10}
+read -p "Frame Kiosk-URL inkl. Port [http://192.168.1.10:5000]: " KIOSK_URL
+KIOSK_URL=${KIOSK_URL:-http://192.168.1.10:5000}
 
 # --- AUSFÜHRUNG ---
 echo -e "${GREEN}>>> Installiere Komponenten...${NC}"

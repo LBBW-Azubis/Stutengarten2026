@@ -6,7 +6,7 @@
 # =================================================================
 
 TARGET_USER=$(whoami)
-KIOSK_URL="http://localhost"
+KIOSK_URL="http://192.168.1.10:5000"
 
 echo "--- Starte Frame Kiosk-Installation für User: $TARGET_USER ---"
 

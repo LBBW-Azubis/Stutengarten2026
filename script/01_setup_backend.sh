@@ -17,6 +17,7 @@ DB_USER="root"
 DB_PASS="1234"
 STATIC_IP="192.168.1.10/24"
 NETWORK_IFACE="enp3s0"          # ggf. anpassen (ip a)
+WIFI_IFACE="wlo1"              # ggf. anpassen (ip a)
 NETPLAN_FILE="/etc/netplan/01-netcfg.yaml"
 
 # ============================================================================
@@ -114,6 +115,10 @@ network:
       optional: true
       addresses:
         - ${STATIC_IP}
+  wifis:
+    ${WIFI_IFACE}:
+      dhcp4: yes
+      optional: true
 YAML
 sudo netplan apply
 info "Statische IP gesetzt. Aktuelle Konfiguration:"
