@@ -1,34 +1,24 @@
 #!/bin/bash
 
 # =================================================================
-# FRAME KIOSK SETUP SCRIPT (Optimiert für Frame/VDI)
+# 04_setup_frame.sh (Optimiert für Frame/VDI + Kiosk Hardening)
 # System: Ubuntu Server + Openbox + Chromium
 # =================================================================
 
-# Variablen
 TARGET_USER=$(whoami)
-# Standardmäßig auf Frame Launchpad gesetzt
-KIOSK_URL="http://localhost"
+KIOSK_URL="https://frame.nutanix.com"
 
 echo "--- Starte Frame Kiosk-Installation für User: $TARGET_USER ---"
 
-# 1. System-Update und Installation (libgles2 für Frame hinzugefügt)
+# 1. System-Update und Installation
 sudo apt update
 sudo apt install -y --no-install-recommends \
-    xserver-xorg-core \
-    xserver-xorg \
-    xinit \
-    openbox \
-    lightdm \
-    lightdm-gtk-greeter \
-    chromium-browser \
-    udevil \
-    xdg-desktop-portal-gtk \
-    x11-xserver-utils \
+    xserver-xorg-core xserver-xorg xinit openbox \
+    lightdm lightdm-gtk-greeter chromium-browser \
+    udevil xdg-desktop-portal-gtk x11-xserver-utils \
     libgles2
 
 # 2. LightDM Konfiguration (Autologin)
-echo "--- Konfiguriere Autologin ---"
 sudo bash -c "cat > /etc/lightdm/lightdm.conf" <<EOF
 [Seat:*]
 autologin-user=$TARGET_USER
@@ -36,19 +26,14 @@ autologin-user-timeout=0
 user-session=openbox
 EOF
 
-# 3. Openbox Konfiguration (Autostart mit Frame-Flags)
-echo "--- Konfiguriere Openbox Autostart (Frame optimiert) ---"
+# 3. Openbox Autostart (Frame Optimiert)
 mkdir -p ~/.config/openbox
 cat > ~/.config/openbox/autostart <<EOF
-# Bildschirmschoner & Energie-Management aus
 xset s off
 xset s noblank
 xset -dpms
-
-# USB-Automount im Hintergrund starten
 devmon &
 
-# Chromium Kiosk-Loop (Frame Optimiert)
 while true; do
   chromium-browser \\
     --kiosk \\
@@ -70,35 +55,31 @@ while true; do
 done
 EOF
 
-# 3.5 Openbox Tastenkombinationen (F1 blockieren)
-echo "--- Deaktiviere F1-Taste (Hilfe) in Openbox ---"
+# 3.5 Openbox Tastenkombinationen (Kiosk-Hardening)
+echo "--- Deaktiviere kritische Tastenkombinationen ---"
 cat > ~/.config/openbox/rc.xml <<EOF
 <?xml version="1.0" encoding="UTF-8"?>
-<openbox_config xmlns="http://openbox.org/3.4/rc" xmlns:xi="http://www.w3.org/2001/XInclude">
+<openbox_config xmlns="http://openbox.org/3.4/rc">
   <keyboard>
-    <keybind key="F1">
-      <action name="Execute">
-        <command>true</command>
-      </action>
-    </keybind>
+    <keybind key="F1"><action name="Execute"><command>true</command></action></keybind>
+    <keybind key="F3"><action name="Execute"><command>true</command></action></keybind>
+    <keybind key="F7"><action name="Execute"><command>true</command></action></keybind>
+    <keybind key="F12"><action name="Execute"><command>true</command></action></keybind>
+    <keybind key="C-f"><action name="Execute"><command>true</command></action></keybind>
+    <keybind key="C-n"><action name="Execute"><command>true</command></action></keybind>
+    <keybind key="C-t"><action name="Execute"><command>true</command></action></keybind>
+    <keybind key="C-p"><action name="Execute"><command>true</command></action></keybind>
+    <keybind key="C-s"><action name="Execute"><command>true</command></action></keybind>
+    <keybind key="C-o"><action name="Execute"><command>true</command></action></keybind>
+    <keybind key="A-F4"><action name="Execute"><command>true</command></action></keybind>
+    <keybind key="A-Tab"><action name="Execute"><command>true</command></action></keybind>
   </keyboard>
 </openbox_config>
 EOF
 
-# Rechte für Autostart vergeben
 chmod +x ~/.config/openbox/autostart
-
-# 4. Gruppenberechtigungen (Audio für Frame hinzugefügt)
-echo "--- Setze Gruppenberechtigungen (inkl. Audio) ---"
 sudo usermod -a -G video,plugdev,audio $TARGET_USER
 
-# 5. Abschluss
-echo "---------------------------------------------------------"
-echo " FRAME SETUP ABGESCHLOSSEN!"
-echo "---------------------------------------------------------"
-echo "Das System wird nun neu gestartet."
-echo "Nach dem Reboot sollte Chromium im Vollbild mit Frame erscheinen."
-echo "---------------------------------------------------------"
-
+echo "SETUP ABGESCHLOSSEN! Reboot folgt..."
 sleep 3
 sudo reboot
