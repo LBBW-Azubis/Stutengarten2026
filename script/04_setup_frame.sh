@@ -8,7 +8,7 @@
 # Variablen
 TARGET_USER=$(whoami)
 # Standardmäßig auf Frame Launchpad gesetzt
-KIOSK_URL="https://frame.nutanix.com"
+KIOSK_URL="http://localhost"
 
 echo "--- Starte Frame Kiosk-Installation für User: $TARGET_USER ---"
 
