@@ -1,28 +1,6 @@
 """import db_connector for connection to database"""
 
-import random
-import string
 from db_connector import DbConnector
-
-def _generate_unique_symbol(cursor, base_name):
-    base_chars = ''.join([c for c in base_name if c.isalnum()]).upper()
-    prefix = base_chars[:3] if len(base_chars) >= 3 else (base_chars + "CTX")[:3]
-    
-    cursor.execute("SELECT symbol FROM aktien WHERE symbol = %s", (prefix,))
-    if not cursor.fetchone():
-        return prefix
-        
-    for i in range(1, 100):
-        symbol = f"{prefix}{(i):02d}"[:5]
-        cursor.execute("SELECT symbol FROM aktien WHERE symbol = %s", (symbol,))
-        if not cursor.fetchone():
-            return symbol
-            
-    while True:
-        symbol = (prefix[:2] + ''.join(random.choices(string.ascii_uppercase + string.digits, k=3)))[:5]
-        cursor.execute("SELECT symbol FROM aktien WHERE symbol = %s", (symbol,))
-        if not cursor.fetchone():
-            return symbol
 
 class CustomCompanyException(Exception):
     """special exception"""
@@ -65,13 +43,6 @@ class Company:
                 cursor.execute(
                     "INSERT INTO unternehmenssparbuecher (unternehmen_fk, saldo) VALUES (%s, 0)",
                     (self.id,)
-                )
-                
-                # Automatically create share (aktie) for this company
-                symbol = _generate_unique_symbol(cursor, name)
-                cursor.execute(
-                    "INSERT INTO aktien (name, symbol, beschreibung) VALUES (%s, %s, %s)",
-                    (name, symbol, f"Aktie für {name}")
                 )
                 
                 conn.commit()

@@ -6,6 +6,16 @@ from db_connector import DbConnector
 
 log = logging.getLogger(__name__)
 
+def _generate_unique_symbol(cursor, base_name):
+    base_chars = ''.join([c for c in base_name if c.isalnum()]).upper()
+    prefix = base_chars[:3] if len(base_chars) >= 3 else (base_chars + "CTX")[:3]
+    
+    cursor.execute("SELECT symbol FROM aktien WHERE symbol = %s", (prefix,))
+    if cursor.fetchone():
+        raise ShareException(f"Kürzel '{prefix}' ist bereits vergeben")
+        
+    return prefix
+
 class ShareException(Exception):
     """Exception for share errors"""
 
@@ -27,12 +37,23 @@ class Share:
         self.db = db
 
         if share_id is None:
-            if not name or not symbol:
-                raise ShareException("Name and symbol required")
+            if not name:
+                raise ShareException("Name required")
 
             conn = db.get_connection()
             cursor = conn.cursor()
             try:
+                cursor.execute("SELECT id FROM aktien WHERE name = %s", (name,))
+                if cursor.fetchone():
+                    raise ShareException(f"Aktienname '{name}' ist bereits vergeben")
+
+                if not symbol:
+                    symbol = _generate_unique_symbol(cursor, name)
+                else:
+                    cursor.execute("SELECT id FROM aktien WHERE symbol = %s", (symbol,))
+                    if cursor.fetchone():
+                        raise ShareException(f"Kürzel '{symbol}' ist bereits vergeben")
+
                 cursor.execute(
                     "INSERT INTO aktien (name, symbol, beschreibung) VALUES (%s, %s, %s)",
                     (name, symbol, description)
@@ -43,6 +64,8 @@ class Share:
                 self.symbol = symbol
                 self.description = description
                 conn.commit()
+            except ShareException:
+                raise
             except Exception as err:
                 log.exception("Error inserting share %s (%s)", name, symbol)
                 raise ShareException(f"Error creating share: {err}") from err

@@ -13,6 +13,7 @@ from blueprints.imports_bp import imports_bp  # pylint: disable=import-error
 from blueprints.customers_bp import customers_bp  # pylint: disable=import-error
 from blueprints.companies_bp import companies_bp  # pylint: disable=import-error
 from blueprints.settings_bp import settings_bp  # pylint: disable=import-error
+from blueprints.shares_bp import shares_bp  # pylint: disable=import-error
 from db_connector import DbConnector
 
 # Prod Server
@@ -48,6 +49,7 @@ app.register_blueprint(imports_bp)
 app.register_blueprint(customers_bp)
 app.register_blueprint(companies_bp)
 app.register_blueprint(settings_bp)
+app.register_blueprint(shares_bp)
 
 # Development server (debug=True) - nicht für Produktion geeignet
 #if __name__ == "__main__":
