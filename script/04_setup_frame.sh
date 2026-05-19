@@ -6,9 +6,15 @@
 # =================================================================
 
 TARGET_USER=$(whoami)
-KIOSK_URL="http://192.168.1.10"
 
 echo "--- Starte Frame Kiosk-Installation für User: $TARGET_USER ---"
+
+read -p "Frame Kiosk-URL [http://192.168.1.10]: " KIOSK_URL
+KIOSK_URL=${KIOSK_URL:-http://192.168.1.10}
+
+DEFAULT_WIFI_IFACE=$(ip link | grep -E '^[0-9]+: (wl)' | awk -F: '{print $2}' | tr -d ' ' | head -n1)
+read -p "Netzwerk-Interface WLAN (zum Deaktivieren) [$DEFAULT_WIFI_IFACE]: " WIFI_IFACE
+WIFI_IFACE=${WIFI_IFACE:-$DEFAULT_WIFI_IFACE}
 
 # 1. System-Update und Installation
 sudo apt update
@@ -153,6 +159,15 @@ EOF
 
 chmod +x ~/.config/openbox/autostart
 sudo usermod -a -G video,plugdev,audio $TARGET_USER
+
+echo "--- Deaktiviere WLAN ---"
+if [[ -n "$WIFI_IFACE" ]] && ip link show "$WIFI_IFACE" > /dev/null 2>&1; then
+    sudo rfkill block wifi
+    sudo ip link set "$WIFI_IFACE" down
+    echo "WLAN-Interface $WIFI_IFACE deaktiviert."
+else
+    echo "Kein gültiges WLAN-Interface angegeben oder gefunden, übersprungen."
+fi
 
 echo "SETUP ABGESCHLOSSEN! Reboot folgt..."
 sleep 3

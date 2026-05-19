@@ -18,10 +18,14 @@ echo -e "${YELLOW}Erkannter User: $TARGET_USER (Home: $TARGET_HOME)${NC}\n"
 
 # --- INTERAKTIVE ABFRAGE ---
 DEFAULT_IFACE=$(ip link | grep -E '^[0-9]+: (en|eth)' | awk -F: '{print $2}' | tr -d ' ' | head -n1)
-read -p "Netzwerk-Interface [$DEFAULT_IFACE]: " INTERFACE
+read -p "Netzwerk-Interface LAN [$DEFAULT_IFACE]: " INTERFACE
 INTERFACE=${INTERFACE:-$DEFAULT_IFACE}
 
-read -p "Gewünschte IP-Adresse (leer für DHCP): " IP_ADDR
+DEFAULT_WIFI_IFACE=$(ip link | grep -E '^[0-9]+: (wl)' | awk -F: '{print $2}' | tr -d ' ' | head -n1)
+read -p "Netzwerk-Interface WLAN (zum Deaktivieren) [$DEFAULT_WIFI_IFACE]: " WIFI_IFACE
+WIFI_IFACE=${WIFI_IFACE:-$DEFAULT_WIFI_IFACE}
+
+read -p "Gewünschte IP-Adresse (192.168.1.*** oder leer für DHCP): " IP_ADDR
 if [[ -z "$IP_ADDR" ]]; then STATIC_IP=false; else STATIC_IP=true; fi
 
 read -p "Frame Kiosk-URL [http://192.168.1.10]: " KIOSK_URL
@@ -212,14 +216,14 @@ sudo chown -R "$TARGET_USER:$TARGET_USER" "$TARGET_HOME/.config/openbox"
 sudo usermod -a -G video,plugdev,audio "$TARGET_USER"
 
 echo -e "${GREEN}>>> Deaktiviere WLAN...${NC}"
-WIFI_IFACE=$(ip link | grep -E '^[0-9]+: (wl)' | awk -F: '{print $2}' | tr -d ' ' | head -n1)
-if [[ -n "$WIFI_IFACE" ]]; then
+if [[ -n "$WIFI_IFACE" ]] && ip link show "$WIFI_IFACE" > /dev/null 2>&1; then
+    sudo rfkill block wifi
     sudo ip link set "$WIFI_IFACE" down
     echo -e "${GREEN}WLAN-Interface $WIFI_IFACE deaktiviert.${NC}"
 else
-    echo -e "${YELLOW}Kein WLAN-Interface gefunden, übersprungen.${NC}"
+    echo -e "${YELLOW}Kein gültiges WLAN-Interface angegeben oder gefunden, übersprungen.${NC}"
 fi
 
 echo -e "${GREEN}SETUP ABGESCHLOSSEN!${NC}"
-sleep 3
+sleep 20
 sudo reboot
