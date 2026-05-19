@@ -87,8 +87,10 @@ CREATE INDEX idx_unternehmensumsaetze_fk ON unternehmensumsaetze(unternehmensspa
 -- Statistik
 CREATE TABLE kundenstatistik (
 	id INT AUTO_INCREMENT PRIMARY KEY,
+	kunde_fk INT NOT NULL,
 	wochentage ENUM('MONTAG', 'DIENSTAG', 'MITTWOCH', 'DONNERSTAG', 'FREITAG', 'SAMSTAG', 'SONNTAG') NOT NULL,
-	gesamtumsatz INT
+	gesamtumsatz INT,
+	FOREIGN KEY (kunde_fk) REFERENCES kunden(id) ON DELETE CASCADE
 );
 -- PERFORMANCE OPTIMIERUNG: Index für Wochentag (da danach gesucht/gefiltert wird)
 CREATE INDEX idx_kundenstatistik_wochentage ON kundenstatistik(wochentage);
@@ -97,8 +99,10 @@ CREATE INDEX idx_kundenstatistik_wochentage ON kundenstatistik(wochentage);
 -- Unternehmensstatistik
 CREATE TABLE unternehmensstatistik (
 	id INT AUTO_INCREMENT PRIMARY KEY,
+	unternehmen_fk INT NOT NULL,
 	wochentage ENUM('MONTAG', 'DIENSTAG', 'MITTWOCH', 'DONNERSTAG', 'FREITAG', 'SAMSTAG', 'SONNTAG') NOT NULL,
-	gesamtumsatz INT
+	gesamtumsatz INT,
+	FOREIGN KEY (unternehmen_fk) REFERENCES unternehmen(id) ON DELETE CASCADE
 );
 -- PERFORMANCE OPTIMIERUNG: Index für Wochentag
 CREATE INDEX idx_unternehmensstatistik_wochentage ON unternehmensstatistik(wochentage);

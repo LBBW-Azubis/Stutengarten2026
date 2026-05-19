@@ -82,13 +82,11 @@ export default function UnternehmenAuszahlen() {
     const neuerStand = kontostand - b
 
     // === BACKEND: Auszahlung vom Unternehmen senden ===
-    // PATCH http://192.168.1.10:5000/company/<name>/savingsbook/balance
-    // Body: { balance: (kontostand - betrag) }
     try {
-      const response = await fetch(`http://192.168.1.10:5000/company/${encodeURIComponent(unternehmenName.trim())}/savingsbook/balance`, {
-        method: 'PATCH',
+      const response = await fetch(`http://192.168.1.10:5000/company/${encodeURIComponent(unternehmenName.trim())}/transactions`, {
+        method: 'POST',
         headers: { 'Content-Type': 'application/json; charset=utf-8' },
-        body: JSON.stringify({ balance: neuerStand }),
+        body: JSON.stringify({ amount: -b, purpose: 'Auszahlung' }),
       })
 
       if (response.ok) {

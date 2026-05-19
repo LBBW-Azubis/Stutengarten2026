@@ -90,17 +90,17 @@ export default function Einzahlen() {
     // === BACKEND: Einzahlung senden ===
     const neuerStand = kontostand + b
     try {
-      const response = await fetch(`http://192.168.1.10:5000/customer/${kontonummer.trim()}/savingsbook/balance`, {
-        method: 'PATCH',
+      const response = await fetch(`http://192.168.1.10:5000/customer/${kontonummer.trim()}/transaction`, {
+        method: 'POST',
         headers: { 'Content-Type': 'application/json; charset=utf-8' },
-        body: JSON.stringify({ balance: String(neuerStand) }),
+        body: JSON.stringify({ amount: b, purpose: 'Einzahlung' }),
       })
 
       const data = await response.json()
 
       if (response.ok) {
-        setKontostandNeu(data.balance || neuerStand)
-        setKontostand(data.balance || neuerStand)
+        setKontostandNeu(neuerStand)
+        setKontostand(neuerStand)
         setPopup('Geld wurde erfolgreich eingezahlt!')
       } else {
         setFehler('Fehler beim Einzahlen.')

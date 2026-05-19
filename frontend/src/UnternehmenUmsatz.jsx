@@ -34,18 +34,45 @@ export default function UnternehmenUmsatz() {
     }
 
     // === BACKEND: Umsatz laden ===
-    // GET /company/<name>/transactions → Umsatz-Daten
     try {
       const name = unternehmenName.trim()
-      const response = await fetch(`http://192.168.1.10:5000/company/${encodeURIComponent(name)}/transactions`)
+      const response = await fetch(`http://192.168.1.10:5000/company/${encodeURIComponent(name)}/statistics`)
 
       if (!response.ok) {
         setFehler('Umsatzdaten konnten nicht geladen werden.')
         return
       }
 
+      const data = await response.json()
+      
+      const weekdaysMap = {
+        'MONTAG': 'Mo',
+        'DIENSTAG': 'Di',
+        'MITTWOCH': 'Mi',
+        'DONNERSTAG': 'Do',
+        'FREITAG': 'Fr',
+        'SAMSTAG': 'Sa',
+        'SONNTAG': 'So'
+      }
+
+      const mappedData = [
+        { label: 'Mo', wert: 0 },
+        { label: 'Di', wert: 0 },
+        { label: 'Mi', wert: 0 },
+        { label: 'Do', wert: 0 },
+        { label: 'Fr', wert: 0 },
+      ]
+
+      data.forEach(item => {
+        const label = weekdaysMap[item.weekday]
+        const target = mappedData.find(d => d.label === label)
+        if (target) {
+          target.wert = item.total_amount
+        }
+      })
+
+      setUmsatzDaten(mappedData)
       setGeladenerName(name)
-      // TODO: Transactions-Response → umsatzDaten mappen (sobald Shape bekannt)
       setGeladen(true)
     } catch (error) {
       console.error('[UnternehmenUmsatz] Fehler:', error)

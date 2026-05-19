@@ -94,22 +94,18 @@ export default function Auszahlen() {
     }
 
     // === BACKEND: Auszahlung senden ===
-    // API-Call: PATCH http://192.168.1.10:5000/customer/<stutengarten_id>/savingsbook/balance
-    // Body: { balance: "-4" } - Backend erwartet Minus-Vorzeichen fuer Auszahlung
     const neuerStand = kontostand - b
     try {
-      const response = await fetch(`http://192.168.1.10:5000/customer/${kontonummer.trim()}/savingsbook/balance`, {
-        method: 'PATCH',
+      const response = await fetch(`http://192.168.1.10:5000/customer/${kontonummer.trim()}/transaction`, {
+        method: 'POST',
         headers: { 'Content-Type': 'application/json; charset=utf-8' },
-        body: JSON.stringify({
-          balance: String(neuerStand),  // Backend erwartet den neuen Gesamtkontostand
-        }),
+        body: JSON.stringify({ amount: -b, purpose: 'Auszahlung' }),
       })
 
       const data = await response.json()
 
       if (response.ok) {
-        setKontostandNeu(data.balance || neuerStand)
+        setKontostandNeu(neuerStand)
         setKontostand(data.balance || neuerStand)
         setPopup('Geld wurde erfolgreich ausgezahlt!')
       } else {

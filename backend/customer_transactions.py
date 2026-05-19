@@ -121,18 +121,29 @@ class CustomerTransaction:
         conn = self.db.get_connection()
         cursor = conn.cursor(dictionary=True)
         try:
-            cursor.execute("SELECT * FROM kundenstatistik WHERE wochentage = %s",
-                           (current_weekday,)
+            # First, get the kunde.id from the customer savings book
+            cursor.execute(
+                "SELECT k.id FROM kunden k JOIN kundensparbuecher ks ON k.stutengarten_id = ks.kunden_fk WHERE ks.id = %s",
+                (self.customer_savings_book_id,)
+            )
+            k_row = cursor.fetchone()
+            if not k_row:
+                return
+            
+            kunde_fk = k_row['id']
+
+            cursor.execute("SELECT * FROM kundenstatistik WHERE wochentage = %s AND kunde_fk = %s",
+                           (current_weekday, kunde_fk)
             )
             row = cursor.fetchone()
 
             if not row:
-                cursor.execute("INSERT INTO kundenstatistik (wochentage, gesamtumsatz) VALUES (%s, %s)",
-                               (current_weekday, self.amount)
+                cursor.execute("INSERT INTO kundenstatistik (kunde_fk, wochentage, gesamtumsatz) VALUES (%s, %s, %s)",
+                               (kunde_fk, current_weekday, self.amount)
                 )
             else:
-                cursor.execute("UPDATE kundenstatistik SET gesamtumsatz = gesamtumsatz + %s WHERE wochentage = %s",
-                               (self.amount, current_weekday))
+                cursor.execute("UPDATE kundenstatistik SET gesamtumsatz = gesamtumsatz + %s WHERE wochentage = %s AND kunde_fk = %s",
+                               (self.amount, current_weekday, kunde_fk))
             conn.commit()
         except Exception as err: # pylint:disable=broad-except
             conn.rollback()
@@ -142,7 +153,7 @@ class CustomerTransaction:
             conn.close()
 
     @staticmethod
-    def get_customer_statistics(db:DbConnector):
+    def get_customer_statistics(db:DbConnector, kunde_fk=None):
         """
         Returns customer transaction statistics by weekday.
         """
@@ -150,7 +161,13 @@ class CustomerTransaction:
         conn = db.get_connection()
         cursor = conn.cursor(dictionary=True)
         try:
-            cursor.execute("SELECT * FROM kundenstatistik ORDER BY id")
+            if kunde_fk is not None:
+                cursor.execute(
+                    "SELECT wochentage, SUM(gesamtumsatz) as gesamtumsatz FROM kundenstatistik WHERE kunde_fk = %s GROUP BY wochentage",
+                    (kunde_fk,)
+                )
+            else:
+                cursor.execute("SELECT wochentage, SUM(gesamtumsatz) as gesamtumsatz FROM kundenstatistik GROUP BY wochentage")
             for row in cursor.fetchall():
                 result.append({"weekday": row["wochentage"],
                                "total_amount": row["gesamtumsatz"] or 0})
@@ -230,14 +247,26 @@ class CustomerTransaction:
             weekdays_german = ['MONTAG', 'DIENSTAG', 'MITTWOCH', 'DONNERSTAG', 'FREITAG', 'SAMSTAG', 'SONNTAG']
             current_weekday = weekdays_german[datetime.now().weekday()]
             
-            # Statistik prüfen
-            cursor.execute("SELECT * FROM kundenstatistik WHERE wochentage = %s", (current_weekday,))
-            if not cursor.fetchone():
-                cursor.execute("INSERT INTO kundenstatistik (wochentage, gesamtumsatz) VALUES (%s, %s)",
-                               (current_weekday, amount))  # amount (positiv) als Volumen nehmen
-            else:
-                cursor.execute("UPDATE kundenstatistik SET gesamtumsatz = gesamtumsatz + %s WHERE wochentage = %s",
-                               (amount, current_weekday))
+            # Helper function internally for both sender and receiver
+            def update_stats(sb_id, amount_val):
+                cursor.execute(
+                    "SELECT k.id FROM kunden k JOIN kundensparbuecher ks ON k.stutengarten_id = ks.kunden_fk WHERE ks.id = %s",
+                    (sb_id,)
+                )
+                k_row = cursor.fetchone()
+                if not k_row:
+                    return
+                kunde_fk = k_row['id']
+                cursor.execute("SELECT * FROM kundenstatistik WHERE wochentage = %s AND kunde_fk = %s", (current_weekday, kunde_fk))
+                if not cursor.fetchone():
+                    cursor.execute("INSERT INTO kundenstatistik (kunde_fk, wochentage, gesamtumsatz) VALUES (%s, %s, %s)",
+                                   (kunde_fk, current_weekday, amount_val))
+                else:
+                    cursor.execute("UPDATE kundenstatistik SET gesamtumsatz = gesamtumsatz + %s WHERE wochentage = %s AND kunde_fk = %s",
+                                   (amount_val, current_weekday, kunde_fk))
+
+            update_stats(sb_sender["id"], -amount)
+            update_stats(sb_receiver["id"], amount)
 
             conn.commit()
             return {"status": "success", "from": from_stutengarten_id,

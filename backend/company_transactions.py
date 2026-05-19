@@ -124,34 +124,48 @@ class CompanyTransaction:
 
     def add_to_statistics(self):
         """
-        Adds this transaction amount to the daily statistics.
+        Adds this transaction amount to the daily statistics for the company.
         Updates or creates entry for current weekday.
         """
         weekdays_german = ['MONTAG', 'DIENSTAG', 'MITTWOCH', 'DONNERSTAG', 'FREITAG', 'SAMSTAG', 'SONNTAG']
         current_weekday = weekdays_german[datetime.now().weekday()]
 
+        # Only add to statistics if it's a positive revenue
+        # Or if we just store sum of all (deposit/withdrawals), let's keep self.amount
+
         conn = self.db.get_connection()
         cursor = conn.cursor(dictionary=True)
 
         try:
-            # Check if entry for current weekdays exists
+            # First, get the unternehmen_fk from the company savings book
             cursor.execute(
-                "SELECT * FROM unternehmensstatistik WHERE wochentage = %s",
-                (current_weekday,)
+                "SELECT unternehmen_fk FROM unternehmenssparbuecher WHERE id = %s",
+                (self.company_savings_book_id,)
+            )
+            sp_row = cursor.fetchone()
+            if not sp_row:
+                return
+            
+            unternehmen_fk = sp_row['unternehmen_fk']
+
+            # Check if entry for current weekday and company exists
+            cursor.execute(
+                "SELECT * FROM unternehmensstatistik WHERE wochentage = %s AND unternehmen_fk = %s",
+                (current_weekday, unternehmen_fk)
             )
             row = cursor.fetchone()
 
             if not row:
                 #Create new entry
                 cursor.execute(
-                    "INSERT INTO unternehmensstatistik (wochentage, gesamtumsatz) VALUES (%s, %s)",
-                    (current_weekday, self.amount)
+                    "INSERT INTO unternehmensstatistik (unternehmen_fk, wochentage, gesamtumsatz) VALUES (%s, %s, %s)",
+                    (unternehmen_fk, current_weekday, self.amount)
                 )
             else:
                 #Update existing entry
                 cursor.execute(
-                    "UPDATE unternehmensstatistik SET gesamtumsatz = gesamtumsatz + %s WHERE wochentage = %s", #pylint: disable=line-too-long
-                    (self.amount, current_weekday)
+                    "UPDATE unternehmensstatistik SET gesamtumsatz = gesamtumsatz + %s WHERE wochentage = %s AND unternehmen_fk = %s", #pylint: disable=line-too-long
+                    (self.amount, current_weekday, unternehmen_fk)
                 )
 
             conn.commit()
@@ -164,19 +178,26 @@ class CompanyTransaction:
             conn.close()
 
     @staticmethod
-    def get_company_statistics(db:DbConnector):
+    def get_company_statistics(db:DbConnector, unternehmen_fk=None):
         """
         Returns company transaction statistics by weekday.
 
         Returns:
-            List of dicts: [{"weekday"}: "MONDAY", "total_amount": 1000}, ...]
+            List of dicts: [{"weekday": "MONTAG", "total_amount": 1000}, ...]
         """
         result = []
         conn = db.get_connection()
         cursor = conn.cursor(dictionary=True)
 
         try:
-            cursor.execute("SELECT * FROM unternehmensstatistik ORDER BY id")
+            if unternehmen_fk is not None:
+                cursor.execute(
+                    "SELECT wochentage, SUM(gesamtumsatz) as gesamtumsatz FROM unternehmensstatistik WHERE unternehmen_fk = %s GROUP BY wochentage",
+                    (unternehmen_fk,)
+                )
+            else:
+                cursor.execute("SELECT wochentage, SUM(gesamtumsatz) as gesamtumsatz FROM unternehmensstatistik GROUP BY wochentage")
+                
             for row in cursor.fetchall():
                 result.append({
                     "weekday": row["wochentage"],

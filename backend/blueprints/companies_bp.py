@@ -247,7 +247,7 @@ def create_company_transaction(company_name):
 @companies_bp.route("/company/statistics", methods=["GET"])
 def get_company_statistics():
     """
-    Retrieve company transaction statistics grouped by weekday.
+    Retrieve company transaction statistics grouped by weekday for all companies.
     """
     connector = current_app.config["DB_CONNECTOR"]
     try:
@@ -255,4 +255,20 @@ def get_company_statistics():
         return jsonify(statistics), 200
     except Exception as err:  # pylint: disable=broad-except
         return jsonify({"error": f"Error retrieving statistics: {str(err)}"}), 500
+
+@companies_bp.route("/company/<string:company_name>/statistics", methods=["GET"])
+def get_specific_company_statistics(company_name):
+    """
+    Retrieve transaction statistics grouped by weekday for a specific company.
+    """
+    connector = current_app.config["DB_CONNECTOR"]
+    try:
+        company = _load_company(connector, company_name)
+        statistics = CompanyTransaction.get_company_statistics(connector, unternehmen_fk=company.id)
+        return jsonify(statistics), 200
+    except CompanyException as err:
+        return jsonify({"error": str(err)}), 404
+    except Exception as err:  # pylint: disable=broad-except
+        return jsonify({"error": f"Error retrieving statistics: {str(err)}"}), 500
+
 #End-of-file

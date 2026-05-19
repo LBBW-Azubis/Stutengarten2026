@@ -227,11 +227,33 @@ def get_customer_transactions(stutengarten_id):
 @customers_bp.route("/customer/statistics", methods=["GET"])
 def get_customer_statistics():
     """
-    Returns customer transaction statistics by weekday.
+    Returns customer transaction statistics by weekday for all customers.
     """
     connector = current_app.config["DB_CONNECTOR"]
     try:
         result = CustomerTransaction.get_customer_statistics(connector)
+        return jsonify(result), 200
+    except Exception as e:  # pylint: disable=broad-except
+        return jsonify({"error": str(e)}), 500
+
+@customers_bp.route("/customer/<string:stutengarten_id>/statistics", methods=["GET"])
+def get_specific_customer_statistics(stutengarten_id):
+    """
+    Returns customer transaction statistics by weekday for a specific customer.
+    """
+    connector = current_app.config["DB_CONNECTOR"]
+    try:
+        conn = connector.get_connection()
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute("SELECT id FROM kunden WHERE stutengarten_id = %s", (stutengarten_id,))
+        k_row = cursor.fetchone()
+        cursor.close()
+        conn.close()
+
+        if not k_row:
+            return jsonify({"error": "Customer not found"}), 404
+        
+        result = CustomerTransaction.get_customer_statistics(connector, kunde_fk=k_row['id'])
         return jsonify(result), 200
     except Exception as e:  # pylint: disable=broad-except
         return jsonify({"error": str(e)}), 500
