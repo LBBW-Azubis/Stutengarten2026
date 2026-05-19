@@ -12,12 +12,10 @@ echo "--- Starte Frame Kiosk-Installation für User: $TARGET_USER ---"
 read -p "Frame Kiosk-URL [http://192.168.1.10]: " KIOSK_URL
 KIOSK_URL=${KIOSK_URL:-http://192.168.1.10}
 
-read -p "WLAN für diese Sitzung deaktivieren? (y/N): " MSG_WLAN
+read -p "WLAN dauerhaft deaktivieren? (y/N): " MSG_WLAN
 if [[ "$MSG_WLAN" =~ ^[Yy]$ ]]; then
     DISABLE_WIFI=true
-    DEFAULT_WIFI_IFACE=$(ip link | grep -E '^[0-9]+: (wl)' | awk -F: '{print $2}' | tr -d ' ' | head -n1)
-    read -p "Netzwerk-Interface WLAN (zum Deaktivieren) [$DEFAULT_WIFI_IFACE]: " WIFI_IFACE
-    WIFI_IFACE=${WIFI_IFACE:-$DEFAULT_WIFI_IFACE}
+    WIFI_IFACE=$(ip link | grep -E '^[0-9]+: (wl)' | awk -F: '{print $2}' | tr -d ' ' | head -n1)
 else
     DISABLE_WIFI=false
 fi

@@ -21,12 +21,10 @@ DEFAULT_IFACE=$(ip link | grep -E '^[0-9]+: (en|eth)' | awk -F: '{print $2}' | t
 read -p "Netzwerk-Interface LAN [$DEFAULT_IFACE]: " INTERFACE
 INTERFACE=${INTERFACE:-$DEFAULT_IFACE}
 
-read -p "WLAN für diese Sitzung deaktivieren? (y/N): " MSG_WLAN
+read -p "WLAN dauerhaft deaktivieren? (y/N): " MSG_WLAN
 if [[ "$MSG_WLAN" =~ ^[Yy]$ ]]; then
     DISABLE_WIFI=true
-    DEFAULT_WIFI_IFACE=$(ip link | grep -E '^[0-9]+: (wl)' | awk -F: '{print $2}' | tr -d ' ' | head -n1)
-    read -p "Netzwerk-Interface WLAN (zum Deaktivieren) [$DEFAULT_WIFI_IFACE]: " WIFI_IFACE
-    WIFI_IFACE=${WIFI_IFACE:-$DEFAULT_WIFI_IFACE}
+    WIFI_IFACE=$(ip link | grep -E '^[0-9]+: (wl)' | awk -F: '{print $2}' | tr -d ' ' | head -n1)
 else
     DISABLE_WIFI=false
 fi
@@ -68,8 +66,8 @@ network:
       dhcp4: true
       optional: true
       access-points:
-        "iPhone":
-          password: "stutengarten"
+        "iPhoneJannik":
+          password: "1234567890"
 EOF
     sudo netplan apply
 fi
