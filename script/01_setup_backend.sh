@@ -117,8 +117,11 @@ network:
         - ${STATIC_IP}
   wifis:
     ${WIFI_IFACE}:
-      dhcp4: yes
+      dhcp4: true
       optional: true
+      access-points:
+        "Stutengarten":
+          password: "stutengarten"
 YAML
 sudo netplan apply
 info "Statische IP gesetzt. Aktuelle Konfiguration:"
