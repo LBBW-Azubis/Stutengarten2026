@@ -1,6 +1,6 @@
 /* AktienVerkaufen Styles - viewport-relativ, leicht oben angesetzt */
 
-.av-seite { display: flex; flex-direction: column; align-items: center; justify-content: flex-start; width: 100%; flex: 1; min-height: 0; overflow: hidden; padding-top: clamp(10px, 2vh, 30px); }
+.av-seite { display: flex; flex-direction: column; align-items: center; justify-content: flex-start; width: 100%; flex: 1; min-height: 0; overflow-y: auto; padding-top: clamp(10px, 2vh, 30px); }
 .av-titel { font-size: clamp(2rem, 4.5vh, 3rem); color: #123250; margin: 0 0 clamp(14px, 2.2vh, 28px) 0; font-weight: bold; }
 .av-inhalt { display: flex; flex-direction: column; gap: clamp(12px, 1.9vh, 22px); width: 100%; max-width: clamp(750px, 88vw, 1500px); min-height: 0; }
 

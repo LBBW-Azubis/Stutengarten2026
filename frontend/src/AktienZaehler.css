@@ -1,6 +1,6 @@
 /* AktienZaehler Styles - viewport-relativ */
 
-.az-seite { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; flex: 1; min-height: 0; overflow: hidden; }
+.az-seite { display: flex; flex-direction: column; align-items: center; justify-content: flex-start; width: 100%; flex: 1; min-height: 0; overflow-y: auto; padding-top: clamp(10px, 2vh, 30px); }
 .az-titel { font-size: clamp(1.5rem, 3.2vh, 2.3rem); color: #123250; margin: 0 0 clamp(10px, 1.6vh, 20px) 0; font-weight: bold; }
 .az-inhalt { display: flex; flex-direction: column; gap: clamp(10px, 1.5vh, 20px); width: 100%; max-width: clamp(700px, 82vw, 1300px); min-height: 0; }
 
