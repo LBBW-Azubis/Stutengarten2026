@@ -21,7 +21,7 @@ DEFAULT_IFACE=$(ip link | grep -E '^[0-9]+: (en|eth)' | awk -F: '{print $2}' | t
 read -p "Netzwerk-Interface LAN [$DEFAULT_IFACE]: " INTERFACE
 INTERFACE=${INTERFACE:-$DEFAULT_IFACE}
 
-read -p "WLAN dauerhaft deaktivieren? (y/N): " MSG_WLAN
+read -p "WLAN dauerhaft deaktivieren? (y/n): " MSG_WLAN
 if [[ "$MSG_WLAN" =~ ^[Yy]$ ]]; then
     DISABLE_WIFI=true
     WIFI_IFACE=$(ip link | grep -E '^[0-9]+: (wl)' | awk -F: '{print $2}' | tr -d ' ' | head -n1)
