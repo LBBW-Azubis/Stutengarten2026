@@ -51,7 +51,7 @@ while true; do
     --enable-zero-copy \\
     --use-fake-ui-for-media-stream \\
     --autoplay-policy=no-user-gesture-required \\
-    --kiosk \$KIOSK_URL
+    --kiosk $KIOSK_URL
 done
 EOF
 
@@ -61,18 +61,80 @@ cat > ~/.config/openbox/rc.xml <<EOF
 <?xml version="1.0" encoding="UTF-8"?>
 <openbox_config xmlns="http://openbox.org/3.4/rc">
   <keyboard>
+    <!-- Blockiere alle F-Tasten -->
     <keybind key="F1"><action name="Execute"><command>true</command></action></keybind>
+    <keybind key="F2"><action name="Execute"><command>true</command></action></keybind>
     <keybind key="F3"><action name="Execute"><command>true</command></action></keybind>
+    <keybind key="F4"><action name="Execute"><command>true</command></action></keybind>
+    <keybind key="F5"><action name="Execute"><command>true</command></action></keybind>
+    <keybind key="F6"><action name="Execute"><command>true</command></action></keybind>
     <keybind key="F7"><action name="Execute"><command>true</command></action></keybind>
+    <keybind key="F8"><action name="Execute"><command>true</command></action></keybind>
+    <keybind key="F9"><action name="Execute"><command>true</command></action></keybind>
+    <keybind key="F10"><action name="Execute"><command>true</command></action></keybind>
+    <keybind key="F11"><action name="Execute"><command>true</command></action></keybind>
     <keybind key="F12"><action name="Execute"><command>true</command></action></keybind>
+    
+    <!-- Blockiere STRG + Buchstabe/Zahl/Sonderzeichen -->
+    <keybind key="C-a"><action name="Execute"><command>true</command></action></keybind>
+    <keybind key="C-b"><action name="Execute"><command>true</command></action></keybind>
+    <keybind key="C-c"><action name="Execute"><command>true</command></action></keybind>
+    <keybind key="C-d"><action name="Execute"><command>true</command></action></keybind>
+    <keybind key="C-e"><action name="Execute"><command>true</command></action></keybind>
     <keybind key="C-f"><action name="Execute"><command>true</command></action></keybind>
+    <keybind key="C-g"><action name="Execute"><command>true</command></action></keybind>
+    <keybind key="C-h"><action name="Execute"><command>true</command></action></keybind>
+    <keybind key="C-i"><action name="Execute"><command>true</command></action></keybind>
+    <keybind key="C-j"><action name="Execute"><command>true</command></action></keybind>
+    <keybind key="C-k"><action name="Execute"><command>true</command></action></keybind>
+    <keybind key="C-l"><action name="Execute"><command>true</command></action></keybind>
+    <keybind key="C-m"><action name="Execute"><command>true</command></action></keybind>
     <keybind key="C-n"><action name="Execute"><command>true</command></action></keybind>
-    <keybind key="C-t"><action name="Execute"><command>true</command></action></keybind>
-    <keybind key="C-p"><action name="Execute"><command>true</command></action></keybind>
-    <keybind key="C-s"><action name="Execute"><command>true</command></action></keybind>
     <keybind key="C-o"><action name="Execute"><command>true</command></action></keybind>
+    <keybind key="C-p"><action name="Execute"><command>true</command></action></keybind>
+    <keybind key="C-q"><action name="Execute"><command>true</command></action></keybind>
+    <keybind key="C-r"><action name="Execute"><command>true</command></action></keybind>
+    <keybind key="C-s"><action name="Execute"><command>true</command></action></keybind>
+    <keybind key="C-t"><action name="Execute"><command>true</command></action></keybind>
+    <keybind key="C-u"><action name="Execute"><command>true</command></action></keybind>
+    <keybind key="C-v"><action name="Execute"><command>true</command></action></keybind>
+    <keybind key="C-w"><action name="Execute"><command>true</command></action></keybind>
+    <keybind key="C-x"><action name="Execute"><command>true</command></action></keybind>
+    <keybind key="C-y"><action name="Execute"><command>true</command></action></keybind>
+    <keybind key="C-z"><action name="Execute"><command>true</command></action></keybind>
+    <keybind key="C-1"><action name="Execute"><command>true</command></action></keybind>
+    <keybind key="C-2"><action name="Execute"><command>true</command></action></keybind>
+    <keybind key="C-3"><action name="Execute"><command>true</command></action></keybind>
+    <keybind key="C-4"><action name="Execute"><command>true</command></action></keybind>
+    <keybind key="C-5"><action name="Execute"><command>true</command></action></keybind>
+    <keybind key="C-6"><action name="Execute"><command>true</command></action></keybind>
+    <keybind key="C-7"><action name="Execute"><command>true</command></action></keybind>
+    <keybind key="C-8"><action name="Execute"><command>true</command></action></keybind>
+    <keybind key="C-9"><action name="Execute"><command>true</command></action></keybind>
+    <keybind key="C-0"><action name="Execute"><command>true</command></action></keybind>
+    <keybind key="C--"><action name="Execute"><command>true</command></action></keybind>
+    <keybind key="C-+"><action name="Execute"><command>true</command></action></keybind>
+    <keybind key="C-Tab"><action name="Execute"><command>true</command></action></keybind>
+    <keybind key="C-S-Tab"><action name="Execute"><command>true</command></action></keybind>
+    <keybind key="C-Esc"><action name="Execute"><command>true</command></action></keybind>
+
+    <!-- Blockiere ALT + Kombis -->
     <keybind key="A-F4"><action name="Execute"><command>true</command></action></keybind>
     <keybind key="A-Tab"><action name="Execute"><command>true</command></action></keybind>
+    <keybind key="A-S-Tab"><action name="Execute"><command>true</command></action></keybind>
+    <keybind key="A-Esc"><action name="Execute"><command>true</command></action></keybind>
+    <keybind key="A-Space"><action name="Execute"><command>true</command></action></keybind>
+    <keybind key="A-Left"><action name="Execute"><command>true</command></action></keybind>
+    <keybind key="A-Right"><action name="Execute"><command>true</command></action></keybind>
+    
+    <!-- Super/Windows-Taste -->
+    <keybind key="W-d"><action name="Execute"><command>true</command></action></keybind>
+    <keybind key="W-e"><action name="Execute"><command>true</command></action></keybind>
+    <keybind key="W-r"><action name="Execute"><command>true</command></action></keybind>
+    <keybind key="W-l"><action name="Execute"><command>true</command></action></keybind>
+
+    <!-- Escape an sich ignorieren (Vorsicht, könnte Dropdowns stören, kann aber in Kiosk erwünscht sein. Falls störend, einfach löschen) -->
+    <keybind key="Escape"><action name="Execute"><command>true</command></action></keybind>
   </keyboard>
 </openbox_config>
 EOF
