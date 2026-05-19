@@ -114,9 +114,20 @@ cat > ~/.config/openbox/rc.xml <<EOF
     <keybind key="C-0"><action name="Execute"><command>true</command></action></keybind>
     <keybind key="C--"><action name="Execute"><command>true</command></action></keybind>
     <keybind key="C-+"><action name="Execute"><command>true</command></action></keybind>
+    <keybind key="C-minus"><action name="Execute"><command>true</command></action></keybind>
+    <keybind key="C-plus"><action name="Execute"><command>true</command></action></keybind>
+    <keybind key="C-equal"><action name="Execute"><command>true</command></action></keybind>
+    <keybind key="C-apostrophe"><action name="Execute"><command>true</command></action></keybind>
+    <keybind key="C-acute"><action name="Execute"><command>true</command></action></keybind>
+    <keybind key="C-KP_Subtract"><action name="Execute"><command>true</command></action></keybind>
+    <keybind key="C-KP_Add"><action name="Execute"><command>true</command></action></keybind>
     <keybind key="C-Tab"><action name="Execute"><command>true</command></action></keybind>
     <keybind key="C-S-Tab"><action name="Execute"><command>true</command></action></keybind>
     <keybind key="C-Esc"><action name="Execute"><command>true</command></action></keybind>
+
+    <!-- Shift + Kombis -->
+    <keybind key="S-Escape"><action name="Execute"><command>true</command></action></keybind>
+    <keybind key="S-F3"><action name="Execute"><command>true</command></action></keybind>
 
     <!-- Blockiere ALT + Kombis -->
     <keybind key="A-F4"><action name="Execute"><command>true</command></action></keybind>
@@ -126,6 +137,7 @@ cat > ~/.config/openbox/rc.xml <<EOF
     <keybind key="A-Space"><action name="Execute"><command>true</command></action></keybind>
     <keybind key="A-Left"><action name="Execute"><command>true</command></action></keybind>
     <keybind key="A-Right"><action name="Execute"><command>true</command></action></keybind>
+    <keybind key="A-Home"><action name="Execute"><command>true</command></action></keybind>
     
     <!-- Super/Windows-Taste -->
     <keybind key="W-d"><action name="Execute"><command>true</command></action></keybind>
