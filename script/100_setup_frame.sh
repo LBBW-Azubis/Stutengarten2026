@@ -217,7 +217,6 @@ sudo usermod -a -G video,plugdev,audio "$TARGET_USER"
 
 echo -e "${GREEN}>>> Deaktiviere WLAN...${NC}"
 if [[ -n "$WIFI_IFACE" ]] && ip link show "$WIFI_IFACE" > /dev/null 2>&1; then
-    sudo rfkill block wifi
     sudo ip link set "$WIFI_IFACE" down
     echo -e "${GREEN}WLAN-Interface $WIFI_IFACE deaktiviert.${NC}"
 else
@@ -225,5 +224,5 @@ else
 fi
 
 echo -e "${GREEN}SETUP ABGESCHLOSSEN!${NC}"
-sleep 20
+sleep 10
 sudo reboot
