@@ -1,8 +1,11 @@
 import { useState } from 'react'
 
+import Popup from './Popup'
+
 import './AktienZaehler.css'  //Wichtig immer CSS importieren
 
 export default function AktienZaehler() {
+  const [popup, setPopup] = useState('')
   // ============================================================
   // EINGABEN:
   //   kontonummer (String) - Stutengarten-ID des Kunden
@@ -121,6 +124,7 @@ export default function AktienZaehler() {
         setAktien(updated)
         setAusgewaehltIdx(null)
         setKurs(null)
+        setPopup('Kurs wurde erfolgreich eingetragen!')
       } else {
         setFehler('Fehler beim Eintragen.')
       }
@@ -228,6 +232,8 @@ export default function AktienZaehler() {
           <button className="btn btn-dunkel az-eintragen-btn" onClick={eintragen}>Eintragen</button>
         </div>
       </div>
+
+      <Popup message={popup} onClose={() => setPopup('')} />
     </div>
   )
 }

@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import { useAppContext } from './AppContext'
 import Emoji from './Emoji'
+import Popup from './Popup'
 
 import './BetreuerMenu.css'  //Wichtig immer CSS importieren
 
@@ -13,6 +14,7 @@ export default function BetreuerMenu() {
   const [importStatus, setImportStatus] = useState(null)  // { typ: 'ok'|'err', text: string } - Statusmeldung fuer Datenbank-Aktionen
   const [showLoeschenDialog, setShowLoeschenDialog] = useState(false)
   const [loeschenInput, setLoeschenInput] = useState('')
+  const [popup, setPopup] = useState('')
 
   function oeffneLoeschenDialog() {
     setLoeschenInput('')
@@ -59,7 +61,7 @@ export default function BetreuerMenu() {
       })
       console.log('[Datenbank] Clear Status:', response.status)
       if (response.ok) {
-        zeigeImportMeldung('ok', 'Datenbank erfolgreich zurückgesetzt!')
+        setPopup('Datenbank wurde erfolgreich zurückgesetzt!')
       } else {
         zeigeImportMeldung('err', 'Datenbank zurücksetzen fehlgeschlagen')
       }
@@ -254,6 +256,7 @@ export default function BetreuerMenu() {
         </div>
       )}
 
+      <Popup message={popup} onClose={() => setPopup('')} />
     </div>
   )
 }

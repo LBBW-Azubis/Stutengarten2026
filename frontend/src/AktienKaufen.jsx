@@ -1,10 +1,13 @@
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 
+import Popup from './Popup'
+
 import './AktienKaufen.css'  //Wichtig immer CSS importieren
 
 export default function AktienKaufen() {
   const navigate = useNavigate()
+  const [popup, setPopup] = useState('')
 
   // ============================================================
   // BACKEND-VARIABLEN
@@ -93,7 +96,7 @@ export default function AktienKaufen() {
       console.log('[Aktien] Response Data:', data)
 
       if (response.ok) {
-        navigate('/mainsite')
+        setPopup('Aktie wurde erfolgreich gekauft!')
       } else {
         setFehler('Fehler beim Aktienkauf.')
       }
@@ -163,6 +166,8 @@ export default function AktienKaufen() {
 
         {fehler && <span className="fehler-text" style={{ display: 'block', textAlign: 'center' }}>{fehler}</span>}
       </div>
+
+      <Popup message={popup} onClose={() => { setPopup(''); navigate('/mainsite') }} />
     </div>
   )
 }
