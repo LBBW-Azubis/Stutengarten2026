@@ -22,6 +22,7 @@ TRUNCATE_TABLES = [
     "unternehmensstatistik",
     "kunden",
     "unternehmen",
+    "aktien",
 ]
 
 def _run_select_1(conn):
