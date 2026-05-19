@@ -110,6 +110,9 @@ EOF
 chmod +x ~/.config/openbox/autostart
 sudo usermod -a -G video,plugdev,audio $TARGET_USER
 
+echo -e "${GREEN}>>> Trenne Hotspot / Deaktiviere WLAN dauerhaft...${NC}"
+sudo rfkill block wifi
+
 echo -e "${GREEN}SETUP ABGESCHLOSSEN!${NC}"
 sleep 3
 sudo reboot
