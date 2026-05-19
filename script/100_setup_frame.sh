@@ -23,6 +23,11 @@ if [[ -z "$IP_ADDR" ]]; then STATIC_IP=false; else STATIC_IP=true; fi
 read -p "Frame Kiosk-URL [http://192.168.1.10]: " KIOSK_URL
 KIOSK_URL=${KIOSK_URL:-http://192.168.1.10}
 
+# Sicherstellen, dass http:// vorangestellt ist, falls vergessen
+if [[ ! "$KIOSK_URL" =~ ^https?:// ]]; then
+    KIOSK_URL="http://$KIOSK_URL"
+fi
+
 # --- AUSFÜHRUNG ---
 echo -e "${GREEN}>>> Installiere Komponenten...${NC}"
 sudo apt update
@@ -46,6 +51,15 @@ EOF
     sudo netplan apply
 fi
 
+# 2. LightDM Konfiguration (Autologin)
+echo -e "${GREEN}>>> Konfiguriere Autologin...${NC}"
+sudo bash -c "cat > /etc/lightdm/lightdm.conf" <<EOF
+[Seat:*]
+autologin-user=$TARGET_USER
+autologin-user-timeout=0
+user-session=openbox
+EOF
+
 # Openbox & Hardening
 mkdir -p ~/.config/openbox
 cat > ~/.config/openbox/autostart <<EOF
@@ -54,10 +68,23 @@ xset s noblank
 xset -dpms
 devmon &
 while true; do
-  chromium-browser --kiosk --no-first-run --no-default-browser-check \\
-    --ignore-gpu-blocklist --enable-gpu-rasterization --enable-zero-copy \\
-    --use-fake-ui-for-media-stream --autoplay-policy=no-user-gesture-required \\
-    --app=$KIOSK_URL
+  chromium-browser \\
+    --kiosk \\
+    --no-first-run \\
+    --no-default-browser-check \\
+    --disable-infobars \\
+    --disable-session-crashed-bubble \\
+    --overscroll-history-navigation=0 \\
+    --disable-features=TranslateUI \\
+    --no-proxy-server \\
+    --password-store=basic \\
+    --disable-save-password-bubble \\
+    --ignore-gpu-blocklist \\
+    --enable-gpu-rasterization \\
+    --enable-zero-copy \\
+    --use-fake-ui-for-media-stream \\
+    --autoplay-policy=no-user-gesture-required \\
+    --kiosk \$KIOSK_URL
 done
 EOF
 

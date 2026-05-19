@@ -51,7 +51,7 @@ while true; do
     --enable-zero-copy \\
     --use-fake-ui-for-media-stream \\
     --autoplay-policy=no-user-gesture-required \\
-    --app=$KIOSK_URL
+    --kiosk \$KIOSK_URL
 done
 EOF
 
