@@ -173,6 +173,10 @@ cat > "$TARGET_HOME/.config/openbox/rc.xml" <<EOF
     <keybind key="C-minus"><action name="Execute"><command>true</command></action></keybind>
     <keybind key="C-plus"><action name="Execute"><command>true</command></action></keybind>
     <keybind key="C-equal"><action name="Execute"><command>true</command></action></keybind>
+    <keybind key="C-apostrophe"><action name="Execute"><command>true</command></action></keybind>
+    <keybind key="C-acute"><action name="Execute"><command>true</command></action></keybind>
+    <keybind key="C-KP_Subtract"><action name="Execute"><command>true</command></action></keybind>
+    <keybind key="C-KP_Add"><action name="Execute"><command>true</command></action></keybind>
     <keybind key="C-Tab"><action name="Execute"><command>true</command></action></keybind>
     <keybind key="C-S-Tab"><action name="Execute"><command>true</command></action></keybind>
     <keybind key="C-Esc"><action name="Execute"><command>true</command></action></keybind>
