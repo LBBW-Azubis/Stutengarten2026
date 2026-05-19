@@ -2,11 +2,13 @@ import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 
 import Emoji from './Emoji'
+import Popup from './Popup'
 
 import './Unternehmen.css'  //Wichtig immer CSS importieren
 
 export default function Unternehmen() {
   const navigate = useNavigate()
+  const [popup, setPopup] = useState('')
 
   // ============================================================
   // BACKEND-VARIABLEN
@@ -15,10 +17,11 @@ export default function Unternehmen() {
   //   unternehmenName    (String) - z.B. "Baeckerei Mueller"
   //   folderHandedOver   (String) - "0" (Nein) oder "1" (Ja)
   //
-  // NACH "Erstellen":
-  //   POST http://192.168.1.10:5000/company
-  //   Body: { name: String, folder_handed_over: "0" | "1" }
-  //   (Company-ID wird vom Backend automatisch vergeben)
+  // NACH "Erstellen": Zwei parallele API-Calls
+  //   1) POST http://192.168.1.10:5000/company
+  //      Body: { name: String, folder_handed_over: "0" | "1" }
+  //   2) POST http://192.168.1.10:5000/share
+  //      Body: { name: String }   (Aktie mit gleichem Namen wie das Unternehmen)
   // ============================================================
   const [unternehmenName, setUnternehmenName] = useState('')
   const [folderHandedOver, setFolderHandedOver] = useState(null)  // null = noch nicht gewaehlt
@@ -36,26 +39,33 @@ export default function Unternehmen() {
       return
     }
 
-    // === BACKEND: Unternehmen erstellen ===
-    // POST http://192.168.1.10:5000/company
-    // Body: { name: String, folder_handed_over: "0" | "1" }
-    // (Savingsbook wird automatisch vom Backend angelegt)
-    const url = 'http://192.168.1.10:5000/company'
-    const body = { name: unternehmenName.trim(), folder_handed_over: folderHandedOver }
-    console.log('[Unternehmen] POST URL:', url)
-    console.log('[Unternehmen] POST Body:', JSON.stringify(body))
-    try {
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json; charset=utf-8' },
-        body: JSON.stringify(body),
-      })
-      console.log('[Unternehmen] Response Status:', response.status)
+    const name = unternehmenName.trim()
 
-      if (response.ok) {
+    // === BACKEND: Unternehmen + Aktie parallel erstellen ===
+    const companyRequest = fetch('http://192.168.1.10:5000/company', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json; charset=utf-8' },
+      body: JSON.stringify({ name, folder_handed_over: folderHandedOver }),
+    })
+    const shareRequest = fetch('http://192.168.1.10:5000/share', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json; charset=utf-8' },
+      body: JSON.stringify({ name }),
+    })
+
+    try {
+      const [companyResponse, shareResponse] = await Promise.all([companyRequest, shareRequest])
+      console.log('[Unternehmen] Company Status:', companyResponse.status, '| Share Status:', shareResponse.status)
+
+      if (companyResponse.ok && shareResponse.ok) {
         setErstellt(true)
-      } else {
+        setPopup('Unternehmen wurde erfolgreich erstellt!')
+      } else if (!companyResponse.ok && !shareResponse.ok) {
+        setFehler('Fehler beim Erstellen von Unternehmen und Aktie.')
+      } else if (!companyResponse.ok) {
         setFehler('Fehler beim Erstellen des Unternehmens.')
+      } else {
+        setFehler('Fehler beim Erstellen der Aktie.')
       }
     } catch (error) {
       console.error('[Unternehmen] Fehler:', error)
@@ -119,6 +129,8 @@ export default function Unternehmen() {
           <button className="btn btn-gruen un-btn" onClick={() => navigate(-1)}>Zurück</button>
         </div>
       </div>
+
+      <Popup message={popup} onClose={() => setPopup('')} />
     </div>
   )
 }

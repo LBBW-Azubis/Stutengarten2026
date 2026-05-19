@@ -1,12 +1,15 @@
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 
+import Popup from './Popup'
+
 import './Einzahlen.css'  //Wichtig immer CSS importieren
 
 import einzahlenIcon from './images/einzahlen.png'
 
 export default function Einzahlen() {
   const navigate = useNavigate()
+  const [popup, setPopup] = useState('')
 
   // ============================================================
   // BACKEND-VARIABLEN - Diese Werte werden spaeter ans Backend gesendet / vom Backend geladen
@@ -98,6 +101,7 @@ export default function Einzahlen() {
       if (response.ok) {
         setKontostandNeu(data.balance || neuerStand)
         setKontostand(data.balance || neuerStand)
+        setPopup('Geld wurde erfolgreich eingezahlt!')
       } else {
         setFehler('Fehler beim Einzahlen.')
       }
@@ -181,6 +185,8 @@ export default function Einzahlen() {
           <span className="feld-input anzeige ez-kontostand-neu">{kontostandNeu !== '' ? `${kontostandNeu}` : ''}</span>
         </div>
       </div>
+
+      <Popup message={popup} onClose={() => setPopup('')} />
     </div>
   )
 }

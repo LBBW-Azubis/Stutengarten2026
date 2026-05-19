@@ -1,10 +1,13 @@
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 
+import Popup from './Popup'
+
 import './Ueberweisung.css'  //Wichtig immer CSS importieren
 
 export default function Ueberweisung() {
   const navigate = useNavigate()
+  const [popup, setPopup] = useState('')
 
   // ============================================================
   // BACKEND-VARIABLEN
@@ -140,6 +143,7 @@ export default function Ueberweisung() {
       if (response.ok) {
         setVonKontostandNeu(vonKontostand - b)
         setAnKontostandNeu(anKontostand + b)
+        setPopup('Überweisung wurde erfolgreich durchgeführt!')
       } else {
         setFehler('Fehler bei der Überweisung.')
       }
@@ -277,6 +281,8 @@ export default function Ueberweisung() {
         {fehler && <span className="fehler-text" style={{ display: 'block', textAlign: 'center' }}>{fehler}</span>}
 
       </div>
+
+      <Popup message={popup} onClose={() => setPopup('')} />
     </div>
   )
 }

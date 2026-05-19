@@ -1,10 +1,13 @@
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 
+import Popup from './Popup'
+
 import './Auszahlen.css'  //Wichtig immer CSS importieren
 
 export default function Auszahlen() {
   const navigate = useNavigate()
+  const [popup, setPopup] = useState('')
 
   // ============================================================
   // BACKEND-VARIABLEN - Diese Werte werden spaeter ans Backend gesendet / vom Backend geladen
@@ -108,6 +111,7 @@ export default function Auszahlen() {
       if (response.ok) {
         setKontostandNeu(data.balance || neuerStand)
         setKontostand(data.balance || neuerStand)
+        setPopup('Geld wurde erfolgreich ausgezahlt!')
       } else {
         setFehler('Fehler beim Auszahlen.')
       }
@@ -193,6 +197,8 @@ export default function Auszahlen() {
           {/* === ENDE BACKEND === */}
         </div>
       </div>
+
+      <Popup message={popup} onClose={() => setPopup('')} />
     </div>
   )
 }

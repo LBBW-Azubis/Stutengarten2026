@@ -1,14 +1,16 @@
 import { useState } from 'react'
 
 import Emoji from './Emoji'
+import Popup from './Popup'
 
 import './UnternehmenLoeschen.css'  //Wichtig immer CSS importieren
 
 export default function UnternehmenLoeschen() {
   const [unternehmenName, setUnternehmenName] = useState('')
   const [fehler, setFehler] = useState('')
-  const [status, setStatus] = useState(null)  // { typ: 'ok'|'err', text: String }
+  const [status, setStatus] = useState(null)  // { typ: 'ok'|'err', text: String } - fuer Fehlermeldungen
   const [showConfirm, setShowConfirm] = useState(false)
+  const [popup, setPopup] = useState('')
 
   function confirmLoeschen() {
     setFehler('')
@@ -33,7 +35,7 @@ export default function UnternehmenLoeschen() {
       console.log('[UnternehmenLoeschen] Response Status:', response.status)
 
       if (response.ok) {
-        setStatus({ typ: 'ok', text: `Unternehmen "${name}" erfolgreich gelöscht!` })
+        setPopup(`Unternehmen "${name}" wurde erfolgreich gelöscht!`)
         setUnternehmenName('')
       } else if (response.status === 404) {
         setStatus({ typ: 'err', text: 'Unternehmen nicht gefunden.' })
@@ -89,6 +91,8 @@ export default function UnternehmenLoeschen() {
           </div>
         </div>
       )}
+
+      <Popup message={popup} onClose={() => setPopup('')} />
     </div>
   )
 }
