@@ -9,8 +9,12 @@ GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 NC='\033[0m'
 
-TARGET_USER=$(whoami)
+# Echter User auch bei sudo-Ausführung
+TARGET_USER=${SUDO_USER:-$(whoami)}
+TARGET_HOME=$(getent passwd "$TARGET_USER" | cut -d: -f6)
+
 echo -e "${BLUE}=== Frame Kiosk Konfiguration & Hardening ===${NC}\n"
+echo -e "${YELLOW}Erkannter User: $TARGET_USER (Home: $TARGET_HOME)${NC}\n"
 
 # --- INTERAKTIVE ABFRAGE ---
 DEFAULT_IFACE=$(ip link | grep -E '^[0-9]+: (en|eth)' | awk -F: '{print $2}' | tr -d ' ' | head -n1)
@@ -28,14 +32,16 @@ if [[ ! "$KIOSK_URL" =~ ^https?:// ]]; then
     KIOSK_URL="http://$KIOSK_URL"
 fi
 
+echo -e "${YELLOW}Kiosk-URL: $KIOSK_URL${NC}\n"
+
 # --- AUSFÜHRUNG ---
 echo -e "${GREEN}>>> Installiere Komponenten...${NC}"
 sudo apt update
 sudo apt install -y --no-install-recommends \
-    xserver-xorg-core xserver-xorg xinit openbox \
+    xorg xserver-xorg-core xserver-xorg xinit openbox \
     lightdm lightdm-gtk-greeter chromium-browser \
     udevil xdg-desktop-portal-gtk x11-xserver-utils \
-    libgles2
+    dbus-x11 at-spi2-core libgles2
 
 # Netzwerk
 if [ "$STATIC_IP" = true ]; then
@@ -51,22 +57,34 @@ EOF
     sudo netplan apply
 fi
 
-# 2. LightDM Konfiguration (Autologin)
-echo -e "${GREEN}>>> Konfiguriere Autologin...${NC}"
-sudo bash -c "cat > /etc/lightdm/lightdm.conf" <<EOF
+# LightDM aktivieren
+sudo systemctl enable lightdm
+sudo systemctl set-default graphical.target
+
+# LightDM Konfiguration (Autologin)
+echo -e "${GREEN}>>> Konfiguriere Autologin für $TARGET_USER...${NC}"
+sudo tee /etc/lightdm/lightdm.conf > /dev/null <<EOF
 [Seat:*]
 autologin-user=$TARGET_USER
 autologin-user-timeout=0
 user-session=openbox
 EOF
 
-# Openbox & Hardening
-mkdir -p ~/.config/openbox
-cat > ~/.config/openbox/autostart <<EOF
+# Openbox Config im richtigen User-Home anlegen
+mkdir -p "$TARGET_HOME/.config/openbox"
+
+# Autostart – KIOSK_URL wird hier direkt eingebettet
+cat > "$TARGET_HOME/.config/openbox/autostart" <<EOF
+export DISPLAY=:0
 xset s off
 xset s noblank
 xset -dpms
-devmon &
+sleep 5
+
+until ping -c1 -W2 $(echo "$KIOSK_URL" | sed 's|https\?://||' | cut -d'/' -f1) &>/dev/null; do
+    sleep 2
+done
+
 while true; do
   chromium-browser \\
     --kiosk \\
@@ -79,17 +97,16 @@ while true; do
     --no-proxy-server \\
     --password-store=basic \\
     --disable-save-password-bubble \\
-    --ignore-gpu-blocklist \\
-    --enable-gpu-rasterization \\
-    --enable-zero-copy \\
+    --disable-gpu \\
     --use-fake-ui-for-media-stream \\
     --autoplay-policy=no-user-gesture-required \\
-    --kiosk \$KIOSK_URL
+    --kiosk $KIOSK_URL
+  sleep 2
 done
 EOF
 
 # Hardening Block
-cat > ~/.config/openbox/rc.xml <<EOF
+cat > "$TARGET_HOME/.config/openbox/rc.xml" <<EOF
 <?xml version="1.0" encoding="UTF-8"?>
 <openbox_config xmlns="http://openbox.org/3.4/rc">
   <keyboard>
@@ -101,17 +118,32 @@ cat > ~/.config/openbox/rc.xml <<EOF
     <keybind key="C-n"><action name="Execute"><command>true</command></action></keybind>
     <keybind key="C-t"><action name="Execute"><command>true</command></action></keybind>
     <keybind key="C-p"><action name="Execute"><command>true</command></action></keybind>
+    <keybind key="C-s"><action name="Execute"><command>true</command></action></keybind>
+    <keybind key="C-o"><action name="Execute"><command>true</command></action></keybind>
     <keybind key="A-F4"><action name="Execute"><command>true</command></action></keybind>
     <keybind key="A-Tab"><action name="Execute"><command>true</command></action></keybind>
   </keyboard>
 </openbox_config>
 EOF
 
-chmod +x ~/.config/openbox/autostart
-sudo usermod -a -G video,plugdev,audio $TARGET_USER
+chmod +x "$TARGET_HOME/.config/openbox/autostart"
+sudo chown -R "$TARGET_USER:$TARGET_USER" "$TARGET_HOME/.config/openbox"
+sudo usermod -a -G video,plugdev,audio "$TARGET_USER"
 
-echo -e "${GREEN}>>> Trenne Hotspot / Deaktiviere WLAN dauerhaft...${NC}"
-sudo rfkill block wifi
+echo -e "${GREEN}>>> Deaktiviere WLAN dauerhaft...${NC}"
+WIFI_IFACE=$(ip link | grep -E '^[0-9]+: (wl)' | awk -F: '{print $2}' | tr -d ' ' | head -n1)
+if [[ -n "$WIFI_IFACE" ]]; then
+    sudo ip link set "$WIFI_IFACE" down
+    # Dauerhaft via Netplan deaktivieren
+    sudo tee /etc/networkd-dispatcher/dormant.d/disable-wifi > /dev/null <<WIFI
+#!/bin/bash
+ip link set $WIFI_IFACE down
+WIFI
+    sudo chmod +x /etc/networkd-dispatcher/dormant.d/disable-wifi
+    echo -e "${GREEN}WLAN-Interface $WIFI_IFACE deaktiviert.${NC}"
+else
+    echo -e "${YELLOW}Kein WLAN-Interface gefunden, übersprungen.${NC}"
+fi
 
 echo -e "${GREEN}SETUP ABGESCHLOSSEN!${NC}"
 sleep 3
