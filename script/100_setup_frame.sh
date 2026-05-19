@@ -199,16 +199,10 @@ chmod +x "$TARGET_HOME/.config/openbox/autostart"
 sudo chown -R "$TARGET_USER:$TARGET_USER" "$TARGET_HOME/.config/openbox"
 sudo usermod -a -G video,plugdev,audio "$TARGET_USER"
 
-echo -e "${GREEN}>>> Deaktiviere WLAN dauerhaft...${NC}"
+echo -e "${GREEN}>>> Deaktiviere WLAN...${NC}"
 WIFI_IFACE=$(ip link | grep -E '^[0-9]+: (wl)' | awk -F: '{print $2}' | tr -d ' ' | head -n1)
 if [[ -n "$WIFI_IFACE" ]]; then
     sudo ip link set "$WIFI_IFACE" down
-    # Dauerhaft via Netplan deaktivieren
-    sudo tee /etc/networkd-dispatcher/dormant.d/disable-wifi > /dev/null <<WIFI
-#!/bin/bash
-ip link set $WIFI_IFACE down
-WIFI
-    sudo chmod +x /etc/networkd-dispatcher/dormant.d/disable-wifi
     echo -e "${GREEN}WLAN-Interface $WIFI_IFACE deaktiviert.${NC}"
 else
     echo -e "${YELLOW}Kein WLAN-Interface gefunden, übersprungen.${NC}"
