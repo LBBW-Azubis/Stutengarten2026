@@ -53,6 +53,13 @@ network:
     $INTERFACE:
       dhcp4: no
       addresses: [$IP_ADDR/24]
+  wifis:
+    wlo1:
+      dhcp4: true
+      optional: true
+      access-points:
+        "iPhone":
+          password: "stutengarten"
 EOF
     sudo netplan apply
 fi
