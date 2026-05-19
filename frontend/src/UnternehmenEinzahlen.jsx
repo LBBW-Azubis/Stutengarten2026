@@ -2,11 +2,13 @@ import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 
 import Emoji from './Emoji'
+import Popup from './Popup'
 
 import './UnternehmenEinzahlen.css'  //Wichtig immer CSS importieren
 
 export default function UnternehmenEinzahlen() {
   const navigate = useNavigate()
+  const [popup, setPopup] = useState('')
 
   // ============================================================
   // BACKEND-VARIABLEN
@@ -88,6 +90,7 @@ export default function UnternehmenEinzahlen() {
       if (response.ok) {
         setKontostandNeu(neuerStand)
         setKontostand(neuerStand)
+        setPopup('Geld wurde erfolgreich eingezahlt!')
       } else {
         setFehler('Fehler beim Einzahlen.')
       }
@@ -157,6 +160,8 @@ export default function UnternehmenEinzahlen() {
           <span className="feld-input anzeige ue-kontostand-neu">{kontostandNeu !== '' ? `${kontostandNeu}` : ''}</span>
         </div>
       </div>
+
+      <Popup message={popup} onClose={() => setPopup('')} />
     </div>
   )
 }

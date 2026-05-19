@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 
 import Emoji from './Emoji'
+import Popup from './Popup'
 
 import './KontoErstellen.css'  //Wichtig immer CSS importieren
 
@@ -15,6 +16,7 @@ export default function KontoErstellen() {
   const [vorname, setVorname] = useState('')
   const [nachname, setNachname] = useState('')
   const [fehler, setFehler] = useState('')
+  const [popup, setPopup] = useState('')
 
   async function fertig() {
     const id = kontonummer.trim().toUpperCase()
@@ -39,7 +41,7 @@ export default function KontoErstellen() {
       })
 
       if (response.ok) {
-        navigate('/mainsite')
+        setPopup('Konto wurde erfolgreich erstellt!')
       } else {
         setFehler('Fehler beim Anlegen des Kunden.')
       }
@@ -119,6 +121,8 @@ export default function KontoErstellen() {
           </div>
         </div>
       </div>
+
+      <Popup message={popup} onClose={() => { setPopup(''); navigate('/mainsite') }} />
     </div>
   )
 }

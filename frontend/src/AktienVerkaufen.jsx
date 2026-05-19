@@ -1,10 +1,13 @@
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 
+import Popup from './Popup'
+
 import './AktienVerkaufen.css'  //Wichtig immer CSS importieren
 
 export default function AktienVerkaufen() {
   const navigate = useNavigate()
+  const [popup, setPopup] = useState('')
 
   // ============================================================
   // EINGABEN:
@@ -91,7 +94,9 @@ export default function AktienVerkaufen() {
     console.log('[AktienVerkaufen] TODO: Verkaufen von', ausgewaehlteIdx.map(i => aktien[i]))
     // === ENDE BACKEND ===
 
-    navigate('/mainsite')
+    setPopup(ausgewaehlteIdx.length === 1
+      ? 'Aktie wurde erfolgreich verkauft!'
+      : 'Aktien wurden erfolgreich verkauft!')
   }
 
   const gesamtErloes = ausgewaehlteIdx.reduce(
@@ -178,6 +183,8 @@ export default function AktienVerkaufen() {
           <button className="btn btn-dunkel av-verkauf-btn" onClick={verkaufen}>Verkaufen</button>
         </div>
       </div>
+
+      <Popup message={popup} onClose={() => { setPopup(''); navigate('/mainsite') }} />
     </div>
   )
 }
