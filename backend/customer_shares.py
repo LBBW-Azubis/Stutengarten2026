@@ -39,14 +39,22 @@ class CustomerShares:
             # NEW PURCHASE
             Share.get_by_id(db, share_id)
 
-            # Check balance
-            if customer_savings_book and (customer_savings_book.balance - invested_amount < 0):
-                raise CustomerException("Not enough balance")
-
             conn = db.get_connection()
             cursor = conn.cursor()
 
             try:
+                # Check if customer already owns this share
+                cursor.execute(
+                    "SELECT id FROM kundenaktien WHERE besitzer_fk = %s AND aktie_fk = %s",
+                    (customer_stutengarten_id, share_id)
+                )
+                if cursor.fetchone():
+                    raise CustomerException("Share already owned!")
+
+                # Check balance
+                if customer_savings_book and (customer_savings_book.balance - invested_amount < 0):
+                    raise CustomerException("Not enough balance")
+
                 # The foreign key `besitzer_fk` refers to `kunden(stutengarten_id)`
                 cursor.execute(
                     """INSERT INTO kundenaktien 
