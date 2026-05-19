@@ -32,6 +32,7 @@ import UnternehmenEinzahlen from './UnternehmenEinzahlen'
 import UnternehmenAuszahlen from './UnternehmenAuszahlen'
 import UnternehmenUmsatz from './UnternehmenUmsatz'
 import UnternehmenInfo from './UnternehmenInfo'
+import UnternehmenMappe from './UnternehmenMappe'
 import AlleUnternehmen from './AlleUnternehmen'
 import UnternehmenLoeschen from './UnternehmenLoeschen'
 
@@ -139,6 +140,11 @@ function ZurueckBar() {
   const startseite = betreuerEingeloggt ? '/mainsite/betreuer' : '/mainsite'
   const istStartseite = location.pathname === startseite
 
+  // Auf Betreuer-Unterseiten (Unternehmen erstellen / loeschen) keinen Abmelden-Button anzeigen
+  const istBetreuerSeite =
+    location.pathname === '/mainsite/unternehmen-erstellen' ||
+    location.pathname === '/mainsite/unternehmen-loeschen'
+
   function handleAbmelden() {
     setEingeloggt(false)
     setAktuellerNutzer(null)
@@ -155,7 +161,9 @@ function ZurueckBar() {
           </>
         )}
       </div>
-      <button className="logout-btn" onClick={handleAbmelden}>Abmelden</button>
+      {!istBetreuerSeite && (
+        <button className="logout-btn" onClick={handleAbmelden}>Abmelden</button>
+      )}
     </div>
   )
 }
@@ -267,6 +275,7 @@ function AppLayout() {
           <Route path="/mainsite/unternehmen-auszahlen" element={<UnternehmenAuszahlen />} />
           <Route path="/mainsite/unternehmen-umsatz" element={<UnternehmenUmsatz />} />
           <Route path="/mainsite/unternehmen-info" element={<UnternehmenInfo />} />
+          <Route path="/mainsite/unternehmen-mappe" element={<UnternehmenMappe />} />
           <Route path="/mainsite/unternehmen-alle" element={<AlleUnternehmen />} />
           <Route path="/mainsite/unternehmen-loeschen" element={<UnternehmenLoeschen />} />
           <Route path="/mainsite/tschuess" element={<Tschuess />} />

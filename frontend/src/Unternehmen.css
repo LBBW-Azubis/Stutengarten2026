@@ -15,10 +15,50 @@
 .un-buttons { display: flex; gap: clamp(14px, 2vw, 26px); justify-content: flex-end; margin-top: clamp(8px, 1.2vh, 14px); }
 .un-btn { min-width: clamp(150px, 16vw, 210px); padding: clamp(13px, 1.9vh, 20px) 0; font-size: clamp(1.2rem, 2.1vh, 1.55rem); text-align: center; }
 
-.un-toggle { display: flex; gap: 0; border-radius: 8px; overflow: hidden; border: 2px solid #123250; flex: 1; max-width: clamp(240px, 28vw, 400px); }
-.un-toggle-btn { flex: 1; padding: clamp(13px, 1.9vh, 22px) clamp(18px, 2.2vw, 30px); font-size: clamp(1.2rem, 2.1vh, 1.55rem); font-weight: bold; border: none; cursor: pointer; background: #e8e8f0; color: #123250; transition: background 0.15s ease, color 0.15s ease; }
-.un-toggle-ja.un-toggle-aktiv { background: #36C291; color: white; }
-.un-toggle-nein.un-toggle-aktiv { background: #d32f2f; color: white; }
-.un-toggle-btn:hover:not(.un-toggle-aktiv) { background: #d5dae4; }
+/* Mappe-Auswahl: Kunde / Bank als grosse Icon-Buttons */
+.un-mappe-auswahl { display: flex; gap: clamp(14px, 2vw, 28px); flex: 1; max-width: clamp(380px, 45vw, 600px); }
+.un-mappe-btn {
+  position: relative;
+  flex: 1 1 0;
+  min-width: 0;
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(8px, 1.2vh, 14px);
+  padding: clamp(14px, 2.2vh, 26px) clamp(12px, 1.6vw, 22px);
+  min-height: clamp(120px, 16vh, 200px);
+  background: white;
+  border: 3px solid #cdd7e3;
+  border-radius: 14px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+.un-mappe-btn:hover { transform: translateY(-2px); border-color: #36C291; box-shadow: 0 4px 12px rgba(54,194,145,0.25); }
+.un-mappe-aktiv { border-color: #36C291; background: #e8f5e9; transform: translateY(-3px) scale(1.02); box-shadow: 0 5px 14px rgba(54,194,145,0.4); }
+.un-mappe-aktiv:hover { transform: translateY(-3px) scale(1.02); }
+.un-mappe-icon { font-size: clamp(2.8rem, 6.5vh, 4.8rem); line-height: 1; }
+.un-mappe-icon-img { height: clamp(45px, 6.5vh, 80px); max-width: 100%; width: auto; object-fit: contain; }
+.un-mappe-label { font-size: clamp(1.15rem, 2vh, 1.5rem); font-weight: bold; color: #123250; }
+.un-mappe-check {
+  position: absolute;
+  top: clamp(6px, 0.8vh, 12px);
+  right: clamp(6px, 0.6vw, 12px);
+  width: clamp(28px, 3.2vw, 40px);
+  height: clamp(28px, 3.2vw, 40px);
+  border-radius: 50%;
+  background: #36C291;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(1rem, 1.9vh, 1.4rem);
+  font-weight: bold;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
 
 @media (max-width: 600px) { .un-feld { flex-direction: column; align-items: flex-start; gap: 4px; } .un-feld label { min-width: auto; text-align: left; } }

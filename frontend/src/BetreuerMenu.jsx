@@ -110,7 +110,7 @@ export default function BetreuerMenu() {
                     <button className={`toggle-btn ${!hackerAktiv ? 'inaktiv' : ''}`} onClick={() => setHackerAktiv(false)}>AUS</button>
                   </div>
                   <span className={`status-badge ${hackerAktiv ? 'status-an' : 'status-aus'}`}>
-                    {hackerAktiv ? 'Aktiv' : 'Deaktiviert'}
+                    {hackerAktiv ? 'Aktiviert' : 'Deaktiviert'}
                   </span>
                 </div>
               </div>
@@ -157,7 +157,7 @@ export default function BetreuerMenu() {
                     <button className={`toggle-btn ${!spieleAktiv ? 'inaktiv' : ''}`} onClick={() => setSpieleAktiv(false)}>AUS</button>
                   </div>
                   <span className={`status-badge ${spieleAktiv ? 'status-an' : 'status-aus'}`}>
-                    {spieleAktiv ? 'Erlaubt' : 'Gesperrt'}
+                    {spieleAktiv ? 'Aktiviert' : 'Deaktiviert'}
                   </span>
                 </div>
               </div>

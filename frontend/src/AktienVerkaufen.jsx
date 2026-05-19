@@ -78,7 +78,7 @@ export default function AktienVerkaufen() {
     )
   }
 
-  function verkaufen() {
+  async function verkaufen() {
     setFehler('')
     if (!kundeGeladen) {
       setFehler('Bitte zuerst Kunde laden.')
@@ -90,13 +90,39 @@ export default function AktienVerkaufen() {
     }
 
     // === BACKEND: Aktien verkaufen ===
-    // TODO: API-Call einbauen
-    console.log('[AktienVerkaufen] TODO: Verkaufen von', ausgewaehlteIdx.map(i => aktien[i]))
-    // === ENDE BACKEND ===
+    // Pro ausgewaehlter Aktie ein DELETE-Call (parallel via Promise.all)
+    // DELETE http://192.168.1.10:5000/customer/<stutengarten_id>/shares/<share_name>
+    const id = kontonummer.trim()
+    const zuVerkaufen = ausgewaehlteIdx.map(i => aktien[i])
+    const requests = zuVerkaufen.map(aktie =>
+      fetch(`http://192.168.1.10:5000/customer/${encodeURIComponent(id)}/shares/${encodeURIComponent(aktie.share_name)}`, {
+        method: 'DELETE',
+      })
+    )
 
-    setPopup(ausgewaehlteIdx.length === 1
-      ? 'Aktie wurde erfolgreich verkauft!'
-      : 'Aktien wurden erfolgreich verkauft!')
+    try {
+      const responses = await Promise.all(requests)
+      const erfolgreich = responses.filter(r => r.ok).length
+      const fehlgeschlagen = responses.length - erfolgreich
+
+      if (fehlgeschlagen === 0) {
+        // Verkaufte Aktien aus der lokalen Liste entfernen
+        const verkaufteNamen = new Set(zuVerkaufen.map(a => a.share_name))
+        setAktien(prev => prev.filter(a => !verkaufteNamen.has(a.share_name)))
+        setAusgewaehlteIdx([])
+        setPopup(zuVerkaufen.length === 1
+          ? 'Aktie wurde erfolgreich verkauft!'
+          : 'Aktien wurden erfolgreich verkauft!')
+      } else if (erfolgreich === 0) {
+        setFehler('Fehler beim Verkaufen der Aktien.')
+      } else {
+        setFehler(`${erfolgreich} von ${responses.length} Aktien verkauft, ${fehlgeschlagen} fehlgeschlagen.`)
+      }
+    } catch (error) {
+      console.error('[AktienVerkaufen] Fehler:', error)
+      setFehler('Verbindung zum Server fehlgeschlagen.')
+    }
+    // === ENDE BACKEND ===
   }
 
   const gesamtErloes = ausgewaehlteIdx.reduce(

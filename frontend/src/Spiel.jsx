@@ -25,6 +25,7 @@ export default function Spiel() {
   const [won, setWon] = useState(false)
   const [err, setErr] = useState('')
   const [step, setStep] = useState(-1)
+  const [doneLevels, setDoneLevels] = useState(() => new Set())
   const t = useRef(null)
   const L = LEVELS[lvl]
 
@@ -57,7 +58,14 @@ export default function Spiel() {
     let i = 0
     function tick() {
       if (i >= cmds.length) {
-        if (p[0] === L.ziel[0] && p[1] === L.ziel[1]) setWon(true)
+        if (p[0] === L.ziel[0] && p[1] === L.ziel[1]) {
+          setWon(true)
+          setDoneLevels(prev => {
+            const next = new Set(prev)
+            next.add(lvl)
+            return next
+          })
+        }
         else setErr('Ziel nicht erreicht!')
         setRunning(false)
         setStep(-1)
@@ -175,7 +183,7 @@ export default function Spiel() {
           <button
             key={i}
             type="button"
-            className={`game-level-btn ${i === lvl ? 'level-now' : ''} ${i < lvl ? 'level-done' : ''}`}
+            className={`game-level-btn ${i === lvl ? 'level-now' : ''} ${doneLevels.has(i) ? 'level-done' : ''}`}
             onClick={() => { if (!running) setLvl(i) }}
             disabled={running}
           >

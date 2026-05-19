@@ -1,0 +1,63 @@
+/* Unternehmen Mappe uebergeben - viewport-relativ, leicht oben angesetzt */
+
+.um-seite { display: flex; flex-direction: column; align-items: center; justify-content: flex-start; width: 100%; flex: 1; padding-top: clamp(10px, 2vh, 30px); }
+.um-icon { font-size: clamp(4rem, 10vh, 7.5rem); line-height: 1; width: clamp(120px, 17vh, 190px); height: clamp(120px, 17vh, 190px); background: linear-gradient(135deg, #f0f5fa 0%, #dfe9f2 100%); border: 5px solid #cdd7e3; border-radius: clamp(16px, 1.8vw, 26px); box-shadow: 0 4px 14px rgba(18,50,80,0.15); display: flex; align-items: center; justify-content: center; box-sizing: border-box; }
+.um-titel { font-size: clamp(2rem, 4.5vh, 3rem); color: #123250; margin: clamp(10px, 1.6vh, 20px) 0 clamp(14px, 2.2vh, 28px) 0; font-weight: bold; }
+.um-inhalt { display: flex; flex-direction: column; gap: clamp(14px, 2.2vh, 26px); width: 100%; max-width: clamp(750px, 88vw, 1500px); }
+.um-feld { display: flex; align-items: center; gap: clamp(14px, 1.6vw, 24px); }
+.um-feld label { font-size: clamp(1.3rem, 2.4vh, 1.8rem); font-weight: bold; color: #123250; min-width: clamp(220px, 20vw, 320px); text-align: right; white-space: nowrap; }
+.um-feld .feld-input { flex: 1; min-width: 0; padding: clamp(13px, 1.9vh, 22px) clamp(17px, 1.7vw, 28px); font-size: clamp(1.25rem, 2.2vh, 1.65rem); }
+.um-action-btn { padding: clamp(13px, 1.9vh, 22px) clamp(28px, 3.2vw, 48px); font-size: clamp(1.2rem, 2.1vh, 1.55rem); white-space: nowrap; }
+.um-trennlinie { width: 100%; height: 2px; background: #dde5ee; margin: clamp(6px, 1vh, 12px) 0; }
+
+/* Mappe-Auswahl: Kunde / Bank als grosse Icon-Buttons (gleiche Logik wie Unternehmen erstellen) */
+.um-mappe-auswahl { display: flex; gap: clamp(14px, 2vw, 28px); flex: 1; max-width: clamp(380px, 45vw, 600px); }
+.um-mappe-btn {
+  position: relative;
+  flex: 1 1 0;
+  min-width: 0;
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(8px, 1.2vh, 14px);
+  padding: clamp(14px, 2.2vh, 26px) clamp(12px, 1.6vw, 22px);
+  min-height: clamp(120px, 16vh, 200px);
+  background: white;
+  border: 3px solid #cdd7e3;
+  border-radius: 14px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+.um-mappe-btn:hover:not(:disabled) { transform: translateY(-2px); border-color: #36C291; box-shadow: 0 4px 12px rgba(54,194,145,0.25); }
+.um-mappe-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.um-mappe-aktiv { border-color: #36C291; background: #e8f5e9; transform: translateY(-3px) scale(1.02); box-shadow: 0 5px 14px rgba(54,194,145,0.4); }
+.um-mappe-aktiv:hover:not(:disabled) { transform: translateY(-3px) scale(1.02); }
+.um-mappe-icon { font-size: clamp(2.8rem, 6.5vh, 4.8rem); line-height: 1; }
+.um-mappe-icon-img { height: clamp(45px, 6.5vh, 80px); max-width: 100%; width: auto; object-fit: contain; }
+.um-mappe-label { font-size: clamp(1.15rem, 2vh, 1.5rem); font-weight: bold; color: #123250; }
+.um-mappe-check {
+  position: absolute;
+  top: clamp(6px, 0.8vh, 12px);
+  right: clamp(6px, 0.6vw, 12px);
+  width: clamp(28px, 3.2vw, 40px);
+  height: clamp(28px, 3.2vw, 40px);
+  border-radius: 50%;
+  background: #36C291;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(1rem, 1.9vh, 1.4rem);
+  font-weight: bold;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.um-action { display: flex; justify-content: center; margin-top: clamp(6px, 1vh, 12px); }
+.um-uebergeben-btn { padding: clamp(14px, 2.1vh, 24px) clamp(40px, 5vw, 80px); font-size: clamp(1.25rem, 2.3vh, 1.7rem); }
+
+@media (max-width: 700px) { .um-feld { flex-wrap: wrap; } .um-feld label { min-width: auto; text-align: left; } }

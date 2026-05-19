@@ -51,7 +51,7 @@ export default function AlleAktien() {
           <div className="as-liste-titel">Alle Unternehmen</div>
           <div className="as-liste-header aa-liste-header">
             <span>Name</span>
-            <span>Ordner</span>
+            <span>Wo ist die Mappe?</span>
             <span>Kontostand</span>
           </div>
           {geladen && eintraege.length > 0 ? (
@@ -60,7 +60,7 @@ export default function AlleAktien() {
                 <div key={i} className="as-liste-zeile aa-liste-zeile">
                   <span className="as-aktienname">{e.name}</span>
                   <span className={`aa-ordner ${Number(e.folder_handed_over) === 1 ? 'aa-ordner-ja' : 'aa-ordner-nein'}`}>
-                    {Number(e.folder_handed_over) === 1 ? 'Ja' : 'Nein'}
+                    {Number(e.folder_handed_over) === 1 ? 'Kunde' : 'Bank'}
                   </span>
                   <span className="as-preis">{e.balance}</span>
                 </div>

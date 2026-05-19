@@ -6,6 +6,8 @@ import Popup from './Popup'
 
 import './Unternehmen.css'  //Wichtig immer CSS importieren
 
+import bwBankLogo from './images/BwBank_Logo.png'
+
 export default function Unternehmen() {
   const navigate = useNavigate()
   const [popup, setPopup] = useState('')
@@ -15,16 +17,17 @@ export default function Unternehmen() {
   //
   // EINGABEN (User tippt ein):
   //   unternehmenName    (String) - z.B. "Baeckerei Mueller"
-  //   folderHandedOver   (String) - "0" (Nein) oder "1" (Ja)
+  //   mappeBei           (String) - "kunde" oder "bank" (UI-State, wird beim Senden in folder_handed_over umgewandelt)
   //
   // NACH "Erstellen": Zwei parallele API-Calls
   //   1) POST http://192.168.1.10:5000/company
   //      Body: { name: String, folder_handed_over: "0" | "1" }
+  //      ("1" = Kunde hat Mappe, "0" = Bank hat Mappe)
   //   2) POST http://192.168.1.10:5000/share
   //      Body: { name: String }   (Aktie mit gleichem Namen wie das Unternehmen)
   // ============================================================
   const [unternehmenName, setUnternehmenName] = useState('')
-  const [folderHandedOver, setFolderHandedOver] = useState(null)  // null = noch nicht gewaehlt
+  const [mappeBei, setMappeBei] = useState(null)  // null = noch nicht gewaehlt, 'kunde' oder 'bank'
   const [fehler, setFehler] = useState('')
   const [erstellt, setErstellt] = useState(false)
 
@@ -34,10 +37,13 @@ export default function Unternehmen() {
       setFehler('Bitte Unternehmensname eingeben.')
       return
     }
-    if (folderHandedOver === null) {
-      setFehler('Bitte Ordner-Übergabe auswählen (Ja oder Nein).')
+    if (mappeBei === null) {
+      setFehler('Bitte auswählen, wo die Mappe ist (Kunde oder Bank).')
       return
     }
+
+    // UI-Auswahl -> folder_handed_over: Kunde = "1", Bank = "0"
+    const folderHandedOver = mappeBei === 'kunde' ? '1' : '0'
 
     const name = unternehmenName.trim()
 
@@ -95,21 +101,25 @@ export default function Unternehmen() {
         <div className="un-trennlinie"></div>
 
         <div className="un-feld">
-          <label>Ordner übergeben:</label>
-          <div className="un-toggle">
+          <label>Wo ist die Mappe?</label>
+          <div className="un-mappe-auswahl">
             <button
               type="button"
-              className={`un-toggle-btn un-toggle-ja${folderHandedOver === '1' ? ' un-toggle-aktiv' : ''}`}
-              onClick={() => { setFolderHandedOver('1'); setErstellt(false) }}
+              className={`un-mappe-btn${mappeBei === 'kunde' ? ' un-mappe-aktiv' : ''}`}
+              onClick={() => { setMappeBei('kunde'); setErstellt(false) }}
             >
-              Ja
+              {mappeBei === 'kunde' && <span className="un-mappe-check">✓</span>}
+              <Emoji char="👤" className="un-mappe-icon" />
+              <span className="un-mappe-label">Kunde</span>
             </button>
             <button
               type="button"
-              className={`un-toggle-btn un-toggle-nein${folderHandedOver === '0' ? ' un-toggle-aktiv' : ''}`}
-              onClick={() => { setFolderHandedOver('0'); setErstellt(false) }}
+              className={`un-mappe-btn${mappeBei === 'bank' ? ' un-mappe-aktiv' : ''}`}
+              onClick={() => { setMappeBei('bank'); setErstellt(false) }}
             >
-              Nein
+              {mappeBei === 'bank' && <span className="un-mappe-check">✓</span>}
+              <img src={bwBankLogo} alt="BW Bank" className="un-mappe-icon-img" />
+              <span className="un-mappe-label">Bank</span>
             </button>
           </div>
         </div>

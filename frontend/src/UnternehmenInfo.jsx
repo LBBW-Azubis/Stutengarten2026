@@ -68,9 +68,9 @@ export default function UnternehmenInfo() {
           <span className="feld-input anzeige">{geladen ? (infoData?.name ?? '') : ''}</span>
         </div>
         <div className="ui-feld">
-          <label>Ordner übergeben:</label>
+          <label>Wo ist die Mappe?</label>
           <span className="feld-input anzeige">
-            {geladen ? (Number(infoData?.folder_handed_over) === 1 ? 'Ja' : 'Nein') : ''}
+            {geladen ? (Number(infoData?.folder_handed_over) === 1 ? 'Kunde' : 'Bank') : ''}
           </span>
         </div>
         <div className="ui-feld">

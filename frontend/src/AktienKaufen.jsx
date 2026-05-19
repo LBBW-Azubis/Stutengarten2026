@@ -97,6 +97,9 @@ export default function AktienKaufen() {
 
       if (response.ok) {
         setPopup('Aktie wurde erfolgreich gekauft!')
+      } else if (response.status === 400 && data?.error === 'Share already owned!') {
+        // Backend liefert bei Doppelkauf: HTTP 400 mit { error: "Share already owned!" }
+        setFehler('Diese Aktie wurde bereits gekauft!')
       } else {
         setFehler('Fehler beim Aktienkauf.')
       }
