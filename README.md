@@ -27,11 +27,9 @@ Die Anwendung bildet zentrale Bankprozesse für Kunden und Unternehmen ab (z. B.
 
 ## Voraussetzungen
 
-Für die lokale Entwicklung bzw. den Betrieb werden u. a. benötigt:
-
+### Backend
 - **Python 3.11.9**
 - **MariaDB 12.0.2**
-- **Node.js** (inkl. `npm`)
 - Python-Pakete:
   - Flask
   - flask-cors
@@ -41,50 +39,61 @@ Für die lokale Entwicklung bzw. den Betrieb werden u. a. benötigt:
   - openpyxl
   - waitress
 
----
-
-## Installation (Kurzfassung)
-
-### 1) Repository klonen
-
-```bash
-git clone https://github.com/LBBW-Azubis/Stutengarten2026.git
-cd Stutengarten2026
-```
-
-### 2) Backend-Abhängigkeiten installieren
-
-```bash
-python3.11 -m venv venv
-source venv/bin/activate
-pip install --upgrade pip
-pip install flask flask-cors pandas mysql-connector-python pyinstaller openpyxl waitress
-```
-
-### 3) Datenbank konfigurieren
-
-- Datenbankverbindung in `backend/server.config` hinterlegen.
-- Falls erforderlich: MariaDB-Konfiguration anpassen (z. B. `skip-name-resolve` unter `[mysqld]`).
-
-### 4) Anwendung starten
-
-Backend (lokal):
-
-```bash
-source venv/bin/activate
-python backend/app.py
-```
+### Frontend
+- **Node.js** (inkl. `npm`)
+- Abhängigkeiten gemäß `package.json` im Frontend-Ordner
 
 ---
 
-## Entwicklungs- und Teamhinweise
+## API-Endpunkte (Backend)
 
-- Branches und Pull Requests nach Teamprozess verwenden.
-- Merges in zentrale Branches erfolgen durch die verantwortlichen Ansprechpartner.
-- Backend-Dokumentation/Projektunterlagen liegen zusätzlich in der OneDrive.
+### Health
+- `GET /ping`
+- `GET /health`
+- `GET /health/pool`
 
----
+### Settings
+- `GET /settings`
+- `PATCH /settings`
 
-## Wartung
+### Import
+- `POST /customer/import`
+- `POST /company/import`
 
-Bei Änderungen an Konfiguration, Datenmodell oder Betriebsabläufen sollte diese README zeitnah mit aktualisiert werden.
+### Customers
+- `GET /customer/<stutengarten_id>`
+- `POST /customer`
+- `PATCH /customer/<stutengarten_id>`
+- `DELETE /customer/<stutengarten_id>`
+- `GET /customersavingsbook`
+- `GET /customer/<stutengarten_id>/savingsbook`
+- `PATCH /customer/<stutengarten_id>/savingsbook/balance`
+- `POST /customer/<stutengarten_id>/transaction`
+- `GET /customer/<stutengarten_id>/transactions`
+- `GET /customer/statistics`
+- `GET /customer/<stutengarten_id>/statistics`
+- `POST /customer/transfer`
+- `GET /shares/available`
+- `GET /shares/name/<share_name>`
+- `POST /customer/<stutengarten_id>/shares/buy`
+- `GET /customer/<stutengarten_id>/shares`
+- `PATCH /customer/<stutengarten_id>/shares/<share_name>`
+- `DELETE /customer/<stutengarten_id>/shares/<share_name>`
+
+### Companies
+- `GET /company/<company_name>`
+- `POST /company`
+- `PATCH /company/<company_name>`
+- `DELETE /company/<company_name>`
+- `GET /companysavingsbook`
+- `GET /company/<company_name>/savingsbook`
+- `PATCH /company/<company_name>/savingsbook/balance`
+- `GET /company/<company_name>/transactions`
+- `POST /company/<company_name>/transactions`
+- `GET /company/statistics`
+- `GET /company/<company_name>/statistics`
+
+### Shares
+- `POST /share`
+- `GET /share/<share_name>`
+- `GET /shares`
