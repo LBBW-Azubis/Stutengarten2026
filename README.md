@@ -19,6 +19,7 @@ Die Anwendung bildet zentrale Bankprozesse für Kunden und Unternehmen ab (z. B.
 ## Repository-Struktur
 
 - `backend/` – Backend (Flask, Datenbankzugriff, Fachlogik)
+- `dokumentation/` – Dokumentationen (Backend, Installation, etc.) 
 - `frontend/` – Frontend-Anwendung
 - `script/` – Setup-/Deployment-/Betriebsskripte
 - `xlsx-Files/` – projektbezogene Excel-Dateien
