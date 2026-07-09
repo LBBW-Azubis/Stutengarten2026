@@ -1,82 +1,90 @@
 # Stutengarten2026
-Bank-Anwendung für den Stutengarten 2026 der Auszubildenden Fachinformatiker JG24
 
-------------------------------------------------
+Bank-Anwendung für den Stutengarten 2026 der Auszubildenden Fachinformatiker JG24.
 
-Die Dokumentation für das Backend ist in der OneDrive
+---
 
-Nur die Ansprechpartner mergen die Branches
+## Projektüberblick
 
-Benötigte Downloads:
-- MariaDB 12.0.2
-    - Konfiguration aus backend/server.config
-    - Änderung von Program Files\MariaDB 12.0\data\my.ini bei Unterpunkt [mysqld] "skip-name-resolve" hinzufügen
-- Flask + CORS
-- Python 3.11.9
-- Pandas
-- MySQL
-- Node.JS (inkl. npm install im direkten Unterordner)
-- Pyinstaller
-- Openpyxl
-- Waitress (als Produktions-Server)
+Dieses Repository enthält die Anwendung für den Stutengarten 2026 mit:
 
-## API-Übersicht (Stand Codebasis)
+- einem **Python/Flask-Backend**
+- einem **JavaScript-Frontend**
+- unterstützenden **Setup- und Betriebs-Skripten**
 
-Die Excel-Datei `API Endpoints.xlsx` ist **nicht vollständig aktuell** zur aktuellen Backend-Implementierung.
+Die Anwendung bildet zentrale Bankprozesse für Kunden und Unternehmen ab (z. B. Kontoführung, Transaktionen, Importe und weitere Fachlogik).
 
-Neu/zusätzlich im Code vorhandene Endpunkte (u. a.):
+---
 
-- **Health**
-  - `GET /ping`
-  - `GET /health`
-  - `GET /health/pool`
+## Repository-Struktur
 
-- **Settings**
-  - `GET /settings`
-  - `PATCH /settings`
+- `backend/` – Backend (Flask, Datenbankzugriff, Fachlogik)
+- `frontend/` – Frontend-Anwendung
+- `script/` – Setup-/Deployment-/Betriebsskripte
+- `xlsx-Files/` – projektbezogene Excel-Dateien
 
-- **Import**
-  - `POST /customer/import`
-  - `POST /company/import`
+---
 
-- **Customers**
-  - `GET /customer/<stutengarten_id>`
-  - `POST /customer`
-  - `PATCH /customer/<stutengarten_id>`
-  - `DELETE /customer/<stutengarten_id>`
-  - `GET /customersavingsbook`
-  - `GET /customer/<stutengarten_id>/savingsbook`
-  - `PATCH /customer/<stutengarten_id>/savingsbook/balance`
-  - `POST /customer/<stutengarten_id>/transaction`
-  - `GET /customer/<stutengarten_id>/transactions`
-  - `GET /customer/statistics`
-  - `GET /customer/<stutengarten_id>/statistics`
-  - `POST /customer/transfer`
-  - `GET /shares/available`
-  - `GET /shares/name/<share_name>`
-  - `POST /customer/<stutengarten_id>/shares/buy`
-  - `GET /customer/<stutengarten_id>/shares`
-  - `PATCH /customer/<stutengarten_id>/shares/<share_name>`
-  - `DELETE /customer/<stutengarten_id>/shares/<share_name>`
+## Voraussetzungen
 
-- **Companies**
-  - `GET /company/<company_name>`
-  - `POST /company`
-  - `PATCH /company/<company_name>`
-  - `DELETE /company/<company_name>`
-  - `GET /companysavingsbook`
-  - `GET /company/<company_name>/savingsbook`
-  - `PATCH /company/<company_name>/savingsbook/balance`
-  - `GET /company/<company_name>/transactions`
-  - `POST /company/<company_name>/transactions`
-  - `GET /company/statistics`
-  - `GET /company/<company_name>/statistics`
+Für die lokale Entwicklung bzw. den Betrieb werden u. a. benötigt:
 
-- **Shares**
-  - `POST /share`
-  - `GET /share/<share_name>`
-  - `GET /shares`
+- **Python 3.11.9**
+- **MariaDB 12.0.2**
+- **Node.js** (inkl. `npm`)
+- Python-Pakete:
+  - Flask
+  - flask-cors
+  - pandas
+  - mysql-connector-python
+  - pyinstaller
+  - openpyxl
+  - waitress
 
-Hinweis:
-- Die tatsächlichen Endpunkte werden in den Flask-Blueprints in `backend/blueprints/` definiert.
-- Bitte `API Endpoints.xlsx` anhand dieser Liste aktualisieren, damit Dokumentation und Code wieder synchron sind.
+---
+
+## Installation (Kurzfassung)
+
+### 1) Repository klonen
+
+```bash
+git clone https://github.com/LBBW-Azubis/Stutengarten2026.git
+cd Stutengarten2026
+```
+
+### 2) Backend-Abhängigkeiten installieren
+
+```bash
+python3.11 -m venv venv
+source venv/bin/activate
+pip install --upgrade pip
+pip install flask flask-cors pandas mysql-connector-python pyinstaller openpyxl waitress
+```
+
+### 3) Datenbank konfigurieren
+
+- Datenbankverbindung in `backend/server.config` hinterlegen.
+- Falls erforderlich: MariaDB-Konfiguration anpassen (z. B. `skip-name-resolve` unter `[mysqld]`).
+
+### 4) Anwendung starten
+
+Backend (lokal):
+
+```bash
+source venv/bin/activate
+python backend/app.py
+```
+
+---
+
+## Entwicklungs- und Teamhinweise
+
+- Branches und Pull Requests nach Teamprozess verwenden.
+- Merges in zentrale Branches erfolgen durch die verantwortlichen Ansprechpartner.
+- Backend-Dokumentation/Projektunterlagen liegen zusätzlich in der OneDrive.
+
+---
+
+## Wartung
+
+Bei Änderungen an Konfiguration, Datenmodell oder Betriebsabläufen sollte diese README zeitnah mit aktualisiert werden.
