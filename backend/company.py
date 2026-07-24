@@ -28,9 +28,11 @@ class Company:
                 raise CompanyException("name must be set to create a new company")
 
             #Create new company in db
-            conn = db.get_connection()
-            cursor = conn.cursor()
+            conn = None
+            cursor = None
             try:
+                conn = db.get_connection()
+                cursor = conn.cursor()
                 cursor.execute(
                     "INSERT INTO unternehmen (bezeichnung, mappe_abgegeben) VALUES (%s, %s)",
                     (name, folder_handed_over)
@@ -49,7 +51,10 @@ class Company:
             except Exception as err:
                 raise CustomCompanyException(f"Error creating company: {err}") from err
             finally:
-                cursor.close()
+                if cursor:
+                    cursor.close()
+                if conn:
+                    conn.close()
         else:
             #Company object from existing data
             self.id = id
