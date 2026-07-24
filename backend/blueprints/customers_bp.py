@@ -243,12 +243,18 @@ def get_specific_customer_statistics(stutengarten_id):
     """
     connector = current_app.config["DB_CONNECTOR"]
     try:
-        conn = connector.get_connection()
-        cursor = conn.cursor(dictionary=True)
-        cursor.execute("SELECT id FROM kunden WHERE stutengarten_id = %s", (stutengarten_id,))
-        k_row = cursor.fetchone()
-        cursor.close()
-        conn.close()
+        conn = None
+        cursor = None
+        try:
+            conn = connector.get_connection()
+            cursor = conn.cursor(dictionary=True)
+            cursor.execute("SELECT id FROM kunden WHERE stutengarten_id = %s", (stutengarten_id,))
+            k_row = cursor.fetchone()
+        finally:
+            if cursor:
+                cursor.close()
+            if conn:
+                conn.close()
 
         if not k_row:
             return jsonify({"error": "Customer not found"}), 404
