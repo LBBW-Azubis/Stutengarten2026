@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # =================================================================
-# 04_setup_frame.sh (Optimiert für Frame/VDI + Kiosk Hardening)
+# aerver_setup_frame.sh (Optimiert für Frame/VDI + Kiosk Hardening)
 # System: Ubuntu Server + Openbox + Chromium
 # =================================================================
 
