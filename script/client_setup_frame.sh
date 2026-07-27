@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # =================================================================
-# 100_setup_frame.sh (Interaktiv + Frame Optimiert + Hardening)
+# client_setup_frame.sh (Interaktiv + Frame Optimiert + Hardening)
 # =================================================================
 
 BLUE='\033[0;34m'
