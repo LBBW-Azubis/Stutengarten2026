@@ -1,7 +1,7 @@
 #!/bin/bash
 # =============================================================================
 # Stutengarten 2026 – Frontend Setup (Nginx + Vue/React Build)
-# Voraussetzung: Backend-Setup (01_setup_backend.sh) wurde bereits ausgeführt.
+# Voraussetzung: Backend-Setup (server_setup_backend.sh) wurde bereits ausgeführt.
 # =============================================================================
 set -e
 
