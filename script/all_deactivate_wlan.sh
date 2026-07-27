@@ -1,6 +1,6 @@
 #!/bin/bash
 # =================================================================
-# 100_deactivate_wlan.sh
+# all_deactivate_wlan.sh
 # Deaktiviert das WLAN dauerhaft (Interface aus + Blockierung,
 # damit es auch nach Reboot/Aufwachen nicht wieder aktiviert wird)
 # =================================================================
