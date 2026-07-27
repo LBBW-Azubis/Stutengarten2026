@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # =================================================================
-# 101_activate_wlan.sh
+# all_activate_wlan.sh
 # Reaktiviert das WLAN (entfernt die dauerhafte Blockierung)
 # =================================================================
 
