@@ -1,0 +1,129 @@
+/* Dokumente Styles - viewport-relativ */
+
+/* Als Flex-Spalte, damit .dok-layout mit flex:1 die volle Hoehe
+   bis zur Fusszeile einnimmt (die .page selbst bekommt ihre Hoehe
+   ueber flex:1 von main#app) */
+.dokumente-page {
+  width: 100% !important;
+  max-width: 100% !important;
+  align-self: stretch !important;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.dok-layout {
+  display: flex;
+  align-items: stretch;
+  gap: clamp(14px, 2vw, 30px);
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+}
+
+/* Grosses Anzeige-Widget in der Mitte - nimmt den Hauptteil der Flaeche ein.
+   Hier wird spaeter die PDF per <iframe> angezeigt. */
+.dok-widget {
+  flex: 1;
+  min-height: 0;
+  background: white;
+  border: 3px solid #dde5ee;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* PDF-Anzeige fuellt das komplette Widget aus */
+.dok-widget-frame {
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: block;
+}
+
+.dok-widget-platzhalter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(6px, 1vh, 14px);
+  font-size: clamp(1.3rem, 2.6vh, 1.9rem);
+  font-weight: bold;
+  color: #123250;
+  text-align: center;
+  padding: clamp(12px, 2vw, 24px);
+}
+
+.dok-widget-hinweis {
+  font-size: clamp(0.95rem, 1.7vh, 1.25rem);
+  font-weight: normal;
+  color: #7a8ba0;
+}
+
+/* Rechte Spalte mit den Auswahl-Buttons */
+.dok-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(10px, 1.5vh, 20px);
+  width: clamp(160px, 18vw, 260px);
+  flex-shrink: 0;
+}
+
+.dok-btn {
+  padding: clamp(14px, 2vh, 24px) clamp(12px, 1.5vw, 20px);
+  font-size: clamp(1.1rem, 2vh, 1.5rem);
+  font-weight: bold;
+  color: #123250;
+  background: white;
+  border: 2px solid #dde5ee;
+  border-radius: 10px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s ease, border-color 0.15s ease;
+  user-select: none;
+}
+
+.dok-btn:hover { background: #f0f5fa; border-color: #4DABF7; }
+
+.dok-btn-aktiv {
+  background: #123250;
+  border-color: #123250;
+  color: white;
+}
+.dok-btn-aktiv:hover { background: #123250; border-color: #123250; }
+
+/* Bedien-Hinweis zum Zoomen unter den Buttons */
+.dok-zoom-hinweis {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(4px, 0.6vh, 8px);
+  padding: clamp(10px, 1.5vh, 18px) clamp(10px, 1vw, 16px);
+  background: #f0f5fa;
+  border: 2px dashed #dde5ee;
+  border-radius: 10px;
+  font-size: clamp(0.9rem, 1.6vh, 1.15rem);
+  color: #123250;
+  text-align: center;
+}
+
+.dok-zoom-hinweis-titel { font-weight: bold; }
+
+.dok-zoom-hinweis kbd {
+  display: inline-block;
+  padding: 1px clamp(5px, 0.5vw, 9px);
+  background: white;
+  border: 1px solid #b8c6d6;
+  border-bottom-width: 3px;
+  border-radius: 6px;
+  font-family: inherit;
+  font-weight: bold;
+  font-size: 0.95em;
+}
+
+/* Schmalere Bildschirme: Buttons unter das Widget */
+@media (max-width: 700px) {
+  .dok-layout { flex-direction: column; }
+  .dok-buttons { flex-direction: row; flex-wrap: wrap; width: 100%; }
+  .dok-btn { flex: 1; }
+}

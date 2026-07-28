@@ -24,6 +24,7 @@ import AktienSammlung from './AktienSammlung'
 import KundeAktien from './KundeAktien'
 import AlleAktien from './AlleAktien'
 import Hacker from './Hacker'
+import Dokumente from './Dokumente'
 import Spiel from './Spiel'
 import Tschuess from './Tschuess'
 import Unternehmen from './Unternehmen'
@@ -253,6 +254,7 @@ function AppLayout() {
           <Route path="/" element={<Login />} />
           <Route path="/mainsite" element={<Menu />} />
           <Route path="/mainsite/betreuer" element={<BetreuerMenu />} />
+          <Route path="/mainsite/dokumente" element={<Dokumente />} />
           <Route path="/mainsite/info" element={<Info />} />
           <Route path="/mainsite/kunde" element={<Kunde />} />
           <Route path="/mainsite/konto" element={<Konto />} />

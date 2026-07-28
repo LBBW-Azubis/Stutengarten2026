@@ -218,6 +218,13 @@ export default function BetreuerMenu() {
               <div className="kachel-label kachel-label-danger">Datenbank Löschen</div>
             </div>
 
+            <div className="kachel" onClick={() => navigate('/mainsite/dokumente')}>
+              <div className="kachel-bild">
+                <Emoji char="📋" className="betreuer-kachel-emoji" />
+              </div>
+              <div className="kachel-label">Dokumente</div>
+            </div>
+
           </div>
         </div>
 
