@@ -100,6 +100,10 @@ export default function AktienKaufen() {
       } else if (response.status === 400 && data?.error === 'Share already owned!') {
         // Backend liefert bei Doppelkauf: HTTP 400 mit { error: "Share already owned!" }
         setFehler('Diese Aktie wurde bereits gekauft!')
+      } else if (response.status === 400 && data?.error?.includes('nicht gefunden')) {
+        // Backend liefert bei unbekanntem Aktiennamen: HTTP 400 mit
+        // { error: "Aktie '<name>' nicht gefunden" }
+        setFehler('Aktienname falsch geschrieben oder die Aktie gibt es noch nicht. Bitte in der "Aktien Sammlung" nachschauen.')
       } else {
         setFehler('Fehler beim Aktienkauf.')
       }
