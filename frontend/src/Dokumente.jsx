@@ -10,8 +10,6 @@ import './Dokumente.css'  //Wichtig immer CSS importieren
 // aus (kein Download-/Druck-Button) - das Widget kann nur anzeigen.
 const DOKUMENTE = [
   { label: 'Anwenderdoku', datei: 'anwenderdoku.pdf' },
-  { label: 'Backend-Doku', datei: 'backend-doku.pdf' },
-  { label: 'Installationsanleitung', datei: 'installationsanleitung.pdf' },
 ]
 
 export default function Dokumente() {
