@@ -141,10 +141,11 @@ function ZurueckBar() {
   const startseite = betreuerEingeloggt ? '/mainsite/betreuer' : '/mainsite'
   const istStartseite = location.pathname === startseite
 
-  // Auf Betreuer-Unterseiten (Unternehmen erstellen / loeschen) keinen Abmelden-Button anzeigen
+  // Auf Betreuer-Unterseiten (Unternehmen erstellen / loeschen, Anwenderdoku) keinen Abmelden-Button anzeigen
   const istBetreuerSeite =
     location.pathname === '/mainsite/unternehmen-erstellen' ||
-    location.pathname === '/mainsite/unternehmen-loeschen'
+    location.pathname === '/mainsite/unternehmen-loeschen' ||
+    location.pathname === '/mainsite/dokumente'
 
   function handleAbmelden() {
     setEingeloggt(false)

@@ -35,7 +35,7 @@ export default function KundeAktien() {
     try {
       const id = kontonummer.trim()
 
-      const r1 = await fetch(`http://192.168.1.10:5000/customer/${id}`)
+      const r1 = await fetch(`http://192.168.1.10:5000/customer/${encodeURIComponent(id)}`)
       const d1 = await r1.json()
       if (!r1.ok) {
         setFehler('Kunde nicht gefunden.')
@@ -44,7 +44,7 @@ export default function KundeAktien() {
       setVorname(d1.first_name)
       setNachname(d1.last_name)
 
-      const r2 = await fetch(`http://192.168.1.10:5000/customer/${id}/shares`)
+      const r2 = await fetch(`http://192.168.1.10:5000/customer/${encodeURIComponent(id)}/shares`)
       const d2 = await r2.json()
       if (!r2.ok) {
         setFehler('Aktien konnten nicht geladen werden.')

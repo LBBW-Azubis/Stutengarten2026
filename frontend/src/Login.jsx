@@ -50,7 +50,7 @@ export default function Login() {
             type="text"
             className="login-input"
             placeholder="z.B. AB12"
-            maxLength="6"
+            maxLength="12"
             style={{ textTransform: 'uppercase' }}
             value={ausweis}
             onChange={e => setAusweis(e.target.value)}

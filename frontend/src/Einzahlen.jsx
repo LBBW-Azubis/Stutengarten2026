@@ -51,7 +51,7 @@ export default function Einzahlen() {
       const id = kontonummer.trim()
 
       // 1) Kunde laden
-      const response = await fetch(`http://192.168.1.10:5000/customer/${id}`)
+      const response = await fetch(`http://192.168.1.10:5000/customer/${encodeURIComponent(id)}`)
       const data = await response.json()
       if (!response.ok) {
         setFehler('Kunde nicht gefunden.')
@@ -61,7 +61,7 @@ export default function Einzahlen() {
       setNachname(data.last_name)
 
       // 2) Sparbuch/Kontostand laden
-      const sbResponse = await fetch(`http://192.168.1.10:5000/customer/${id}/savingsbook`)
+      const sbResponse = await fetch(`http://192.168.1.10:5000/customer/${encodeURIComponent(id)}/savingsbook`)
       const sbData = await sbResponse.json()
       if (sbResponse.ok && Array.isArray(sbData) && sbData.length > 0) {
         setKontostand(sbData[0].balance || 0)
@@ -90,7 +90,7 @@ export default function Einzahlen() {
     // === BACKEND: Einzahlung senden ===
     const neuerStand = kontostand + b
     try {
-      const response = await fetch(`http://192.168.1.10:5000/customer/${kontonummer.trim()}/transaction`, {
+      const response = await fetch(`http://192.168.1.10:5000/customer/${encodeURIComponent(kontonummer.trim())}/transaction`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json; charset=utf-8' },
         body: JSON.stringify({ amount: b, purpose: 'Einzahlung' }),

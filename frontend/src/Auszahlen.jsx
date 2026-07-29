@@ -51,7 +51,7 @@ export default function Auszahlen() {
       const id = kontonummer.trim()
 
       // Kunde laden
-      const response = await fetch(`http://192.168.1.10:5000/customer/${id}`)
+      const response = await fetch(`http://192.168.1.10:5000/customer/${encodeURIComponent(id)}`)
       const data = await response.json()
       if (!response.ok) {
         setFehler('Kunde nicht gefunden.')
@@ -63,7 +63,7 @@ export default function Auszahlen() {
       // Sparbuch/Kontostand laden
       // GET http://192.168.1.10:5000/customer/<stutengarten_id>/savingsbook
       // Response 200: [{ stutengarten_id: "...", balance: ... }]
-      const sbResponse = await fetch(`http://192.168.1.10:5000/customer/${id}/savingsbook`)
+      const sbResponse = await fetch(`http://192.168.1.10:5000/customer/${encodeURIComponent(id)}/savingsbook`)
       const sbData = await sbResponse.json()
       if (sbResponse.ok && Array.isArray(sbData) && sbData.length > 0) {
         setKontostand(sbData[0].balance || 0)
@@ -96,7 +96,7 @@ export default function Auszahlen() {
     // === BACKEND: Auszahlung senden ===
     const neuerStand = kontostand - b
     try {
-      const response = await fetch(`http://192.168.1.10:5000/customer/${kontonummer.trim()}/transaction`, {
+      const response = await fetch(`http://192.168.1.10:5000/customer/${encodeURIComponent(kontonummer.trim())}/transaction`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json; charset=utf-8' },
         body: JSON.stringify({ amount: -b, purpose: 'Auszahlung' }),

@@ -52,7 +52,7 @@ export default function AktienZaehler() {
     try {
       const id = kontonummer.trim()
 
-      const r1 = await fetch(`http://192.168.1.10:5000/customer/${id}`)
+      const r1 = await fetch(`http://192.168.1.10:5000/customer/${encodeURIComponent(id)}`)
       const d1 = await r1.json()
       if (!r1.ok) {
         setFehler('Kunde nicht gefunden.')
@@ -61,7 +61,7 @@ export default function AktienZaehler() {
       setVorname(d1.first_name)
       setNachname(d1.last_name)
 
-      const r2 = await fetch(`http://192.168.1.10:5000/customer/${id}/shares`)
+      const r2 = await fetch(`http://192.168.1.10:5000/customer/${encodeURIComponent(id)}/shares`)
       const d2 = await r2.json()
       if (!r2.ok) {
         setFehler('Aktien konnten nicht geladen werden.')
@@ -104,7 +104,7 @@ export default function AktienZaehler() {
     // === BACKEND: Kurs eintragen ===
     // PATCH http://192.168.1.10:5000/customer/<id>/shares/<share_name>
     // Body: { new_value: int }
-    const url = `http://192.168.1.10:5000/customer/${kontonummer.trim()}/shares/${encodeURIComponent(aktie.share_name)}`
+    const url = `http://192.168.1.10:5000/customer/${encodeURIComponent(kontonummer.trim())}/shares/${encodeURIComponent(aktie.share_name)}`
     const body = { new_value: neuerWert }
     console.log('[AktienZaehler] PATCH URL:', url)
     console.log('[AktienZaehler] PATCH Body:', JSON.stringify(body))

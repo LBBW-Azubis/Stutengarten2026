@@ -59,13 +59,13 @@ export default function Ueberweisung() {
     // === BACKEND: Absender laden ===
     try {
       const id = kontoVon.trim()
-      const response = await fetch(`http://192.168.1.10:5000/customer/${id}`)
+      const response = await fetch(`http://192.168.1.10:5000/customer/${encodeURIComponent(id)}`)
       const data = await response.json()
       if (!response.ok) { setFehler('Absender nicht gefunden.'); return }
       setVonVorname(data.first_name)
       setVonNachname(data.last_name)
 
-      const sbResponse = await fetch(`http://192.168.1.10:5000/customer/${id}/savingsbook`)
+      const sbResponse = await fetch(`http://192.168.1.10:5000/customer/${encodeURIComponent(id)}/savingsbook`)
       const sbData = await sbResponse.json()
       if (sbResponse.ok && Array.isArray(sbData) && sbData.length > 0) {
         setVonKontostand(sbData[0].balance || 0)
@@ -92,13 +92,13 @@ export default function Ueberweisung() {
     // === BACKEND: Empfaenger laden ===
     try {
       const id = kontoAn.trim()
-      const response = await fetch(`http://192.168.1.10:5000/customer/${id}`)
+      const response = await fetch(`http://192.168.1.10:5000/customer/${encodeURIComponent(id)}`)
       const data = await response.json()
       if (!response.ok) { setFehler('Empfänger nicht gefunden.'); return }
       setAnVorname(data.first_name)
       setAnNachname(data.last_name)
 
-      const sbResponse = await fetch(`http://192.168.1.10:5000/customer/${id}/savingsbook`)
+      const sbResponse = await fetch(`http://192.168.1.10:5000/customer/${encodeURIComponent(id)}/savingsbook`)
       const sbData = await sbResponse.json()
       if (sbResponse.ok && Array.isArray(sbData) && sbData.length > 0) {
         setAnKontostand(sbData[0].balance || 0)

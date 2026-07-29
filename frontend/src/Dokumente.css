@@ -1,4 +1,4 @@
-/* Dokumente Styles - viewport-relativ */
+/* Dokumente (Anwenderdoku) Styles - viewport-relativ */
 
 /* Als Flex-Spalte, damit .dok-layout mit flex:1 die volle Hoehe
    bis zur Fusszeile einnimmt (die .page selbst bekommt ihre Hoehe
@@ -21,8 +21,7 @@
   min-height: 0;
 }
 
-/* Grosses Anzeige-Widget in der Mitte - nimmt den Hauptteil der Flaeche ein.
-   Hier wird spaeter die PDF per <iframe> angezeigt. */
+/* Grosses Anzeige-Widget in der Mitte - nimmt den Hauptteil der Flaeche ein */
 .dok-widget {
   flex: 1;
   min-height: 0;
@@ -43,26 +42,8 @@
   display: block;
 }
 
-.dok-widget-platzhalter {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: clamp(6px, 1vh, 14px);
-  font-size: clamp(1.3rem, 2.6vh, 1.9rem);
-  font-weight: bold;
-  color: #123250;
-  text-align: center;
-  padding: clamp(12px, 2vw, 24px);
-}
-
-.dok-widget-hinweis {
-  font-size: clamp(0.95rem, 1.7vh, 1.25rem);
-  font-weight: normal;
-  color: #7a8ba0;
-}
-
-/* Rechte Spalte mit den Auswahl-Buttons */
-.dok-buttons {
+/* Rechte Spalte mit dem Zoom-Hinweis */
+.dok-seite-rechts {
   display: flex;
   flex-direction: column;
   gap: clamp(10px, 1.5vh, 20px);
@@ -70,30 +51,7 @@
   flex-shrink: 0;
 }
 
-.dok-btn {
-  padding: clamp(14px, 2vh, 24px) clamp(12px, 1.5vw, 20px);
-  font-size: clamp(1.1rem, 2vh, 1.5rem);
-  font-weight: bold;
-  color: #123250;
-  background: white;
-  border: 2px solid #dde5ee;
-  border-radius: 10px;
-  cursor: pointer;
-  font-family: inherit;
-  transition: background 0.15s ease, border-color 0.15s ease;
-  user-select: none;
-}
-
-.dok-btn:hover { background: #f0f5fa; border-color: #4DABF7; }
-
-.dok-btn-aktiv {
-  background: #123250;
-  border-color: #123250;
-  color: white;
-}
-.dok-btn-aktiv:hover { background: #123250; border-color: #123250; }
-
-/* Bedien-Hinweis zum Zoomen unter den Buttons */
+/* Bedien-Hinweis zum Zoomen */
 .dok-zoom-hinweis {
   display: flex;
   flex-direction: column;
@@ -121,9 +79,8 @@
   font-size: 0.95em;
 }
 
-/* Schmalere Bildschirme: Buttons unter das Widget */
+/* Schmalere Bildschirme: Hinweis unter das Widget */
 @media (max-width: 700px) {
   .dok-layout { flex-direction: column; }
-  .dok-buttons { flex-direction: row; flex-wrap: wrap; width: 100%; }
-  .dok-btn { flex: 1; }
+  .dok-seite-rechts { width: 100%; }
 }

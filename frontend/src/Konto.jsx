@@ -43,7 +43,7 @@ export default function Konto() {
     // Response 404: { error: String }
     // Response 500: { error: String, details: String }
     try {
-      const response = await fetch(`http://192.168.1.10:5000/customer/${kontonummer.trim().toUpperCase()}`)
+      const response = await fetch(`http://192.168.1.10:5000/customer/${encodeURIComponent(kontonummer.trim().toUpperCase())}`)
 
       const data = await response.json()
 
@@ -54,7 +54,7 @@ export default function Konto() {
         // Sparbuch/Kontostand laden
         // GET http://192.168.1.10:5000/customer/<stutengarten_id>/savingsbook
         try {
-          const sbResponse = await fetch(`http://192.168.1.10:5000/customer/${kontonummer.trim()}/savingsbook`)
+          const sbResponse = await fetch(`http://192.168.1.10:5000/customer/${encodeURIComponent(kontonummer.trim())}/savingsbook`)
           const sbData = await sbResponse.json()
           if (sbResponse.ok && Array.isArray(sbData) && sbData.length > 0) {
             setKontostand(sbData[0].balance || 0)

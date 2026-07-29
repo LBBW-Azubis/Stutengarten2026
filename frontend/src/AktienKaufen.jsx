@@ -44,13 +44,13 @@ export default function AktienKaufen() {
     // === BACKEND: Kunde + Sparbuch laden ===
     try {
       const id = kontonummer.trim()
-      const response = await fetch(`http://192.168.1.10:5000/customer/${id}`)
+      const response = await fetch(`http://192.168.1.10:5000/customer/${encodeURIComponent(id)}`)
       const data = await response.json()
       if (!response.ok) { setFehler('Kunde nicht gefunden.'); return }
       setVorname(data.first_name)
       setNachname(data.last_name)
 
-      const sbResponse = await fetch(`http://192.168.1.10:5000/customer/${id}/savingsbook`)
+      const sbResponse = await fetch(`http://192.168.1.10:5000/customer/${encodeURIComponent(id)}/savingsbook`)
       const sbData = await sbResponse.json()
       if (sbResponse.ok && Array.isArray(sbData) && sbData.length > 0) {
         setKontostand(sbData[0].balance || 0)
@@ -80,7 +80,7 @@ export default function AktienKaufen() {
     // === BACKEND: Aktien kaufen ===
     // API-Call: POST http://192.168.1.10:5000/customer/<stutengarten_id>/shares/buy
     // Body: { share_name: String, amount: int } - amount ist fest 3 Stuggis pro Aktie
-    const url = `http://192.168.1.10:5000/customer/${kontonummer.trim()}/shares/buy`
+    const url = `http://192.168.1.10:5000/customer/${encodeURIComponent(kontonummer.trim())}/shares/buy`
     const body = { share_name: aktienname.trim(), amount: AKTIEN_PREIS }
     console.log('[Aktien] POST URL:', url)
     console.log('[Aktien] POST Body:', JSON.stringify(body))

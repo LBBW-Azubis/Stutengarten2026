@@ -222,7 +222,7 @@ export default function BetreuerMenu() {
               <div className="kachel-bild">
                 <Emoji char="📋" className="betreuer-kachel-emoji" />
               </div>
-              <div className="kachel-label">Dokumente</div>
+              <div className="kachel-label">Anwenderdoku</div>
             </div>
 
           </div>

@@ -46,7 +46,7 @@ export default function AktienVerkaufen() {
       const id = kontonummer.trim()
 
       // Kundendaten
-      const r1 = await fetch(`http://192.168.1.10:5000/customer/${id}`)
+      const r1 = await fetch(`http://192.168.1.10:5000/customer/${encodeURIComponent(id)}`)
       if (!r1.ok) {
         setFehler('Kunde nicht gefunden.')
         return
@@ -56,7 +56,7 @@ export default function AktienVerkaufen() {
       setNachname(d1.last_name)
 
       // Aktien
-      const r2 = await fetch(`http://192.168.1.10:5000/customer/${id}/shares`)
+      const r2 = await fetch(`http://192.168.1.10:5000/customer/${encodeURIComponent(id)}/shares`)
       if (!r2.ok) {
         setFehler('Aktien konnten nicht geladen werden.')
         return
